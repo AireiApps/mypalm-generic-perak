@@ -6,16 +6,48 @@
         src="../../../assets/img/logo.png"
       ></ion-img>
     </ion-avatar>
-    <ion-title color="light" [innerHTML]="mill_name"></ion-title>
+    <ion-title mode="ios" color="light" [innerHTML]="mill_name"></ion-title>
 
     <ion-buttons slot="primary">
-      <ion-button class="bg-light-color" (click)="callmodalcontroller()">
+      <!-- <ion-button class="bg-light-color" (click)="callmodalcontroller('')">
         <ion-icon name="calendar-outline"></ion-icon>
+      </ion-button> -->
+
+      <ion-button class="bg-light-color" (click)="btn_QRcodescanner()">
+        <ion-icon name="qr-code-outline"></ion-icon>
       </ion-button>
 
-      <ion-button class="bg-light-color" (click)="btn_notification()">
+      <!-- <ion-button class="bg-light-color" (click)="btn_notification()">
         <ion-badge class="todaybadge" *ngIf="count && count != 0" color="accent"
           >{{ count }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button> -->
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'android'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'twodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'ios'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'iostwodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
         >
         <ion-icon name="notifications-outline"></ion-icon>
       </ion-button>
@@ -42,137 +74,6 @@
   <div class="home-box" #myElementRef>
     <div *ngIf="!nomachinesfound">
       <form [formGroup]="dashboardForm">
-        <!-- Commented by Suresh on 19.12.2022 as said by Previna to comment edit option and old ui 
-      <ion-row *ngIf="welcomemessage!=''">
-        <ion-card class="bg-yellow card-height">
-          <span class="productionstatustitle">{{welcomemessage}}</span>
-        </ion-card>
-      </ion-row>
-
-        <div class="checkcard">
-        <ion-grid *ngIf="(millstartdatetime || millstopdatetime) != ''">
-          <ion-row class="ion-text-center">
-            <ion-col
-              size="6"
-              no-padding
-              (click)="changemillstartstopdatetime(millstartdatetime)"
-            >
-              <ion-icon
-                name="business-sharp"
-                [style.color]="'#008000'"
-                size="large"
-              ></ion-icon>
-              <p class="mdfont">
-                {{ 'SUPERVISORDASHBOARD.millstartdatetime' | translate}}
-              </p>
-              <p
-                class="mdfont"
-                style="color: #008000"
-                *ngIf="millstartdatetime != ''"
-              >
-                {{millstartdatetime}}
-              </p>
-              <p
-                class="mdfont"
-                style="color: #008000"
-                *ngIf="millstartdatetime == ''"
-              >
-                -
-              </p>
-            </ion-col>
-
-            <ion-col
-              size="6"
-              no-padding
-              (click)="changemillstartstopdatetime(millstopdatetime)"
-            >
-              <ion-icon
-                name="business-sharp"
-                [style.color]="'#cb4335'"
-                size="large"
-              ></ion-icon>
-              <p class="mdfont">
-                {{ 'SUPERVISORDASHBOARD.millstopdatetime' | translate}}
-              </p>
-              <p
-                class="mdfont"
-                style="color: #cb4335"
-                *ngIf="millstopdatetime != ''"
-              >
-                {{millstopdatetime}}
-              </p>
-              <p
-                class="mdfont"
-                style="color: #cb4335"
-                *ngIf="millstopdatetime == ''"
-              >
-                -
-              </p>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-
-        <ion-row *ngIf="!isDisabled">
-          <ion-col>
-            <button
-              type="submit"
-              class="btn"
-              [ngClass]="{'btn-productionstart' : selectedlanguage == 'English', 'btn-productionstart-malay' : selectedlanguage == 'Malay'}"
-              *ngIf="productionflag == '0'"
-              (click)="confirmProduction(productionflag)"
-            >
-              {{ 'SUPERVISORDASHBOARD.startproduction' | translate}}
-            </button>
-            <button
-              type="submit"
-              class="btn"
-              [ngClass]="{'btn-productionstop' : selectedlanguage == 'English', 'btn-productionstop-malay' : selectedlanguage == 'Malay'}"
-              *ngIf="productionflag == '1'"
-              (click)="confirmProduction(productionflag)"
-            >
-              {{ 'SUPERVISORDASHBOARD.stopproduction' | translate}}
-            </button>
-          </ion-col>
-
-          <ion-col>
-            <button
-              type="submit"
-              [disabled]="isDisabled"
-              class="btn"
-              [ngClass]="{'btn-breakdown' : selectedlanguage == 'English', 'btn-breakdown-malay' : selectedlanguage == 'Malay'}"
-              (click)="breakdownalert()"
-            >
-              {{ 'SUPERVISORDASHBOARD.breakdown' | translate}}
-            </button>
-          </ion-col>
-        </ion-row>
-
-        <ion-row *ngIf="isDisabled">
-          <ion-col style="display: flex; justify-content: center">
-            <button
-              type="submit"
-              class="btn"
-              [ngClass]="{'btn-productionstart' : selectedlanguage == 'English', 'btn-productionstart-malay' : selectedlanguage == 'Malay'}"
-              style="width: 250px"
-              *ngIf="productionflag == '0'"
-              (click)="confirmProduction(productionflag)"
-            >
-              {{ 'SUPERVISORDASHBOARD.startproduction' | translate}}
-            </button>
-            <button
-              type="submit"
-              class="btn"
-              [ngClass]="{'btn-productionstop' : selectedlanguage == 'English', 'btn-productionstop-malay' : selectedlanguage == 'Malay'}"
-              *ngIf="productionflag == '1'"
-              style="width: 250px"
-              (click)="confirmProduction(productionflag)"
-            >
-              {{ 'SUPERVISORDASHBOARD.stopproduction' | translate}}
-            </button>
-          </ion-col>
-        </ion-row>
-      </div> -->
-
         <div class="titleheader" *ngIf="productionflag!=''">
           <div class="col">
             <div class="title text-uppercase">
@@ -186,7 +87,7 @@
             <ion-col style="display: grid; justify-content: center">
               <div
                 class="productionstatustitleheader"
-                [style.backgroundColor]="getBackGroundColor(productionflag)"
+                [style.backgroundColor]="getMillBackGroundColor(productionflag)"
               >
                 <div class="productionstatustitle text-uppercase">
                   {{txt_millproductionstatus}}
@@ -243,6 +144,17 @@
                 -
               </p>
 
+              <div
+                style="margin: 10px 0px 10px 0px"
+                *ngIf="breakdownreason != ''"
+              >
+                <p class="mdfont">
+                  {{ 'MAINTENANCEDASHBOARD.breakdownreason' | translate}}
+                </p>
+
+                <p class="mdfont" style="color: #cb4335">{{breakdownreason}}</p>
+              </div>
+
               <div>
                 <button
                   type="button"
@@ -256,7 +168,7 @@
           </ion-row>
         </div>
 
-        <div class="titleheader" style="margin-top: 10px">
+        <div class="titleheader" style="margin-top: 20px">
           <div class="col">
             <div class="title text-uppercase">
               {{ 'GENERALBUTTON.actions' | translate}}
@@ -327,7 +239,7 @@
         </div>
 
         <div
-          style="padding: 0px 6px 0px 6px; margin-top: 10px"
+          style="padding: 0px 6px 0px 6px; margin-top: 20px"
           *ngIf="!previoushistoryuienable && productionflag !=''"
         >
           <select
@@ -348,7 +260,7 @@
         </div>
 
         <!-- Stations and Machines -->
-        <div *ngIf="uienable" style="margin-top: 10px">
+        <div *ngIf="uienable && !pleasewaitflag" style="margin-top: 10px">
           <div *ngFor="let station of stationsArr; let i=index">
             <div class="titleheader">
               <div class="col">
@@ -362,6 +274,7 @@
 
             <div class="stationcard">
               <ion-row
+                *ngIf="productionflag !='' && productionflag != '0'"
                 class="vertical-align-content"
                 style="padding-right: 5px"
               >
@@ -409,7 +322,7 @@
                       <ion-col
                         class="vertical-align-content"
                         size="9"
-                        [style.background-color]="getBackGroundColor(eachitem.machinestatus)"
+                        [style.background-color]="getBackGroundColor(eachitem.machinestatus, eachitem.breakdownstatus)"
                         [style.color]="getStatusTextColor(eachitem.machinestatus)"
                       >
                         <div class="h7">{{eachitem.machinename}}</div>
@@ -419,127 +332,111 @@
                 </ion-col>
               </ion-row>
 
+              <!-- FFB Cages - Start -->
+              <div *ngIf="ffbcageenableflag == 1">
+                <ng-container *ngFor="let machines of station.machines">
+                  <ng-container *ngFor="let eachitem of machines">
+                    <div
+                      style="margin: 0px 5px 0px 5px"
+                      *ngIf="eachitem.ffbcageflag==1"
+                    >
+                      <div class="ffbcageheader">
+                        <ion-row>
+                          <ion-col
+                            size="8"
+                            style="
+                              padding: 0px;
+                              margin: 0px;
+                              align-self: center;
+                            "
+                          >
+                            <div class="ffbcagetitle text-uppercase">
+                              {{eachitem.machinename}}
+                            </div>
+                          </ion-col>
+
+                          <ion-col
+                            size="4"
+                            style="padding: 0px; margin: 0px; align-self: right"
+                          >
+                            <button
+                              type="button"
+                              class="btn btn-update float-right"
+                              (click)="ffbcagemodalcontroller()"
+                            >
+                              {{ 'GENERALBUTTON.updatebutton' | translate}}
+                            </button>
+                          </ion-col>
+                        </ion-row>
+                      </div>
+                      <table
+                        style="width: 100%; height: 100%"
+                        class="table table-bordered"
+                      >
+                        <tr>
+                          <th style="padding: 4px !important">
+                            <span class="tablefont"
+                              >{{ 'FFBCAGES.total' | translate}}</span
+                            >
+                          </th>
+
+                          <th colspan="1" style="padding: 4px !important">
+                            <span class="tablefont"
+                              >{{ 'FFBCAGES.inuse' | translate}}</span
+                            >
+                          </th>
+
+                          <th colspan="1" style="padding: 4px !important">
+                            <span class="tablefont"
+                              >{{ 'FFBCAGES.notinuse' | translate}}</span
+                            >
+                          </th>
+
+                          <th colspan="1" style="padding: 4px !important">
+                            <span class="tablefont"
+                              >{{ 'FFBCAGES.underrepair' | translate}}</span
+                            >
+                          </th>
+                        </tr>
+
+                        <tr>
+                          <td scope="row">
+                            <b>{{ffbtotal}}</b>
+                          </td>
+
+                          <td scope="row">
+                            <b>{{ffbinuse}}</b>
+                          </td>
+
+                          <td scope="row">
+                            <b>{{ffbnotinuse}}</b>
+                          </td>
+                          <td scope="row">
+                            <b>{{ffbunderrepair}}</b>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+              <!-- FFB Cages - End -->
+
               <!-- <hr *ngIf="(i+1)<stationsArr.length" /> -->
             </div>
           </div>
         </div>
         <!-- End -->
 
-        <!-- Production History -->
-        <div *ngIf="previoushistoryuienable" style="margin: 10px 5px 5px 5px">
-          <!-- <div>
-          <img
-            class="productionimg"
-            src="../../../assets/img/productionbanner.png"
-          />
-        </div> -->
-
-          <div *ngFor="let general of previoushistoryArr">
-            <div
-              style="
-                background-color: black;
-                text-align: center;
-                font-weight: bold;
-                font-size: 15px;
-                padding: 10px;
-                border-radius: 5px;
-                margin: 0px 0px 10px 0px;
-                color: #ff9f0c;
-              "
-            >
-              {{ 'SUPERVISORDASHBOARD.productionhistory' | translate}}
-            </div>
-
-            <table
-              style="width: 100%; height: 100%"
-              class="table table-bordered"
-            >
-              <tr *ngIf="general.totalrunninghours != ''">
-                <td width="50%">
-                  <span
-                    ><b
-                      >{{ 'SUPERVISORDASHBOARD.totalrunninghours' |
-                      translate}}</b
-                    ></span
-                  >
-                </td>
-
-                <td width="50%">{{general.totalrunninghours}}</td>
-              </tr>
-            </table>
-
-            <!-- Breakdown Machines - Start -->
-            <div
-              style="
-                margin: 0px 0px 10px 0px;
-                text-align: center;
-                font-weight: bold;
-                font-size: 14px;
-                color: white;
-              "
-            >
-              {{ 'SUPERVISORDASHBOARD.breakdownmachines' | translate}}
-            </div>
-
-            <div *ngFor="let machine of general.breakdownmachines">
-              <table
-                style="width: 100%; height: 100%"
-                class="table table-bordered"
-              >
-                <tr
-                  style="
-                    text-align: center;
-                    background-color: #585858;
-                    color: #ffffff;
-                  "
-                >
-                  <th>
-                    <span class="mdfont">{{machine.machinename}}</span>
-                  </th>
-                </tr>
-
-                <tr>
-                  <td>
-                    <b>{{ 'SUPERVISORDASHBOARD.reason' | translate}}:</b>
-                    {{machine.reasons}}
-                  </td>
-                </tr>
-
-                <tr>
-                  <td>
-                    <b>{{ 'SUPERVISORDASHBOARD.runninghour' | translate}}:</b>
-                    {{machine.runninghours}}
-                  </td>
-                </tr>
-
-                <tr
-                  style="
-                    text-align: right;
-                    background-color: #ededed;
-                    color: #000000;
-                  "
-                >
-                  <td>
-                    <b>{{ 'SUPERVISORDASHBOARD.stoppedby' | translate}}:</b>
-                    {{machine.stoppedby}}
-                  </td>
-                </tr>
-              </table>
-            </div>
-
-            <div
-              style="text-align: center"
-              *ngIf="general.breakdownmachines.length <= 0"
-            >
-              <img
-                class="nobreakdownimg"
-                src="../../../assets/img/nobreakdown.png"
-              />
-            </div>
-            <!-- Breakdown Machines - End -->
+        <div class="pleasewait" *ngIf="pleasewaitflag">
+          <div style="width: 100%; text-align: center">
+            <img
+              style="width: 80px; height: 80px"
+              src="../../../assets/img/loading.gif"
+            />
           </div>
+          {{ 'NORECORDSFOUND.loading' | translate}}
         </div>
-        <!-- End -->
       </form>
     </div>
   </div>

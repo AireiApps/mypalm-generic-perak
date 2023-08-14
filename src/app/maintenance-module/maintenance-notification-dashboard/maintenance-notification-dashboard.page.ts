@@ -33,8 +33,8 @@ import { AppVersion } from "@ionic-native/app-version/ngx";
 import { TranslateService } from "@ngx-translate/core";
 import { LanguageService } from "src/app/services/language-service/language.service";
 // Modal Pages - Start
-import { WebviewWeeklyreportPage } from "src/app/maintenance-module/webview-weeklyreport/webview-weeklyreport.page";
 import { SchedulePage } from "src/app/maintenance-module/schedule/schedule.page";
+import { SummaryPopupPage } from "src/app/summary-module/summary-popup/summary-popup.page";
 // Modal Pages - End
 
 @Component({
@@ -60,11 +60,61 @@ export class MaintenanceNotificationDashboardPage implements OnInit {
   uienable = false;
   pleasewaitflag = false;
 
-  stationsArr = [];
   txt_millproductionstatus = "";
-  txt_millstartstop = "";
+  txt_millstart = "";
+  txt_millstop = "";
+
   millstartdatetime = "";
   millstopdatetime = "";
+
+  gradingArr = [
+    {
+      title: "Average Hard Bunches (%)",
+      position: "1",
+      value: "10",
+    },
+    {
+      title: "Average Ripeness (%)",
+      position: "2",
+      value: "20",
+    },
+    {
+      title: "Overall FFB Quality",
+      position: "3",
+      value: "Good",
+    },
+  ];
+
+  oillossArr = [
+    {
+      title: "Average Oil Loss",
+      position: "1",
+      value: "3.2",
+    },
+    {
+      title: "Oil Loss Prediction",
+      position: "2",
+      value: "Low",
+    },
+  ];
+
+  maintenancesummaryArr = [
+    {
+      title: "Created",
+      position: "1",
+      value: "10",
+    },
+    {
+      title: "InProgress",
+      position: "2",
+      value: "4",
+    },
+    {
+      title: "Completed",
+      position: "3",
+      value: "6",
+    },
+  ];
 
   constructor(
     private languageService: LanguageService,
@@ -114,6 +164,8 @@ export class MaintenanceNotificationDashboardPage implements OnInit {
     this.getLiveNotification();
 
     this.forceUpdated();
+
+    this.getSummaryPopUpFlag();
 
     this.getProductionStatus();
   }
@@ -201,11 +253,9 @@ export class MaintenanceNotificationDashboardPage implements OnInit {
             this.market
               .open(appId)
               .then((response) => {
+                /*this.notifi.logoutupdateNotification();
                 localStorage.clear();
-                this.notifi.logoutupdateNotification();
-                this.router.navigate(["/login"], { replaceUrl: true });
-
-                console.debug(response);
+                this.router.navigate(["/login"], { replaceUrl: true });*/
               })
               .catch((error) => {
                 console.warn(error);
@@ -262,6 +312,64 @@ export class MaintenanceNotificationDashboardPage implements OnInit {
     return color;
   }
 
+  getGradingBackGroundColor(position) {
+    let color;
+
+    if (position == "1") {
+      color = "linear-gradient(315deg, #00a4e4 0%, #fefefe 74%)";
+    } else if (position == "2") {
+      color = "linear-gradient(315deg, #ffd166 0%, #fffcf9 74%)";
+    } else {
+      color = "linear-gradient(315deg, #82bc23 0%, #ffffff 74%)";
+    }
+
+    return color;
+  }
+
+  getOillossBackGroundColor(position) {
+    let color;
+
+    if (position == "1") {
+      color = "linear-gradient(315deg, #c797eb 0%, #f0ecfc 74%)";
+    } else if (position == "2") {
+      color = "linear-gradient(315deg, #f47b7b 0%, #ffffff 74%)";
+    } else {
+      color = "linear-gradient(315deg, #82bc23 0%, #ffffff 74%)";
+    }
+
+    return color;
+  }
+
+  getMaintenanceSummaryBackGroundColor(position) {
+    let color;
+
+    if (position == "1") {
+      color = "linear-gradient(315deg, #f47b7b 0%, #ffffff 74%)";
+    } else if (position == "2") {
+      color = "linear-gradient(315deg, #ffd166 0%, #fffcf9 74%)";
+    } else {
+      color = "linear-gradient(315deg, #82bc23 0%, #ffffff 74%)";
+    }
+
+    return color;
+  }
+
+  geBorderColor(position) {
+    let color;
+
+    /*if (position == "1") {
+      color = "#00a4e4";
+    } else if (position == "2") {
+      color = "#ffd166";
+    } else {
+      color = "#82bc23";
+    }*/
+
+    color = "#ffffff";
+
+    return color;
+  }
+
   refreshRecords() {
     this.getProductionStatus();
   }
@@ -292,16 +400,24 @@ export class MaintenanceNotificationDashboardPage implements OnInit {
             "MAINTENANCEDASHBOARD.inoperation"
           );
 
-          this.txt_millstartstop = this.translate.instant(
+          this.txt_millstart = this.translate.instant(
             "MAINTENANCEDASHBOARD.millstartdatetime"
           );
-        } else if (this.productionflag == "0") {
+
+          this.txt_millstop = this.translate.instant(
+            "MAINTENANCEDASHBOARD.millstopdatetime"
+          );
+        } else {
           if (this.breakdownflag == 1) {
             this.txt_millproductionstatus = this.translate.instant(
               "MAINTENANCEDASHBOARD.stoppedoperation"
             );
 
-            this.txt_millstartstop = this.translate.instant(
+            this.txt_millstart = this.translate.instant(
+              "MAINTENANCEDASHBOARD.millstartdatetime"
+            );
+
+            this.txt_millstop = this.translate.instant(
               "MAINTENANCEDASHBOARD.stoppedbreakdownoperation"
             );
           } else {
@@ -309,24 +425,29 @@ export class MaintenanceNotificationDashboardPage implements OnInit {
               "MAINTENANCEDASHBOARD.stoppedoperation"
             );
 
-            this.txt_millstartstop = this.translate.instant(
+            this.txt_millstart = this.translate.instant(
+              "MAINTENANCEDASHBOARD.millstartdatetime"
+            );
+
+            this.txt_millstop = this.translate.instant(
               "MAINTENANCEDASHBOARD.millstopdatetime"
             );
           }
         }
 
-        this.getStations();
+        this.pleasewaitflag = false;
       } else {
         this.productionflag = "0";
 
         this.millstartdatetime = "";
         this.millstopdatetime = "";
-        this.getStations();
+
+        this.pleasewaitflag = false;
       }
     });
   }
 
-  getStations() {
+  getSummaryPopUpFlag() {
     let req = {
       userid: this.userlist.userId,
       departmentid: this.userlist.dept_id,
@@ -335,42 +456,75 @@ export class MaintenanceNotificationDashboardPage implements OnInit {
       language: this.languageService.selected,
     };
 
-    this.service.getProductionStaions(req).then((result) => {
+    this.commonservice.getsummarypopupflag(req).then((result) => {
       var resultdata: any;
       resultdata = result;
       if (resultdata.httpcode == 200) {
-        this.stationsArr = resultdata.data;
+        if (resultdata.popup == 1) {
+          //this.callmodalcontroller("SUMMARY");
 
-        if (this.productionflag == "1") {
-          this.uienable = true;
-        } else {
-          this.uienable = true;
+          if (localStorage.getItem("scheduledpopup") == "") {
+            localStorage.setItem(
+              "scheduledpopup",
+              moment(new Date().toISOString()).format("YYYY-MM-DD HH:00:00")
+            );
+
+            this.callmodalcontroller("SUMMARY");
+          } else {
+            let startdate = new Date(localStorage.getItem("scheduledpopup"));
+            let enddate = new Date();
+
+            if (
+              this.diff_hours(enddate, startdate) >= resultdata.popupduration
+            ) {
+              localStorage.setItem(
+                "scheduledpopup",
+                moment(new Date().toISOString()).format("YYYY-MM-DD HH:00:00")
+              );
+
+              this.callmodalcontroller("SUMMARY");
+            }
+          }
         }
-
-        this.pleasewaitflag = false;
-      } else {
-        this.stationsArr = [];
-
-        this.uienable = false;
-
-        this.pleasewaitflag = false;
       }
     });
   }
 
-  async callmodalcontroller() {
-    const modal = await this.modalController.create({
-      component: SchedulePage,
-    });
+  async callmodalcontroller(value) {
+    if (value == "") {
+      const modal = await this.modalController.create({
+        component: SchedulePage,
+      });
 
-    modal.onDidDismiss().then((data) => {
-      this.ionViewDidEnter();
-    });
+      modal.onDidDismiss().then((data) => {
+        this.ionViewDidEnter();
+      });
 
-    return await modal.present();
+      return await modal.present();
+    } else {
+      const modal = await this.modalController.create({
+        component: SummaryPopupPage,
+        showBackdrop: true,
+        backdropDismiss: false,
+        cssClass: ["acknowledgement-modal"],
+      });
+
+      modal.onDidDismiss().then((data) => {
+        //this.ionViewDidEnter();
+      });
+
+      return await modal.present();
+    }
   }
 
   nl2br(text: string) {
     return text.replace(new RegExp("\r?\n", "g"), "<br />");
+  }
+
+  diff_hours(dt2, dt1) {
+    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= 60 * 60;
+
+    return Math.floor(diff);
   }
 }

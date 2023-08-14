@@ -400,7 +400,7 @@
       <!-- Maintenance Type -->
       <div *ngIf="maintenancetypeFlag">
         <ion-row class="form-row">
-          <ion-col size="5">
+          <ion-col size="6">
             <div class="title">
               {{ 'MAINTENANCEACKNOWLEDGEMODAL.maintenancetype' | translate}}
             </div>
@@ -412,13 +412,14 @@
             </div>
           </ion-col>
 
-          <ion-col size="6.5">
+          <ion-col size="5.5">
             <ion-select
+              mode="md"
               [interfaceOptions]="maintenancetypeOptions"
               formControlName="select_maintenancetype"
               multiple="false"
               [okText]="'GENERALBUTTON.okay' | translate"
-              [cancelText]="'GENERALBUTTON.dismiss' | translate"
+              [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
               class="selectdropdown"
               placeholder="{{ 'MAINTENANCEACKNOWLEDGEMODAL.select' | translate}}"
               (ionChange)="maintenancetypehandleChange($event)"
@@ -438,7 +439,7 @@
       <!-- Part Defect -->
       <div *ngIf="partFlag">
         <ion-row class="form-row">
-          <ion-col size="5">
+          <ion-col size="6">
             <div class="title" *ngIf="module == 'CM'">
               {{ 'MAINTENANCEACKNOWLEDGEMODAL.partdefect' | translate}}
             </div>
@@ -456,7 +457,7 @@
             </div>
           </ion-col>
 
-          <ion-col size="6.5">
+          <ion-col size="5.5">
             <ion-button
               class="optionbutton"
               (click)="callmodalcontroller('PartDefect', '')"
@@ -563,7 +564,7 @@
       <div *ngIf="damageFlag">
         <div *ngIf="getdamageid==''">
           <ion-row class="form-row">
-            <ion-col size="5">
+            <ion-col size="6">
               <div class="title">
                 {{ 'MAINTENANCEACKNOWLEDGEMODAL.damagetype' | translate}}
               </div>
@@ -575,7 +576,7 @@
               </div>
             </ion-col>
 
-            <ion-col size="6.5">
+            <ion-col size="5.5">
               <ion-button class="optionbutton" (click)="openDamageType()"
                 >{{ 'MAINTENANCEACKNOWLEDGEMODAL.select' | translate}}
               </ion-button>
@@ -605,11 +606,12 @@
           <div class="hl4line" *ngIf="damagetypevalue!=''"></div>
 
           <ion-select
+            mode="md"
             [interfaceOptions]="damagetypeOptions"
             formControlName="select_damagetype"
             multiple="true"
             [okText]="'GENERALBUTTON.okay' | translate"
-            [cancelText]="'GENERALBUTTON.dismiss' | translate"
+            [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
             class="ionicselect"
             (ionChange)="damagehandleChange($event)"
             #damagetypeSelect
@@ -682,11 +684,12 @@
           <div class="hl4line" *ngIf="getdamageid!=''"></div>
 
           <ion-select
+            mode="md"
             [interfaceOptions]="damagetypeOptions"
             formControlName="select_damagetype"
             multiple="true"
             [okText]="'GENERALBUTTON.okay' | translate"
-            [cancelText]="'GENERALBUTTON.dismiss' | translate"
+            [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
             class="ionicselect"
             (ionChange)="damagehandleChange($event)"
             #damagetypeSelect
@@ -703,7 +706,7 @@
       <!-- Breakdown Causes -->
       <div *ngIf="breakdowncausesFlag">
         <ion-row class="form-row">
-          <ion-col size="5">
+          <ion-col size="6">
             <div class="title">
               {{ 'MAINTENANCEACKNOWLEDGEMODAL.breakdowncauses' | translate}}
             </div>
@@ -715,7 +718,7 @@
             </div>
           </ion-col>
 
-          <ion-col size="6.5">
+          <ion-col size="5.5">
             <ion-button class="optionbutton" (click)="openBreakdownCauses()"
               >{{ 'MAINTENANCEACKNOWLEDGEMODAL.select' | translate}}
             </ion-button>
@@ -745,11 +748,12 @@
         <div class="hl4line" *ngIf="breakdowncausesvalue!=''"></div>
 
         <ion-select
+          mode="md"
           [interfaceOptions]="breakdowncausesOptions"
           formControlName="select_breakdowncauses"
           multiple="true"
           [okText]="'GENERALBUTTON.okay' | translate"
-          [cancelText]="'GENERALBUTTON.dismiss' | translate"
+          [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
           class="ionicselect"
           (ionChange)="breakdowncauseshandleChange($event)"
           #breakdowncausesSelect

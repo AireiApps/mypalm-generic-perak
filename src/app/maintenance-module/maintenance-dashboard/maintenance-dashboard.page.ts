@@ -8,6 +8,7 @@ import {
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AIREIService } from "src/app/api/api.service";
+import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import {
   AlertController,
   Platform,
@@ -26,10 +27,10 @@ import { AuthGuardService } from "src/app/services/authguard/auth-guard.service"
 const { PushNotifications } = Plugins;
 
 // Modal Pages - Start
-import { WebviewWeeklyreportPage } from "src/app/maintenance-module/webview-weeklyreport/webview-weeklyreport.page";
 import { SchedulePage } from "src/app/maintenance-module/schedule/schedule.page";
 import { MaintenanceNotificationModalPage } from "src/app/maintenance-module/maintenance-notification-modal/maintenance-notification-modal.page";
 import { MaintenanceEngineerNotificationModalPage } from "src/app/maintenance-module/maintenance-engineer-notification-modal/maintenance-engineer-notification-modal.page";
+import { SummaryPopupPage } from "src/app/summary-module/summary-popup/summary-popup.page";
 // Modal Pages - End
 
 import { TranslateService } from "@ngx-translate/core";
@@ -58,6 +59,10 @@ export class MaintenanceDashboardPage implements OnInit {
   mill_name = this.nl2br(this.userlist.millname);
 
   count = 0;
+
+  pendingcount = 0;
+  pendingcountlength = 0;
+
   productionflag = "0";
   breakdownflag = 0;
 
@@ -72,6 +77,15 @@ export class MaintenanceDashboardPage implements OnInit {
   txt_millstartstop = "";
   millstartdatetime = "";
   millstopdatetime = "";
+
+  breakdownreason = "";
+
+  // FFB Cages
+  ffbcageenableflag = 0;
+  ffbtotal = "";
+  ffbinuse = "";
+  ffbnotinuse = "";
+  ffbunderrepair = "";
 
   filterTerm: string;
   getplatform: string;
@@ -93,17 +107,32 @@ export class MaintenanceDashboardPage implements OnInit {
     private appVersion: AppVersion,
     private market: Market,
     private service: SupervisorService,
-    private animationCtrl: AnimationController
+    private animationCtrl: AnimationController,
+    private screenOrientation: ScreenOrientation
   ) {
-    if (this.platform.is("android")) {
-      this.getplatform = "android";
-    } else if (this.platform.is("ios")) {
-      this.getplatform = "ios";
-    }
-
     this.dashboardForm = this.fb.group({
       select_station: new FormControl(""),
       //txt_millproductionstatus: new FormControl("", Validators.required),
+    });
+
+    this.activatedroute.params.subscribe((val) => {
+      if (this.platform.is("android")) {
+        this.getplatform = "android";
+      } else if (this.platform.is("ios")) {
+        this.getplatform = "ios";
+      }
+
+      this.screenOrientation.lock(
+        this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY
+      );
+
+      if (
+        this.userdesignation == 2 ||
+        this.userdesignation == 4 ||
+        this.userdesignation == 6
+      ) {
+        this.getMaintenancePendingCount();
+      }
     });
   }
 
@@ -118,6 +147,13 @@ export class MaintenanceDashboardPage implements OnInit {
       .fromTo("opacity", "0", "1");
 
     animation.play();
+
+    PushNotifications.removeAllDeliveredNotifications();
+
+    this.count = parseInt(localStorage.getItem("badge_count"));
+    this.notifi.updateNotification();
+    this.updateNotification();
+    this.getLiveNotification();
   }
 
   ionViewDidEnter() {
@@ -131,6 +167,10 @@ export class MaintenanceDashboardPage implements OnInit {
     this.forceUpdated();
 
     //this.dashboardForm.controls.select_station.setValue("");
+
+    if (this.userdesignation == 2) {
+      this.getSummaryPopUpFlag();
+    }
 
     this.getStation();
   }
@@ -200,11 +240,9 @@ export class MaintenanceDashboardPage implements OnInit {
             this.market
               .open(appId)
               .then((response) => {
+                /*this.notifi.logoutupdateNotification();
                 localStorage.clear();
-                this.notifi.logoutupdateNotification();
-                this.router.navigate(["/login"], { replaceUrl: true });
-
-                console.debug(response);
+                this.router.navigate(["/login"], { replaceUrl: true });*/
               })
               .catch((error) => {
                 console.warn(error);
@@ -217,9 +255,13 @@ export class MaintenanceDashboardPage implements OnInit {
   }
 
   btn_notification() {
-    localStorage.setItem("badge_count", "0");
-    this.router.navigate(["/segregatenotification"]);
-    //this.router.navigate(["/segregation-notification"]);
+    if (this.userdesignation != 4 && this.userdesignation != 6) {
+      localStorage.setItem("badge_count", "0");
+      this.router.navigate(["/segregatenotification"]);
+    }
+
+    /*localStorage.setItem("badge_count", "0");
+    this.router.navigate(["/segregatenotification"]);*/
   }
 
   updateNotification() {
@@ -238,6 +280,18 @@ export class MaintenanceDashboardPage implements OnInit {
       (notification: PushNotification) => {
         // alert('Push received: ' + JSON.stringify(notification));
         this.updateNotification();
+
+        if (
+          this.userdesignation == 2 ||
+          this.userdesignation == 4 ||
+          this.userdesignation == 6
+        ) {
+          this.getMaintenancePendingCount();
+
+          setTimeout(() => {
+            this.getStation();
+          }, 2000);
+        }
       }
     );
   }
@@ -257,17 +311,35 @@ export class MaintenanceDashboardPage implements OnInit {
     return color;
   }
 
-  getBackGroundColor(status) {
+  getBackGroundColor(machinestatus, breakdownstatus) {
     let color;
 
-    if (status == "1") {
-      color = "#008000";
-      //color ="linear-gradient(to right top, #74d217, #8bd847, #a0dd69, #b4e388, #c6e8a5, #c8e8a8, #cae9ac, #cce9af, #bfe599, #b1e183, #a2dd6c, #93d954)";
-    } else if (status == "0") {
+    /*if (status == "0") {
       color = "#CB4335";
       //color ="linear-gradient(to right top, #ea2c2c, #ef4444, #f3585a, #f56b6f, #f67d83, #f68086, #f5838a, #f5868d, #f57c81, #f57175, #f46769, #f35c5c)";
-    } else {
+    } else if (status == "1") {
+      color = "#008000";
+      //color ="linear-gradient(to right top, #74d217, #8bd847, #a0dd69, #b4e388, #c6e8a5, #c8e8a8, #cae9ac, #cce9af, #bfe599, #b1e183, #a2dd6c, #93d954)";
+    } else if (status == "2") {
       color = "#ff9f0c";
+    } else {
+      color = "#4d4d4d";
+    }*/
+
+    if (machinestatus == "0") {
+      if (breakdownstatus == "0") {
+        color = "#4d4d4d";
+      } else {
+        color = "#CB4335";
+      }
+      //color ="linear-gradient(to right top, #ea2c2c, #ef4444, #f3585a, #f56b6f, #f67d83, #f68086, #f5838a, #f5868d, #f57c81, #f57175, #f46769, #f35c5c)";
+    } else if (machinestatus == "1") {
+      color = "#008000";
+      //color ="linear-gradient(to right top, #74d217, #8bd847, #a0dd69, #b4e388, #c6e8a5, #c8e8a8, #cae9ac, #cce9af, #bfe599, #b1e183, #a2dd6c, #93d954)";
+    } else if (machinestatus == "2") {
+      color = "#ff9f0c";
+    } else {
+      color = "#4d4d4d";
     }
 
     return color;
@@ -307,6 +379,75 @@ export class MaintenanceDashboardPage implements OnInit {
     }
   }
 
+  getMaintenancePendingCount() {
+    let req = {
+      userid: this.userlist.userId,
+      departmentid: this.userlist.dept_id,
+      design_id: this.userlist.desigId,
+      millcode: this.userlist.millcode,
+      language: this.languageService.selected,
+    };
+
+    console.log(req);
+
+    this.commonservice.getmaintenancependingcount(req).then((result) => {
+      var resultdata: any;
+      resultdata = result;
+      if (resultdata.httpcode == 200) {
+        this.pendingcount = resultdata.count;
+        this.pendingcountlength = this.pendingcount.toString().length;
+      } else {
+        this.pendingcount = 0;
+        this.pendingcountlength = this.pendingcount.toString().length;
+      }
+    });
+  }
+
+  getSummaryPopUpFlag() {
+    let req = {
+      userid: this.userlist.userId,
+      departmentid: this.userlist.dept_id,
+      designationid: this.userlist.desigId,
+      millcode: this.userlist.millcode,
+      language: this.languageService.selected,
+    };
+
+    console.log(req);
+
+    this.commonservice.getsummarypopupflag(req).then((result) => {
+      var resultdata: any;
+      resultdata = result;
+      if (resultdata.httpcode == 200) {
+        if (resultdata.popup == "1") {
+          //console.log(localStorage.getItem("scheduledpopup"));
+
+          if (localStorage.getItem("scheduledpopup") == "") {
+            localStorage.setItem(
+              "scheduledpopup",
+              moment(new Date().toISOString()).format("YYYY-MM-DD HH:00:00")
+            );
+
+            this.callmodalcontroller("SUMMARY");
+          } else {
+            let startdate = new Date(localStorage.getItem("scheduledpopup"));
+            let enddate = new Date();
+
+            if (
+              this.diff_hours(enddate, startdate) >= resultdata.popupduration
+            ) {
+              localStorage.setItem(
+                "scheduledpopup",
+                moment(new Date().toISOString()).format("YYYY-MM-DD HH:00:00")
+              );
+
+              this.callmodalcontroller("SUMMARY");
+            }
+          }
+        }
+      }
+    });
+  }
+
   getStation() {
     const req = {
       user_id: this.userlist.userId,
@@ -329,7 +470,7 @@ export class MaintenanceDashboardPage implements OnInit {
 
         this.nomachinesfound = true;
 
-        //this.getProductionStatus();
+        this.getProductionStatus();
       }
     });
   }
@@ -354,6 +495,13 @@ export class MaintenanceDashboardPage implements OnInit {
 
         this.millstartdatetime = resultdata.data[0].mill_start_date;
         this.millstopdatetime = resultdata.data[0].mill_stop_date;
+        this.breakdownreason = resultdata.data[0].breakdownreason;
+
+        this.ffbcageenableflag = resultdata.data[0].ffbcageenableflag;
+        this.ffbtotal = resultdata.data[0].ffbcagestotal;
+        this.ffbinuse = resultdata.data[0].ffbcagesinuse;
+        this.ffbnotinuse = resultdata.data[0].ffbcagesnotinuse;
+        this.ffbunderrepair = resultdata.data[0].ffbcagesunderrepair;
 
         if (this.productionflag == "1") {
           this.txt_millproductionstatus = this.translate.instant(
@@ -443,6 +591,10 @@ export class MaintenanceDashboardPage implements OnInit {
     });
   }
 
+  btn_QRcodescanner() {
+    this.router.navigate(["/qrcodescanner"]);
+  }
+
   btn_Action(value) {
     this.router.navigate([
       "/maintenance-dashboard-correctivemaintenance",
@@ -461,58 +613,82 @@ export class MaintenanceDashboardPage implements OnInit {
       });
 
       return await modal.present();
-    } else if (value == "WEEKLYREPORT") {
+    } else if (value == "SUMMARY") {
       const modal = await this.modalController.create({
-        component: WebviewWeeklyreportPage,
+        component: SummaryPopupPage,
+        showBackdrop: true,
+        backdropDismiss: false,
+        cssClass: ["acknowledgement-modal"],
       });
 
       modal.onDidDismiss().then((data) => {
-        this.ionViewDidEnter();
+        //this.ionViewDidEnter();
       });
 
       return await modal.present();
     } else {
-      if (this.userdesignation == 2) {
-        const modal = await this.modalController.create({
-          component: MaintenanceEngineerNotificationModalPage,
-          componentProps: {
-            item: JSON.stringify(value),
-            module: "MAINTENANCE",
-          },
-          showBackdrop: true,
-          backdropDismiss: false,
-          cssClass: ["notification-modal"],
-        });
+      if (value.breakdownstatus == 0) {
+        if (this.userdesignation == 2) {
+          const modal = await this.modalController.create({
+            component: MaintenanceEngineerNotificationModalPage,
+            componentProps: {
+              item: JSON.stringify(value),
+              module: "MAINTENANCE",
+            },
+            showBackdrop: true,
+            backdropDismiss: false,
+            cssClass: ["acknowledgement-modal"],
+          });
 
-        modal.onDidDismiss().then((data) => {
-          //this.dashboardForm.controls.select_station.setValue("");
+          modal.onDidDismiss().then((modaldata) => {
+            //this.dashboardForm.controls.select_station.setValue("");
 
-          this.ionViewDidEnter();
-        });
+            let getdata = modaldata["data"]["item"];
 
-        return await modal.present();
-      } else if (this.userdesignation != 2) {
-        const modal = await this.modalController.create({
-          component: MaintenanceNotificationModalPage,
-          componentProps: {
-            item: JSON.stringify(value),
-            module: "MAINTENANCE",
-          },
-          showBackdrop: true,
-          backdropDismiss: false,
-          cssClass: ["notification-modal"],
-        });
+            if (getdata != "") {
+              this.ionViewDidEnter();
+            }
+          });
 
-        modal.onDidDismiss().then((data) => {
-          this.ionViewDidEnter();
-        });
+          return await modal.present();
+        } else if (this.userdesignation != 2) {
+          const modal = await this.modalController.create({
+            component: MaintenanceNotificationModalPage,
+            componentProps: {
+              item: JSON.stringify(value),
+              module: "MAINTENANCE",
+            },
+            showBackdrop: true,
+            backdropDismiss: false,
+            cssClass: ["acknowledgement-modal"],
+          });
 
-        return await modal.present();
+          modal.onDidDismiss().then((modaldata) => {
+            let getdata = modaldata["data"]["item"];
+
+            if (getdata != "") {
+              this.ionViewDidEnter();
+            }
+          });
+
+          return await modal.present();
+        }
+      } else {
+        this.commonservice.presentToast(
+          this.translate.instant("SUPERVISORDASHBOARD.machineisunderbreakdown")
+        );
       }
     }
   }
 
   nl2br(text: string) {
     return text.replace(new RegExp("\r?\n", "g"), "<br />");
+  }
+
+  diff_hours(dt2, dt1) {
+    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= 60 * 60;
+
+    return Math.floor(diff);
   }
 }

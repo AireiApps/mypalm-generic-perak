@@ -25,7 +25,6 @@ const routes: Routes = [
     loadChildren: () =>
       import("./more/more.module").then((m) => m.MorePageModule),
   },
-
   {
     path: "forgotpassword",
     loadChildren: () =>
@@ -78,13 +77,6 @@ const routes: Routes = [
       import("./signup/signup.module").then((m) => m.SignupPageModule),
   },
   {
-    path: "maintenance-notification-list",
-    loadChildren: () =>
-      import(
-        "./maintenance-module/maintenance-notification-list/maintenance-notification-list.module"
-      ).then((m) => m.MaintenanceNotificationListPageModule),
-  },
-  {
     path: "maintenance-notification-view",
     loadChildren: () =>
       import(
@@ -120,41 +112,7 @@ const routes: Routes = [
         "./maintenance-module/maintenance-notification-dashboard/maintenance-notification-dashboard.module"
       ).then((m) => m.MaintenanceNotificationDashboardPageModule),
   },
-  {
-    path: "millperformanceonedashboard",
-    loadChildren: () =>
-      import(
-        "./maintenance-module/millperformanceonedashboard/millperformanceonedashboard.module"
-      ).then((m) => m.MillperformanceonedashboardPageModule),
-  },
-  {
-    path: "millperformancetwodashboard",
-    loadChildren: () =>
-      import(
-        "./maintenance-module/millperformancetwodashboard/millperformancetwodashboard.module"
-      ).then((m) => m.MillperformancetwodashboardPageModule),
-  },
-  {
-    path: "production-notification-list",
-    loadChildren: () =>
-      import(
-        "./supervisor-module/production-notification-list/production-notification-list.module"
-      ).then((m) => m.ProductionNotificationListPageModule),
-  },
-  {
-    path: "production-notification-new",
-    loadChildren: () =>
-      import(
-        "./supervisor-module/production-notification-new/production-notification-new.module"
-      ).then((m) => m.ProductionNotificationNewPageModule),
-  },
-  {
-    path: "production-notification-view",
-    loadChildren: () =>
-      import(
-        "./supervisor-module/production-notification-view/production-notification-view.module"
-      ).then((m) => m.ProductionNotificationViewPageModule),
-  },
+
   {
     path: "production-home",
     loadChildren: () =>
@@ -182,13 +140,6 @@ const routes: Routes = [
       import(
         "./maintenance-module/maintenance-materialsearch/maintenance-materialsearch.module"
       ).then((m) => m.MaintenanceMaterialsearchPageModule),
-  },
-  {
-    path: "production-dashboard",
-    loadChildren: () =>
-      import(
-        "./supervisor-module/production-dashboard/production-dashboard.module"
-      ).then((m) => m.ProductionDashboardPageModule),
   },
   {
     path: "production-hourlyreporting",
@@ -225,13 +176,7 @@ const routes: Routes = [
         "./supervisor-module/production-hourlysterilizerstationsave/production-hourlysterilizerstationsave.module"
       ).then((m) => m.ProductionHourlysterilizerstationsavePageModule),
   },
-  {
-    path: "report-machineryrunninghour",
-    loadChildren: () =>
-      import(
-        "./supervisor-module/report-machineryrunninghour/report-machineryrunninghour.module"
-      ).then((m) => m.ReportMachineryrunninghourPageModule),
-  },
+
   {
     path: "report-pressstationhourlyperformance",
     loadChildren: () =>
@@ -246,13 +191,7 @@ const routes: Routes = [
         "./supervisor-module/report-sterilizerhourlyperformance/report-sterilizerhourlyperformance.module"
       ).then((m) => m.ReportSterilizerhourlyperformancePageModule),
   },
-  {
-    path: "manager-productiondashboard",
-    loadChildren: () =>
-      import(
-        "./maintenance-module/manager-productiondashboard/manager-productiondashboard.module"
-      ).then((m) => m.ManagerProductiondashboardPageModule),
-  },
+
   {
     path: "maintenance-production-report",
     loadChildren: () =>
@@ -266,41 +205,6 @@ const routes: Routes = [
       import(
         "./maintenance-module/lab-oillossesreport/lab-oillossesreport.module"
       ).then((m) => m.LabOillossesreportPageModule),
-  },
-  {
-    path: "lab-oillosses",
-    loadChildren: () =>
-      import("./maintenance-module/lab-oillosses/lab-oillosses.module").then(
-        (m) => m.LabOillossesPageModule
-      ),
-  },
-  {
-    path: "lab-oillosses-list",
-    loadChildren: () =>
-      import(
-        "./maintenance-module/lab-oillosses-list/lab-oillosses-list.module"
-      ).then((m) => m.LabOillossesListPageModule),
-  },
-  {
-    path: "lab-oillosses-edit",
-    loadChildren: () =>
-      import(
-        "./maintenance-module/lab-oillosses-edit/lab-oillosses-edit.module"
-      ).then((m) => m.LabOillossesEditPageModule),
-  },
-  {
-    path: "dashboard-predictionanalysis",
-    loadChildren: () =>
-      import(
-        "./dashboard-predictionanalysis/dashboard-predictionanalysis.module"
-      ).then((m) => m.DashboardPredictionanalysisPageModule),
-  },
-  {
-    path: "dashboard-forecasting",
-    loadChildren: () =>
-      import("./dashboard-forecasting/dashboard-forecasting.module").then(
-        (m) => m.DashboardForecastingPageModule
-      ),
   },
   {
     path: "production-sterilizerpress-dashboard",
@@ -350,48 +254,6 @@ const routes: Routes = [
       import(
         "./segregatenotificatepages/segregatenotificationalerts/segregatenotificationalerts.module"
       ).then((m) => m.SegregatenotificationalertsPageModule),
-  },
-  {
-    path: "date-modal",
-    loadChildren: () =>
-      import("./supervisor-module/date-modal/date-modal.module").then(
-        (m) => m.DateModalPageModule
-      ),
-  },
-  {
-    path: "logsheet-pressstation",
-    loadChildren: () =>
-      import(
-        "./supervisor-module/logsheet-pressstation/logsheet-pressstation.module"
-      ).then((m) => m.LogsheetPressstationPageModule),
-  },
-  {
-    path: "logsheet-pressstation-edit",
-    loadChildren: () =>
-      import(
-        "./supervisor-module/logsheet-pressstation-edit/logsheet-pressstation-edit.module"
-      ).then((m) => m.LogsheetPressstationEditPageModule),
-  },
-  {
-    path: "logsheet-sterilizerstation",
-    loadChildren: () =>
-      import(
-        "./supervisor-module/logsheet-sterilizerstation/logsheet-sterilizerstation.module"
-      ).then((m) => m.LogsheetSterilizerstationPageModule),
-  },
-  {
-    path: "logsheet-sterilizerstation-edit",
-    loadChildren: () =>
-      import(
-        "./supervisor-module/logsheet-sterilizerstation-edit/logsheet-sterilizerstation-edit.module"
-      ).then((m) => m.LogsheetSterilizerstationEditPageModule),
-  },
-  {
-    path: "dashboard-oilloss-predictionanalysis",
-    loadChildren: () =>
-      import(
-        "./dashboard-oilloss-predictionanalysis/dashboard-oilloss-predictionanalysis.module"
-      ).then((m) => m.DashboardOillossPredictionanalysisPageModule),
   },
   {
     path: "production-hourlpressingstation-alert",
@@ -456,13 +318,6 @@ const routes: Routes = [
       import("./maintenance-module/report-pvrpv/report-pvrpv.module").then(
         (m) => m.ReportPvrpvPageModule
       ),
-  },
-  {
-    path: "maintenance-notification-materialrequest",
-    loadChildren: () =>
-      import(
-        "./maintenance-module/maintenance-notification-materialrequest/maintenance-notification-materialrequest.module"
-      ).then((m) => m.MaintenanceNotificationMaterialrequestPageModule),
   },
   {
     path: "production-dashboard-dynamic",
@@ -584,13 +439,7 @@ const routes: Routes = [
         "./maintenance-module/maintenance-engineer-notification-modal/maintenance-engineer-notification-modal.module"
       ).then((m) => m.MaintenanceEngineerNotificationModalPageModule),
   },
-  {
-    path: "webview-maintenance-dashboard",
-    loadChildren: () =>
-      import(
-        "./maintenance-module/webview-maintenance-dashboard/webview-maintenance-dashboard.module"
-      ).then((m) => m.WebviewMaintenanceDashboardPageModule),
-  },
+
   {
     path: "webview-production-dashboard",
     loadChildren: () =>
@@ -598,13 +447,7 @@ const routes: Routes = [
         "./supervisor-module/webview-production-dashboard/webview-production-dashboard.module"
       ).then((m) => m.WebviewProductionDashboardPageModule),
   },
-  {
-    path: "webview-weeklyreport",
-    loadChildren: () =>
-      import(
-        "./maintenance-module/webview-weeklyreport/webview-weeklyreport.module"
-      ).then((m) => m.WebviewWeeklyreportPageModule),
-  },
+
   {
     path: "maintenance-foreman-notification-list",
     loadChildren: () =>
@@ -667,6 +510,270 @@ const routes: Routes = [
       import("./chatbot-screen/chatbot-screen.module").then(
         (m) => m.ChatbotScreenPageModule
       ),
+  },
+  {
+    path: "splash",
+    loadChildren: () =>
+      import("./splash/splash.module").then((m) => m.SplashPageModule),
+  },
+  {
+    path: "summary-popup",
+    loadChildren: () =>
+      import("./summary-module/summary-popup/summary-popup.module").then(
+        (m) => m.SummaryPopupPageModule
+      ),
+  },
+  {
+    path: "production-oilloss",
+    loadChildren: () =>
+      import(
+        "./supervisor-module/production-oilloss/production-oilloss/production-oilloss.module"
+      ).then((m) => m.ProductionOillossPageModule),
+  },
+  {
+    path: "alertacknowledge",
+    loadChildren: () =>
+      import(
+        "./segregatenotificatepages/alertacknowledge/alertacknowledge.module"
+      ).then((m) => m.AlertacknowledgePageModule),
+  },
+  {
+    path: "tabalertacknowledge",
+    loadChildren: () =>
+      import(
+        "./segregatenotificatepages/tabalertacknowledge/tabalertacknowledge.module"
+      ).then((m) => m.TabalertacknowledgePageModule),
+  },
+  {
+    path: "tab-pressstation-report",
+    loadChildren: () =>
+      import(
+        "./supervisor-module/tab-pressstation-report/tab-pressstation-report.module"
+      ).then((m) => m.TabPressstationReportPageModule),
+  },
+  {
+    path: "tab-sterilizerstation-report",
+    loadChildren: () =>
+      import(
+        "./supervisor-module/tab-sterilizerstation-report/tab-sterilizerstation-report.module"
+      ).then((m) => m.TabSterilizerstationReportPageModule),
+  },
+  {
+    path: "lab-oillosses-dashboard",
+    loadChildren: () =>
+      import(
+        "./maintenance-module/lab-oillosses-dashboard/lab-oillosses-dashboard.module"
+      ).then((m) => m.LabOillossesDashboardPageModule),
+  },
+  {
+    path: "tab-laboilloss-report",
+    loadChildren: () =>
+      import(
+        "./maintenance-module/tab-laboilloss-report/tab-laboilloss-report.module"
+      ).then((m) => m.TabLaboillossReportPageModule),
+  },
+  {
+    path: "tab-correctivemaintenance",
+    loadChildren: () =>
+      import(
+        "./maintenance-module/tab-correctivemaintenance/tab-correctivemaintenance.module"
+      ).then((m) => m.TabCorrectivemaintenancePageModule),
+  },
+  {
+    path: "tab-preventivemaintenance",
+    loadChildren: () =>
+      import(
+        "./maintenance-module/tab-preventivemaintenance/tab-preventivemaintenance.module"
+      ).then((m) => m.TabPreventivemaintenancePageModule),
+  },
+  {
+    path: "notification-form-history-modal",
+    loadChildren: () =>
+      import(
+        "./scanner-module/notification-form-history-modal/notification-form-history-modal.module"
+      ).then((m) => m.NotificationFormHistoryModalPageModule),
+  },
+  {
+    path: "notification-timeline-modal",
+    loadChildren: () =>
+      import(
+        "./scanner-module/notification-timeline-modal/notification-timeline-modal.module"
+      ).then((m) => m.NotificationTimelineModalPageModule),
+  },
+  {
+    path: "maintenance-foreman-pv-close",
+    loadChildren: () =>
+      import(
+        "./maintenance-module/maintenance-foreman-pv-close/maintenance-foreman-pv-close.module"
+      ).then((m) => m.MaintenanceForemanPvClosePageModule),
+  },
+  {
+    path: "popup-notification-view",
+    loadChildren: () =>
+      import(
+        "./supervisor-module/popup-notification-view/popup-notification-view.module"
+      ).then((m) => m.PopupNotificationViewPageModule),
+  },
+  {
+    path: "notification-list-modal",
+    loadChildren: () =>
+      import(
+        "./scanner-module/notification-list-modal/notification-list-modal.module"
+      ).then((m) => m.NotificationListModalPageModule),
+  },
+  {
+    path: "popup-maintenance-notification-view",
+    loadChildren: () =>
+      import(
+        "./maintenance-module/popup-maintenance-notification-view/popup-maintenance-notification-view.module"
+      ).then((m) => m.PopupMaintenanceNotificationViewPageModule),
+  },
+  {
+    path: "oillosses-new",
+    loadChildren: () =>
+      import("./supervisor-module/oillosses-new/oillosses-new.module").then(
+        (m) => m.OillossesNewPageModule
+      ),
+  },
+  {
+    path: "tab-oillosses-new",
+    loadChildren: () =>
+      import(
+        "./supervisor-module/tab-oillosses-new/tab-oillosses-new.module"
+      ).then((m) => m.TabOillossesNewPageModule),
+  },
+  {
+    path: "dooropenlater-update-modal",
+    loadChildren: () =>
+      import(
+        "./supervisor-module/dooropenlater-update-modal/dooropenlater-update-modal.module"
+      ).then((m) => m.DooropenlaterUpdateModalPageModule),
+  },
+  {
+    path: "owner-production",
+    loadChildren: () =>
+      import("./owner-module/owner-production/owner-production.module").then(
+        (m) => m.OwnerProductionPageModule
+      ),
+  },
+  {
+    path: "owner-dashboard",
+    loadChildren: () =>
+      import("./owner-module/owner-dashboard/owner-dashboard.module").then(
+        (m) => m.OwnerDashboardPageModule
+      ),
+  },
+  {
+    path: "owner-oilloss",
+    loadChildren: () =>
+      import("./owner-module/owner-oilloss/owner-oilloss.module").then(
+        (m) => m.OwnerOillossPageModule
+      ),
+  },
+  {
+    path: "owner-maintenance",
+    loadChildren: () =>
+      import("./owner-module/owner-maintenance/owner-maintenance.module").then(
+        (m) => m.OwnerMaintenancePageModule
+      ),
+  },
+  {
+    path: "owner-reports",
+    loadChildren: () =>
+      import("./owner-module/owner-reports/owner-reports.module").then(
+        (m) => m.OwnerReportsPageModule
+      ),
+  },
+  {
+    path: "oilloss-recomandation-modal",
+    loadChildren: () =>
+      import(
+        "./owner-module/oilloss-recomandation-modal/oilloss-recomandation-modal.module"
+      ).then((m) => m.OillossRecomandationModalPageModule),
+  },
+  {
+    path: "oilloss-report-popup",
+    loadChildren: () =>
+      import(
+        "./owner-module/oilloss-report-popup/oilloss-report-popup.module"
+      ).then((m) => m.OillossReportPopupPageModule),
+  },
+  {
+    path: "oilloss-reports",
+    loadChildren: () =>
+      import("./owner-module/oilloss-reports/oilloss-reports.module").then(
+        (m) => m.OillossReportsPageModule
+      ),
+  },
+  {
+    path: "owner-statistics",
+    loadChildren: () =>
+      import("./owner-module/owner-statistics/owner-statistics.module").then(
+        (m) => m.OwnerStatisticsPageModule
+      ),
+  },
+  {
+    path: "production-ffbcage",
+    loadChildren: () =>
+      import(
+        "./supervisor-module/production-ffbcage/production-ffbcage.module"
+      ).then((m) => m.ProductionFfbcagePageModule),
+  },
+  {
+    path: "ropm-multipart-save",
+    loadChildren: () =>
+      import(
+        "./maintenance-module/ropm-multipart-save/ropm-multipart-save.module"
+      ).then((m) => m.RopmMultipartSavePageModule),
+  },
+  {
+    path: "repm-multipart-save",
+    loadChildren: () =>
+      import(
+        "./maintenance-module/repm-multipart-save/repm-multipart-save.module"
+      ).then((m) => m.RepmMultipartSavePageModule),
+  },
+  {
+    path: "tab-preventivemaintenance-new",
+    loadChildren: () =>
+      import(
+        "./maintenance-module/tab-preventivemaintenance-new/tab-preventivemaintenance-new.module"
+      ).then((m) => m.TabPreventivemaintenanceNewPageModule),
+  },
+  {
+    path: "owner-machinerunninghours",
+    loadChildren: () =>
+      import(
+        "./owner-module/owner-machinerunninghours/owner-machinerunninghours.module"
+      ).then((m) => m.OwnerMachinerunninghoursPageModule),
+  },
+  {
+    path: "owner-oillosses-dataanalysis",
+    loadChildren: () =>
+      import(
+        "./owner-module/owner-oillosses-dataanalysis/owner-oillosses-dataanalysis.module"
+      ).then((m) => m.OwnerOillossesDataanalysisPageModule),
+  },
+  {
+    path: "cm-multipart-save",
+    loadChildren: () =>
+      import(
+        "./maintenance-module/cm-multipart-save/cm-multipart-save.module"
+      ).then((m) => m.CmMultipartSavePageModule),
+  },
+  {
+    path: "popup-replacement-extendedhours-update",
+    loadChildren: () =>
+      import(
+        "./maintenance-module/popup-replacement-extendedhours-update/popup-replacement-extendedhours-update.module"
+      ).then((m) => m.PopupReplacementExtendedhoursUpdatePageModule),
+  },
+  {
+    path: "update-extendedrunninghours",
+    loadChildren: () =>
+      import(
+        "./segregatenotificatepages/update-extendedrunninghours/update-extendedrunninghours.module"
+      ).then((m) => m.UpdateExtendedrunninghoursPageModule),
   },
 ];
 

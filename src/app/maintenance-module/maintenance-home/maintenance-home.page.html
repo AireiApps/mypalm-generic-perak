@@ -8,7 +8,19 @@
     </ion-avatar>
     <ion-title color="light" [innerHTML]="mill_name"></ion-title>
 
-    <ion-buttons slot="primary">
+    <ion-buttons slot="primary" *ngIf="userdesignation!=1">
+      <ion-button class="bg-light-color" (click)="btn_notification()">
+        <ion-badge *ngIf="count && count != 0" color="accent">
+          {{ count }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons
+      slot="primary"
+      *ngIf="userdesignation==1 && oillossnotificationflag==1"
+    >
       <ion-button class="bg-light-color" (click)="btn_notification()">
         <ion-badge *ngIf="count && count != 0" color="accent">
           {{ count }}</ion-badge
@@ -412,43 +424,6 @@
 
   <!-- Fitter (1006) -->
   <div *ngIf="userdepartmentid==7 && userdesignation==5" #myElementRef>
-    <form [formGroup]="maintenancehomeForm">
-      <div class="form-row" style="margin-top: 10px">
-        <div class="h7 text-white" style="text-align: center">
-          <b>{{ 'MAINTENANCEHOME.date' | translate}} </b>
-        </div>
-        <div class="col">
-          <!-- <ion-datetime
-            mode="ios"
-            class="h7 form-control"
-            formControlName="pickdate"
-            display-format="DD-MM-YYYY"
-          ></ion-datetime> -->
-
-          <input
-            type="text"
-            class="h7 form-control readonly"
-            formControlName="pickdate"
-            placeholder="DD-MM-YYYY"
-            (click)="openDateTimePicker('FD')"
-            readonly
-          />
-        </div>
-        <div>
-          <button
-            type="button"
-            class="h7 btn btn-general btn-sm margin-5px float-right"
-            (click)="getRecords()"
-          >
-            <!-- <ion-icon name="filter"></ion-icon> -->
-            {{ 'GENERALBUTTON.getrecords' | translate}}
-          </button>
-        </div>
-      </div>
-
-      <hr />
-    </form>
-
     <ion-row style="background: none; height: 30px">
       <ion-col style="text-align: center; align-self: center">
         <span

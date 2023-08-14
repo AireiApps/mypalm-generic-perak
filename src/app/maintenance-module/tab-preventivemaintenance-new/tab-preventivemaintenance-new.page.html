@@ -1,0 +1,983 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-avatar slot="start">
+      <ion-img
+        class="toolbarimage"
+        src="../../../assets/img/logo.png"
+      ></ion-img>
+    </ion-avatar>
+    <ion-title mode="ios" color="light" [innerHTML]="mill_name"></ion-title>
+
+    <ion-buttons slot="primary">
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="(designationid != 2 && designationid != 4 && designationid != 6)"
+      >
+        <ion-badge class="todaybadge" *ngIf="count && count != 0" color="accent"
+          >{{ count }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'android' && (designationid == 2 || designationid == 4 || designationid == 6)"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'twodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'ios' && (designationid == 2 || designationid == 4 || designationid == 6)"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'iostwodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <div class="firstsegment">
+      <ion-segment
+        mode="md"
+        (ionChange)="segmentChanged($event)"
+        [(ngModel)]="tabs_segment"
+      >
+        <ion-segment-button value="Routine">
+          <ion-label text-wrap class="h7"
+            >{{ 'PREVENTIVEMAINTENANCE.routine' | translate}}</ion-label
+          >
+        </ion-segment-button>
+
+        <ion-segment-button value="Replacement">
+          <ion-label text-wrap class="h7"
+            >{{ 'PREVENTIVEMAINTENANCE.replacement' | translate}}</ion-label
+          >
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div [ngSwitch]="tabs_segment">
+    <div *ngSwitchCase="'Routine'">
+      <div class="secondsegment">
+        <ion-segment
+          mode="md"
+          (ionChange)="secondsegmentChanged($event)"
+          [(ngModel)]="secondtabs_segment"
+        >
+          <ion-segment-button value="New">
+            <ion-badge
+              class="badgecount badgeblink"
+              *ngIf="ropmnewrecords!=0 && designationid!=2"
+              >{{ropmnewrecords}}</ion-badge
+            >
+
+            <ion-label text-wrap class="h7" *ngIf="designationid!=2"
+              >{{ 'PREVENTIVEMAINTENANCE.new' | translate}}</ion-label
+            >
+
+            <ion-label text-wrap class="h7" *ngIf="designationid==2"
+              >{{ 'PREVENTIVEMAINTENANCE.new' | translate}}
+              ({{ropmnewrecords}})</ion-label
+            >
+          </ion-segment-button>
+
+          <ion-segment-button value="Pending">
+            <ion-badge
+              class="badgecount badgeblink"
+              *ngIf="ropmpendingrecords!=0"
+              >{{ropmpendingrecords}}</ion-badge
+            >
+
+            <ion-label text-wrap class="h7"
+              >{{ 'PREVENTIVEMAINTENANCE.pending' | translate}}</ion-label
+            >
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <div [ngSwitch]="secondtabs_segment">
+        <!-- Routing New -->
+        <div *ngSwitchCase="'New'">
+          <ion-searchbar
+            placeholder="{{'PREVENTIVEMAINTENANCE.searchrecords' | translate}}"
+            [(ngModel)]="ropmfilterTerm"
+            animated="true"
+            clearIcon="close"
+          ></ion-searchbar>
+
+          <div *ngIf="ropmnewnotificationlistArr.length>0">
+            <ion-card
+              class="ropmcard"
+              [style.backgroundColor]="getBackgroundColor(value.statusId)"
+              [style.borderColor]="geBorderColor('RoPM', value.statusId)"
+              *ngFor="let value of ropmnewnotificationlistArr | filter:ropmfilterTerm"
+            >
+              <ion-card-header
+                [style.backgroundColor]="geBorderColor('RoPM', value.statusId)"
+                [style.color]="getTextColor(value.statusId)"
+              >
+                <div class="form-row">
+                  <div class="col">
+                    <div class="h6" style="float: left">
+                      <b> {{value.notificationno}} - {{value.insDate}}</b>
+                    </div>
+                  </div>
+                </div>
+              </ion-card-header>
+
+              <ion-card-content>
+                <!-- <ion-row
+                  *ngIf="(value.notificationno!='' || value.insDate!='')"
+                >
+                  <ion-col>
+                    <p class="title-content">
+                      {{value.notificationno}} - {{value.insDate}}
+                    </p>
+                  </ion-col>
+                </ion-row> -->
+
+                <ion-row *ngIf="value.stationname!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.station' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.stationname}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.equipmentname!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.machine' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.equipmentname}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.partdefect!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.partname' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data" [innerHTML]="value.partdefect"></p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.problem!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.problem' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.problem}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.reportBy!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.reportedby' |
+                    translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.reportBy}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.statusname!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.status' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p
+                      class="statusdata"
+                      [style.color]="getStatusTextColor(value.statusId)"
+                    >
+                      {{ value.statusname }}
+                    </p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.reason!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.reason' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.reason}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.remarks!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.remarks' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.remarks}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row class="row-reverse">
+                  <button
+                    type="button"
+                    class="h7 btn btn-view btn-sm margin-5px"
+                    (click)="btn_NotificationView(value)"
+                  >
+                    <ion-icon
+                      class="icon"
+                      name="document-text-outline"
+                    ></ion-icon>
+                    <span class="icontext">
+                      {{ 'GENERALBUTTON.viewbutton' | translate}}</span
+                    >
+                  </button>
+
+                  <button
+                    type="button"
+                    class="h7 btn btn-accept btn-sm margin-5px"
+                    (click)="btn_NotificationAccept(value)"
+                    *ngIf="value.statusId == '1' && designationid != '2'"
+                  >
+                    <ion-icon class="icon" name="copy-outline"></ion-icon>
+                    <span class="icontext" *ngIf="value.iscompleted==0">
+                      {{ 'GENERALBUTTON.acceptbutton' | translate}}</span
+                    >
+                    <span class="icontext" *ngIf="value.iscompleted==1">
+                      {{ 'GENERALBUTTON.updatebutton' | translate}}</span
+                    >
+                  </button>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+          <ion-infinite-scroll
+            threshold="100px"
+            (ionInfinite)="ropmnewpagination($event)"
+            *ngIf="ropmnewnotificationlistArr.length>0"
+          >
+            <ion-infinite-scroll-content
+              class="loadmore"
+              loadingSpinner="bubbles"
+              loadingText="{{'NORECORDSFOUND.loadingmoredata' | translate}}"
+            >
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+
+          <div class="norecordfound" *ngIf="ropmnewnorecordflag">
+            {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+          </div>
+
+          <div class="pleasewait" *ngIf="pleasewaitflag">
+            <div style="width: 100%; text-align: center">
+              <img
+                style="width: 80px; height: 80px"
+                src="../../../assets/img/loading.gif"
+              />
+            </div>
+            {{ 'NORECORDSFOUND.loading' | translate}}
+          </div>
+        </div>
+
+        <!-- Routine Pending -->
+        <div *ngSwitchCase="'Pending'">
+          <ion-searchbar
+            placeholder="{{'PREVENTIVEMAINTENANCE.searchrecords' | translate}}"
+            [(ngModel)]="ropmfilterTerm"
+            animated="true"
+            clearIcon="close"
+          ></ion-searchbar>
+
+          <div *ngIf="ropmpendingnotificationlistArr.length>0">
+            <ion-card
+              class="ropmcard"
+              [style.backgroundColor]="getBackgroundColor(value.statusId)"
+              [style.borderColor]="geBorderColor('RoPM', value.statusId)"
+              *ngFor="let value of ropmpendingnotificationlistArr | filter:ropmfilterTerm"
+            >
+              <ion-card-header
+                [style.backgroundColor]="geBorderColor('RoPM', value.statusId)"
+                [style.color]="getTextColor(value.statusId)"
+              >
+                <div class="form-row">
+                  <div class="col">
+                    <div class="h6" style="float: left">
+                      <b> {{value.notificationno}} - {{value.insDate}}</b>
+                    </div>
+                  </div>
+                </div>
+              </ion-card-header>
+
+              <ion-card-content>
+                <!-- <ion-row
+                  *ngIf="(value.notificationno!='' || value.insDate!='')"
+                >
+                  <ion-col>
+                    <p class="title-content">
+                      {{value.notificationno}} - {{value.insDate}}
+                    </p>
+                  </ion-col>
+                </ion-row> -->
+
+                <ion-row *ngIf="value.stationname!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.station' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.stationname}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.equipmentname!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.machine' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.equipmentname}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.partdefect!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.partname' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <!-- <p class="data">{{value.partdefect}}</p> -->
+                    <p class="data" [innerHTML]="value.partdefect"></p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.problem!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.problem' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.problem}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.reportBy!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.reportedby' |
+                    translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.reportBy}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.statusname!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.status' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p
+                      class="statusdata"
+                      [style.color]="getStatusTextColor(value.statusId)"
+                    >
+                      {{ value.statusname }}
+                    </p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.reason!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.reason' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.reason}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.remarks!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.remarks' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.remarks}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row class="row-reverse">
+                  <button
+                    type="button"
+                    class="h7 btn btn-view btn-sm margin-5px"
+                    (click)="btn_NotificationView(value)"
+                  >
+                    <ion-icon
+                      class="icon"
+                      name="document-text-outline"
+                    ></ion-icon>
+                    <span class="icontext">
+                      {{ 'GENERALBUTTON.viewbutton' | translate}}</span
+                    >
+                  </button>
+
+                  <div *ngIf="designationid==2">
+                    <!-- <button
+                      type="button"
+                      class="h7 btn btn-close btn-sm margin-5px"
+                      *ngIf="(value.statusId=='2' || value.statusId=='10'|| value.statusId=='12')"
+                      disabled
+                    >
+                      <ion-icon
+                        class="icon"
+                        name="close-circle-outline"
+                      ></ion-icon>
+                      <span class="icontext">
+                        {{ 'GENERALBUTTON.closebutton' | translate}}</span
+                      >
+                    </button> -->
+
+                    <button
+                      type="button"
+                      class="h7 btn btn-acknowledge btn-sm margin-5px"
+                      *ngIf="(value.statusId!='2' && value.statusId!='10' && value.statusId!='12')"
+                      (click)="btn_Acknowledge(value)"
+                    >
+                      <ion-icon
+                        class="icon"
+                        name="checkmark-outline"
+                      ></ion-icon>
+                      <span class="icontext">
+                        {{ 'PREVENTIVEMAINTENANCE.buttonacknowledge' |
+                        translate}}</span
+                      >
+                    </button>
+                  </div>
+
+                  <div *ngIf="designationid!=2">
+                    <button
+                      type="button"
+                      class="h7 btn btn-close btn-sm margin-5px"
+                      (click)="btn_NotificationClose(value)"
+                    >
+                      <ion-icon
+                        class="icon"
+                        name="close-circle-outline"
+                      ></ion-icon>
+                      <span class="icontext">
+                        {{ 'GENERALBUTTON.closebutton' | translate}}</span
+                      >
+                    </button>
+                  </div>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+          <ion-infinite-scroll
+            threshold="100px"
+            (ionInfinite)="ropmpendingpagination($event)"
+            *ngIf="ropmpendingnotificationlistArr.length>0"
+          >
+            <ion-infinite-scroll-content
+              class="loadmore"
+              loadingSpinner="bubbles"
+              loadingText="{{'NORECORDSFOUND.loadingmoredata' | translate}}"
+            >
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+
+          <div class="norecordfound" *ngIf="ropmpendingnorecordflag">
+            {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+          </div>
+
+          <div class="pleasewait" *ngIf="pleasewaitflag">
+            <div style="width: 100%; text-align: center">
+              <img
+                style="width: 80px; height: 80px"
+                src="../../../assets/img/loading.gif"
+              />
+            </div>
+            {{ 'NORECORDSFOUND.loading' | translate}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'Replacement'">
+      <div class="secondsegment">
+        <ion-segment
+          mode="md"
+          (ionChange)="secondsegmentChanged($event)"
+          [(ngModel)]="secondtabs_segment"
+        >
+          <ion-segment-button value="New">
+            <ion-badge
+              class="badgecount badgeblink"
+              *ngIf="repmnewrecords!=0 && designationid!=2"
+              >{{repmnewrecords}}</ion-badge
+            >
+
+            <ion-label text-wrap class="h7" *ngIf="designationid!=2"
+              >{{ 'PREVENTIVEMAINTENANCE.new' | translate}}</ion-label
+            >
+
+            <ion-label text-wrap class="h7" *ngIf="designationid==2"
+              >{{ 'PREVENTIVEMAINTENANCE.new' | translate}}
+              ({{repmnewrecords}})</ion-label
+            >
+          </ion-segment-button>
+
+          <ion-segment-button value="Pending">
+            <ion-badge
+              class="badgecount badgeblink"
+              *ngIf="repmpendingrecords!=0"
+              >{{repmpendingrecords}}</ion-badge
+            >
+
+            <ion-label text-wrap class="h7"
+              >{{ 'PREVENTIVEMAINTENANCE.pending' | translate}}</ion-label
+            >
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <div [ngSwitch]="secondtabs_segment">
+        <!-- Replacement New -->
+        <div *ngSwitchCase="'New'">
+          <ion-searchbar
+            placeholder="{{'PREVENTIVEMAINTENANCE.searchrecords' | translate}}"
+            [(ngModel)]="repmfilterTerm"
+            animated="true"
+            clearIcon="close"
+          ></ion-searchbar>
+
+          <div *ngIf="repmnewnotificationlistArr.length>0">
+            <ion-card
+              class="repmcard"
+              [style.backgroundColor]="getBackgroundColor(value.statusId)"
+              [style.borderColor]="geBorderColor('RePM', value.statusId)"
+              *ngFor="let value of repmnewnotificationlistArr | filter:repmfilterTerm"
+            >
+              <ion-card-header
+                [style.backgroundColor]="geBorderColor('RePM',value.statusId)"
+                [style.color]="getTextColor(value.statusId)"
+              >
+                <div class="form-row">
+                  <div class="col">
+                    <div class="h6" style="float: left">
+                      <b> {{value.notificationno}} - {{value.insDate}}</b>
+                    </div>
+                  </div>
+                </div>
+              </ion-card-header>
+
+              <ion-card-content class="cardcontent">
+                <!-- <ion-row
+                  *ngIf="(value.notificationno!='' || value.insDate!='')"
+                >
+                  <ion-col>
+                    <p class="title-content">
+                      {{value.notificationno}} - {{value.insDate}}
+                    </p>
+                  </ion-col>
+                </ion-row> -->
+
+                <ion-row *ngIf="value.stationname!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.station' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.stationname}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.equipmentname!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.machine' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.equipmentname}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.partdefect!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.partname' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <!-- <p class="data">{{value.partdefect}}</p> -->
+                    <p class="data" [innerHTML]="value.partdefect"></p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.problem!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.problem' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.problem}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.reportBy!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.reportedby' |
+                    translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.reportBy}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.statusname!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.status' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p
+                      class="statusdata"
+                      [style.color]="getStatusTextColor(value.statusId)"
+                    >
+                      {{ value.statusname }}
+                    </p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.reason!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.reason' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.reason}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.remarks!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.remarks' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.remarks}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row class="row-reverse">
+                  <button
+                    type="button"
+                    class="h7 btn btn-view btn-sm margin-5px"
+                    (click)="btn_NotificationView(value)"
+                  >
+                    <ion-icon
+                      class="icon"
+                      name="document-text-outline"
+                    ></ion-icon>
+                    <span class="icontext">
+                      {{ 'GENERALBUTTON.viewbutton' | translate}}</span
+                    >
+                  </button>
+
+                  <button
+                    type="button"
+                    class="h7 btn btn-accept btn-sm margin-5px"
+                    (click)="btn_NotificationAccept(value)"
+                    *ngIf="value.statusId == '1' && designationid != '2'"
+                  >
+                    <ion-icon class="icon" name="copy-outline"></ion-icon>
+                    <span class="icontext" *ngIf="value.iscompleted==0">
+                      {{ 'GENERALBUTTON.acceptbutton' | translate}}</span
+                    >
+                    <span class="icontext" *ngIf="value.iscompleted==1">
+                      {{ 'GENERALBUTTON.updatebutton' | translate}}</span
+                    >
+                  </button>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+          <ion-infinite-scroll
+            threshold="100px"
+            (ionInfinite)="repmnewpagination($event)"
+            *ngIf="repmnewnotificationlistArr.length>0"
+          >
+            <ion-infinite-scroll-content
+              class="loadmore"
+              loadingSpinner="bubbles"
+              loadingText="{{'NORECORDSFOUND.loadingmoredata' | translate}}"
+            >
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+
+          <div class="norecordfound" *ngIf="repmnewnorecordflag">
+            {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+          </div>
+
+          <div class="pleasewait" *ngIf="pleasewaitflag">
+            <div style="width: 100%; text-align: center">
+              <img
+                style="width: 80px; height: 80px"
+                src="../../../assets/img/loading.gif"
+              />
+            </div>
+            {{ 'NORECORDSFOUND.loading' | translate}}
+          </div>
+        </div>
+
+        <!-- Routine Pending -->
+        <div *ngSwitchCase="'Pending'">
+          <ion-searchbar
+            placeholder="{{'PREVENTIVEMAINTENANCE.searchrecords' | translate}}"
+            [(ngModel)]="repmfilterTerm"
+            animated="true"
+            clearIcon="close"
+          ></ion-searchbar>
+
+          <div *ngIf="repmpendingnotificationlistArr.length>0">
+            <ion-card
+              class="repmcard"
+              [style.backgroundColor]="getBackgroundColor(value.statusId)"
+              [style.borderColor]="geBorderColor('RePM', value.statusId)"
+              *ngFor="let value of repmpendingnotificationlistArr | filter:repmfilterTerm"
+            >
+              <ion-card-header
+                [style.backgroundColor]="geBorderColor('RePM',value.statusId)"
+                [style.color]="getTextColor(value.statusId)"
+              >
+                <div class="form-row">
+                  <div class="col">
+                    <div class="h6" style="float: left">
+                      <b> {{value.notificationno}} - {{value.insDate}}</b>
+                    </div>
+                  </div>
+                </div>
+              </ion-card-header>
+
+              <ion-card-content class="cardcontent">
+                <!-- <ion-row
+                  *ngIf="(value.notificationno!='' || value.insDate!='')"
+                >
+                  <ion-col>
+                    <p class="title-content">
+                      {{value.notificationno}} - {{value.insDate}}
+                    </p>
+                  </ion-col>
+                </ion-row> -->
+
+                <ion-row *ngIf="value.stationname!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.station' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.stationname}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.equipmentname!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.machine' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.equipmentname}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.partdefect!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.partname' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <!-- <p class="data">{{value.partdefect}}</p> -->
+                    <p class="data" [innerHTML]="value.partdefect"></p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.problem!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.problem' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.problem}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.reportBy!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.reportedby' |
+                    translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.reportBy}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.statusname!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.status' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p
+                      class="statusdata"
+                      [style.color]="getStatusTextColor(value.statusId)"
+                    >
+                      {{ value.statusname }}
+                    </p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.reason!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.reason' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.reason}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row *ngIf="value.remarks!=''">
+                  <ion-col size="5"
+                    >{{ 'PREVENTIVEMAINTENANCE.remarks' | translate}}</ion-col
+                  >
+
+                  <ion-col size="7">
+                    <p class="data">{{value.remarks}}</p>
+                  </ion-col>
+                </ion-row>
+
+                <ion-row class="row-reverse">
+                  <button
+                    type="button"
+                    class="h7 btn btn-view btn-sm margin-5px"
+                    (click)="btn_NotificationView(value)"
+                  >
+                    <ion-icon
+                      class="icon"
+                      name="document-text-outline"
+                    ></ion-icon>
+                    <span class="icontext">
+                      {{ 'GENERALBUTTON.viewbutton' | translate}}</span
+                    >
+                  </button>
+
+                  <div *ngIf="designationid==2">
+                    <!-- <button
+                      type="button"
+                      class="h7 btn btn-close btn-sm margin-5px"
+                      *ngIf="(value.statusId=='2' || value.statusId=='10'|| value.statusId=='12')"
+                      disabled
+                    >
+                      <ion-icon
+                        class="icon"
+                        name="close-circle-outline"
+                      ></ion-icon>
+                      <span class="icontext">
+                        {{ 'GENERALBUTTON.closebutton' | translate}}</span
+                      >
+                    </button> -->
+
+                    <button
+                      type="button"
+                      class="h7 btn btn-acknowledge btn-sm margin-5px"
+                      *ngIf="(value.statusId!='2' && value.statusId!='10' && value.statusId!='12')"
+                      (click)="btn_Acknowledge(value)"
+                    >
+                      <ion-icon
+                        class="icon"
+                        name="checkmark-outline"
+                      ></ion-icon>
+                      <span class="icontext">
+                        {{ 'PREVENTIVEMAINTENANCE.buttonacknowledge' |
+                        translate}}</span
+                      >
+                    </button>
+                  </div>
+
+                  <div *ngIf="designationid!=2">
+                    <button
+                      type="button"
+                      class="h7 btn btn-close btn-sm margin-5px"
+                      (click)="btn_NotificationClose(value)"
+                    >
+                      <ion-icon
+                        class="icon"
+                        name="close-circle-outline"
+                      ></ion-icon>
+                      <span class="icontext">
+                        {{ 'GENERALBUTTON.closebutton' | translate}}</span
+                      >
+                    </button>
+                  </div>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </div>
+
+          <ion-infinite-scroll
+            threshold="100px"
+            (ionInfinite)="repmpendingpagination($event)"
+            *ngIf="repmpendingnotificationlistArr.length>0"
+          >
+            <ion-infinite-scroll-content
+              class="loadmore"
+              loadingSpinner="bubbles"
+              loadingText="{{'NORECORDSFOUND.loadingmoredata' | translate}}"
+            >
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+
+          <div class="norecordfound" *ngIf="repmpendingnorecordflag">
+            {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+          </div>
+
+          <div class="pleasewait" *ngIf="pleasewaitflag">
+            <div style="width: 100%; text-align: center">
+              <img
+                style="width: 80px; height: 80px"
+                src="../../../assets/img/loading.gif"
+              />
+            </div>
+            {{ 'NORECORDSFOUND.loading' | translate}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

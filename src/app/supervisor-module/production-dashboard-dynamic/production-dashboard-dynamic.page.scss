@@ -38,14 +38,26 @@
   background-size: cover;
 }
 
+.productionhistorycard {
+  box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  border-radius: 0px 0px 5px 5px;
+  background-color: #f7f7f7;
+  margin: 0px 5px 0px 5px;
+  padding: 5px;
+  background-image: url(../../../assets/img/palmbg.png);
+  background-size: cover;
+}
+
 .stationcard {
   background-color: #ffffff;
   border-radius: 0px 0px 5px 5px;
-  margin: 0px 5px 10px 5px;
+  margin: 0px 5px 15px 5px;
   background-image: url(../../../assets/img/machinebg.png);
   background-position: center center fixed;
   background-repeat: repeat;
   background-size: cover;
+  padding-bottom: 1px;
 }
 
 .card {
@@ -71,10 +83,6 @@
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   height: 100%;
-}
-
-.bg-light-color {
-  --color: var(--ion-color-lightorange);
 }
 
 div.item {
@@ -108,6 +116,21 @@ img {
 .machineimg {
   width: 40px;
   height: 40px;
+}
+
+.ffbcageheader {
+  border-radius: 5px 5px 0px 0px;
+  //border: 1px solid #ffffff;
+  text-align: center;
+  background-color: #ededed;
+  padding: 5px 0px 5px 0px;
+}
+
+.ffbcagetitle {
+  text-align: right;
+  font-size: 11px;
+  font-weight: bold;
+  color: #000000;
 }
 
 .titleheader {
@@ -149,6 +172,14 @@ img {
   border-color: #ff9f0c;
 }
 
+.btn-update {
+  margin-right: 5px;
+  font-size: 10px;
+  background-color: none;
+  border: 1px solid #ff9f0c;
+  color: #000000;
+}
+
 .lbl-head {
   padding-left: 10px;
   padding-top: 10px;
@@ -170,7 +201,8 @@ img {
 }
 
 .bg-light-color {
-  --color: var(--ion-color-light-contrast);
+  --color: var(--ion-color-white);
+  margin: 0px;
 }
 
 .lbl-head {
@@ -303,10 +335,62 @@ p {
   transition: 0.3s;
 }
 
+.twodigitbadgecount {
+  background: white;
+  padding: 5px;
+  color: red;
+  border-radius: 20px;
+  position: absolute;
+  right: -0.8rem;
+  opacity: 0.9;
+  font-size: 15px;
+  margin: 5px;
+}
+
+.iostwodigitbadgecount {
+  background: white;
+  padding: 5px;
+  color: red;
+  border-radius: 20px;
+  position: absolute;
+  right: -0.6rem;
+  opacity: 0.9;
+  font-size: 15px;
+  margin: 5px;
+}
+
+.onedigitbadgecount {
+  background: white;
+  padding: 5px;
+  color: red;
+  border-radius: 20px;
+  position: absolute;
+  right: -0.2rem;
+  opacity: 0.9;
+  font-size: 15px;
+  margin: 5px;
+}
+
+.badgeblink {
+  animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 table {
-  font-size: 11px;
-  line-height: 1.42857143;
-  color: #ffffff;
+  font-size: 10px;
+  line-height: 1;
+  padding: 5px;
   border-collapse: collapse;
 }
 
@@ -315,12 +399,19 @@ table {
   padding: 0.3rem !important;
 }
 
-.table_head {
-  background-color: #ededed;
-  font-weight: bold;
+.table td {
   text-align: center;
-  margin-top: 10;
-  vertical-align: middle;
+  color: #000000;
+}
+
+.table th {
+  text-align: center;
+  background-color: #000000;
+  color: #ff9f0c;
+}
+
+.tablefont {
+  font-size: 11px;
 }
 
 .mdfont {
@@ -338,8 +429,15 @@ ion-icon {
 hr {
   display: block;
   height: 1px;
-  border-top: 1px solid #c2c2c2;
+  border-top: 1px dashed #ffffff;
 }
+
+.hl4line {
+  border-top: 1px dashed #000000;
+  height: 0px !important;
+  margin: 15px 15px 0px 15px;
+}
+
 .backgroundimage {
   height: 100%;
   width: 100%;
@@ -422,6 +520,12 @@ hr {
   right: 0;
   top: 70%;
   transform: translateY(-50%);
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.pleasewait {
+  text-align: center;
   font-size: 14px;
   color: #ffffff;
 }

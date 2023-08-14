@@ -1,14 +1,53 @@
 <ion-header>
   <ion-toolbar class="bg-brown-color">
-    <ion-buttons slot="start">
-      <!-- <ion-back-button color="whitefav"></ion-back-button> -->
-      <ion-button color="whitefav" (click)="dismiss()">
-        <ion-icon name="arrow-back"></ion-icon>
+    <ion-avatar slot="start">
+      <ion-img
+        class="toolbarimage"
+        src="../../../assets/img/logo.png"
+      ></ion-img>
+    </ion-avatar>
+    <ion-title color="light" [innerHTML]="mill_name"></ion-title>
+
+    <ion-buttons slot="primary">
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="(designationid != 2 && designationid != 4 && designationid != 6)"
+      >
+        <ion-badge class="todaybadge" *ngIf="count && count != 0" color="accent"
+          >{{ count }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'android' && (designationid == 2 || designationid == 4 || designationid == 6)"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'twodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'ios' && (designationid == 2 || designationid == 4 || designationid == 6)"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'iostwodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title mode="ios" color="light"
-      >{{ 'SCHEDULING.title' | translate}}</ion-title
-    >
   </ion-toolbar>
 </ion-header>
 
@@ -16,7 +55,10 @@
   <!-- <iframe src="http://103.27.72.29/mms.airei.com.my1/index.php/Reports/MMS_logsheet_mobile"  style="width:100%;height:100%" scrolling="yes" ></iframe> -->
   <iframe
     [src]="weburl | safe"
-    style="width: 100%; height: 100%; border: none"
+    width="100%"
+    height="100%"
+    frameborder="0"
+    allowfullscreen
     scrolling="yes"
   ></iframe>
 </ion-content>

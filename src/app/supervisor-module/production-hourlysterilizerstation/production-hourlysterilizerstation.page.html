@@ -1,25 +1,47 @@
 <ion-header>
-  <ion-toolbar
-    class="bg-brown-color"
-    *ngIf="!fruittypeimageviewFlag && !p1imageviewFlag && !p3imageviewFlag"
-  >
-    <ion-title mode="ios" color="light"
+  <ion-toolbar class="bg-brown-color">
+    <ion-title
+      mode="ios"
+      color="light"
+      *ngIf="!bpvimageviewFlag && !peakimageviewFlag"
       >{{ 'HOURLYSTERILIZATIONSTATIONSAVE.title' | translate}}</ion-title
     >
-    <ion-buttons slot="start">
-      <ion-back-button color="whitefav"></ion-back-button>
-    </ion-buttons>
-  </ion-toolbar>
 
-  <ion-toolbar
-    class="bg-brown-color"
-    *ngIf="(fruittypeimageviewFlag || p1imageviewFlag || p3imageviewFlag)"
-  >
-    <ion-title color="light" style="text-align: center"
-      >{{imagetype}} {{ 'HOURLYSTERILIZATIONSTATIONSAVE.images' |
-      translate}}</ion-title
+    <ion-title
+      mode="ios"
+      *ngIf="(bpvimageviewFlag || peakimageviewFlag)"
+      color="light"
+      ><div class="toolbar-title" *ngIf="getlanguage=='English'">
+        {{imageviewtitle}} {{ 'HOURLYPRESSSTATIONSAVE.images' | translate}}
+      </div>
+
+      <div class="toolbar-title" *ngIf="getlanguage=='Malay'">
+        {{ 'HOURLYPRESSSTATIONSAVE.images' | translate}} {{imageviewtitle}}
+      </div>
+    </ion-title>
+
+    <ion-buttons
+      slot="start"
+      *ngIf="!viewFlag && !bpvimageviewFlag && !peakimageviewFlag"
     >
-    <ion-buttons slot="end">
+      <ion-button color="whitefav" (click)="cancel()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons
+      slot="start"
+      *ngIf="viewFlag && !bpvimageviewFlag && !peakimageviewFlag"
+    >
+      <ion-button color="whitefav" (click)="cancelconfirm()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons
+      slot="end"
+      *ngIf="!viewFlag && (bpvimageviewFlag || peakimageviewFlag)"
+    >
       <ion-button color="whitefav" (click)="imageviewcancel()">
         <ion-icon name="close"></ion-icon>
       </ion-button>
@@ -31,17 +53,17 @@
   <!-- Input Data to get from user -->
   <form
     [formGroup]="sterilizerstationForm"
-    *ngIf="!viewFlag && !fruittypeimageviewFlag && !p1imageviewFlag && !p3imageviewFlag"
+    *ngIf="!viewFlag && !bpvimageviewFlag && !peakimageviewFlag"
   >
     <div *ngIf="uienableflag">
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-light">
             {{ 'HOURLYSTERILIZATIONSTATIONSAVE.cycleno' | translate}}
             <sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="7">
+        <ion-col size="6">
           <input
             type="number"
             class="h7 form-control"
@@ -52,16 +74,17 @@
       </ion-row>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-light">
             {{ 'HOURLYSTERILIZATIONSTATIONSAVE.sterilizerno' | translate}}
             <sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="7">
+        <ion-col size="6">
           <select
             formControlName="select_sterilizer"
             class="h7 form-control text-dark"
+            (change)="onConditionSterilizer()"
           >
             <option value="" selected disabled hidden>
               {{ 'HOURLYSTERILIZATIONSTATIONSAVE.select' | translate}}
@@ -76,14 +99,14 @@
         </ion-col>
       </ion-row>
 
-      <ion-row class="form-row">
-        <ion-col size="5">
+      <!-- <ion-row class="form-row">
+        <ion-col size="6">
           <div class="h7 text-light">
             {{ 'HOURLYSTERILIZATIONSTATIONSAVE.fruittype' | translate}}
             <sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="7">
+        <ion-col size="6">
           <select
             formControlName="select_fruittype"
             class="h7 form-control text-dark"
@@ -99,73 +122,107 @@
             </option>
           </select>
         </ion-col>
-      </ion-row>
+      </ion-row> -->
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-light">
             {{ 'HOURLYSTERILIZATIONSTATIONSAVE.doorshuttime' | translate}}
             <sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="7">
-          <!-- <ion-datetime
+        <ion-col size="6">
+          <ion-datetime
             mode="ios"
             class="h7 form-control"
             formControlName="txt_doorshuttime"
             display-format="DD-MM-YYYY HH:mm"
+            [min]="doorshutminimumdate"
             placeholder="DD-MM-YYYY HH:mm"
+            cancelText="{{ 'GENERALBUTTON.cancelbutton' | translate}}"
+            doneText="{{ 'GENERALBUTTON.okay' | translate}}"
           >
-          </ion-datetime> -->
+          </ion-datetime>
 
-          <input
+          <!-- <input
             type="text"
             class="h7 form-control readonly"
             formControlName="txt_doorshuttime"
             placeholder="DD-MM-YYYY HH:mm"
             (click)="openDateTimePicker('DST')"
             readonly
-          />
+          /> -->
         </ion-col>
       </ion-row>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-light">
             {{ 'HOURLYSTERILIZATIONSTATIONSAVE.dooropentime' | translate}}
-            <sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="7">
-          <!-- <ion-datetime
+        <ion-col size="6">
+          <ion-datetime
             mode="ios"
             class="h7 form-control"
             formControlName="txt_dooropentime"
             display-format="DD-MM-YYYY HH:mm"
+            [min]="minimumdate"
             placeholder="DD-MM-YYYY HH:mm"
+            cancelText="{{ 'GENERALBUTTON.cancelbutton' | translate}}"
+            doneText="{{ 'GENERALBUTTON.okay' | translate}}"
+            (ionChange)="onDoorOpenTimeChange()"
           >
-          </ion-datetime> -->
+          </ion-datetime>
 
-          <input
+          <!-- <input
             type="text"
             class="h7 form-control readonly"
             formControlName="txt_dooropentime"
             placeholder="DD-MM-YYYY HH:mm"
             (click)="openDateTimePicker('DOT')"
             readonly
-          />
+          /> -->
         </ion-col>
       </ion-row>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-light">
-            {{ 'HOURLYSTERILIZATIONSTATIONSAVE.backpressure' | translate}}<br />{{
-            'HOURLYSTERILIZATIONSTATIONSAVE.receiver' | translate}}
-            <sup>*</sup>
+            {{ 'HOURLYSTERILIZATIONSTATIONSAVE.dooropenlater' | translate}}
           </div>
         </ion-col>
-        <ion-col size="5.5">
+        <ion-col size="6">
+          <ion-row class="dooropenlaterradiobutton">
+            <ion-col style="text-align: left; padding-left: 0px">
+              <div>
+                <input
+                  type="radio"
+                  id="radio_dooropenlater"
+                  name="radio_dooropenlater"
+                  value="Yes"
+                  (change)="onConditionDoorOpenChange('Yes')"
+                  [checked]="dooropenlaterFlag"
+                />
+                <label for="radio_dooropenlater" style="padding-right: 10px"
+                  >{{ 'HOURLYSTERILIZATIONSTATIONSAVE.dooropenlateroption' |
+                  translate}}</label
+                >
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="form-row">
+        <ion-col size="6">
+          <div class="h7 text-light">
+            {{ 'HOURLYSTERILIZATIONSTATIONSAVE.backpressure' | translate}}<br />{{
+            'HOURLYSTERILIZATIONSTATIONSAVE.receiver' | translate}} [PSI]
+            <sup> *</sup>
+          </div>
+        </ion-col>
+        <ion-col size="6">
           <input
             type="number"
             class="h7 form-control"
@@ -177,19 +234,50 @@
             (input)="onChangeBackPressureReceiver()"
           />
         </ion-col>
-        <ion-col size="1.5">
+        <!-- <ion-col size="1.5">
           <div class="h7 text-light"><b>PSI</b></div>
+        </ion-col> -->
+      </ion-row>
+
+      <ion-row class="form-row" *ngIf="bpvimageuiflag">
+        <ion-col style="text-align: right !important">
+          <button
+            type="submit"
+            class="btn btn-imageupload"
+            (click)="imageUpload('BPV')"
+          >
+            <ion-icon class="icon" name="camera-outline"></ion-icon>
+            <span class="icontext">
+              {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
+            >
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-imageview"
+            (click)="btn_view('BPV')"
+          >
+            <!-- <ion-icon class="icon" name="eye-outline"></ion-icon> -->
+
+            <span class="icontext" *ngIf="bpvimagesArr.length==0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+            </span>
+            <span class="icontext" *ngIf="bpvimagesArr.length>0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+              ({{bpvimagesArr.length}})
+            </span>
+          </button>
         </ion-col>
       </ion-row>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-light">
-            {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p1peak' | translate}}
-            <sup>*</sup>
+            {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p1peak' | translate}} [PSI]
+            <sup> *</sup>
           </div>
         </ion-col>
-        <ion-col size="5.5">
+        <ion-col size="6">
           <input
             type="number"
             class="h7 form-control"
@@ -199,19 +287,19 @@
             (input)="onChangeP1()"
           />
         </ion-col>
-        <ion-col size="1.5">
+        <!-- <ion-col size="1.5">
           <div class="h7 text-light"><b>PSI</b></div>
-        </ion-col>
+        </ion-col> -->
       </ion-row>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-light">
-            {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p2peak' | translate}}
-            <sup>*</sup>
+            {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p2peak' | translate}} [PSI]
+            <sup> *</sup>
           </div>
         </ion-col>
-        <ion-col size="5.5">
+        <ion-col size="6">
           <input
             type="number"
             class="h7 form-control"
@@ -221,19 +309,19 @@
             (input)="onChangeP2()"
           />
         </ion-col>
-        <ion-col size="1.5">
+        <!-- <ion-col size="1.5">
           <div class="h7 text-light"><b>PSI</b></div>
-        </ion-col>
+        </ion-col> -->
       </ion-row>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-light">
-            {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p3peak' | translate}}
-            <sup>*</sup>
+            {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p3peak' | translate}} [PSI]
+            <sup> *</sup>
           </div>
         </ion-col>
-        <ion-col size="5.5">
+        <ion-col size="6">
           <input
             type="number"
             class="h7 form-control"
@@ -243,148 +331,41 @@
             (input)="onChangeP3()"
           />
         </ion-col>
-        <ion-col size="1.5">
+        <!-- <ion-col size="1.5">
           <div class="h7 text-light"><b>PSI</b></div>
-        </ion-col>
+        </ion-col> -->
       </ion-row>
 
-      <!-- <div style="text-align: center; margin-top: 20px;">
-        <button type="submit" class="h7 btn btn-success" (click)="cookingtimethresholdalert()">
-          Save
-        </button>
-      </div> -->
-
-      <div class="imagecard" *ngIf="fruittypeimageuiflag">
-        <div class="title">
-          {{ 'HOURLYSTERILIZATIONSTATIONSAVE.fruittypeimages' | translate}}
-        </div>
-        <ion-row class="form-row">
-          <ion-col>
-            <input
-              type="text"
-              class="h7 form-control"
-              formControlName="txt_fruittypeimageupload"
-              placeholder="{{ 'HOURLYSTERILIZATIONSTATIONSAVE.uploadbuttonmessage' | translate}}"
-              readonly
-          /></ion-col>
-        </ion-row>
-
-        <ion-row style="margin-top: 10px">
-          <ion-col size="6" style="text-align: right !important">
-            <button
-              type="submit"
-              class="btn btn-general"
-              (click)="btn_view('FruitType')"
+      <ion-row class="form-row" *ngIf="peakimageuiflag">
+        <ion-col style="text-align: right !important">
+          <button
+            type="submit"
+            class="btn btn-imageupload"
+            (click)="imageUpload('Peak')"
+          >
+            <ion-icon class="icon" name="camera-outline"></ion-icon>
+            <span class="icontext">
+              {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
             >
-              <ion-icon class="icon" name="eye-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.viewbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
+          </button>
 
-          <ion-col size="6" style="text-align: left !important">
-            <button
-              type="submit"
-              class="btn btn-warning"
-              (click)="imageUpload('FruitType')"
-            >
-              <ion-icon class="icon" name="cloud-upload-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-        </ion-row>
-      </div>
+          <button
+            type="submit"
+            class="btn btn-imageview"
+            (click)="btn_view('Peak')"
+          >
+            <!-- <ion-icon class="icon" name="eye-outline"></ion-icon> -->
 
-      <div class="imagecard" *ngIf="p1imageuiflag">
-        <div class="title">
-          {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p1images' | translate}}
-        </div>
-        <ion-row class="form-row">
-          <ion-col>
-            <input
-              type="text"
-              class="h7 form-control"
-              formControlName="txt_p1imageupload"
-              placeholder="{{ 'HOURLYSTERILIZATIONSTATIONSAVE.uploadbuttonmessage' | translate}}"
-              readonly
-          /></ion-col>
-        </ion-row>
-
-        <ion-row style="margin-top: 10px">
-          <ion-col size="6" style="text-align: right !important">
-            <button
-              type="submit"
-              class="btn btn-general"
-              (click)="btn_view('P1')"
-            >
-              <ion-icon class="icon" name="eye-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.viewbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-
-          <ion-col size="6" style="text-align: left !important">
-            <button
-              type="submit"
-              class="btn btn-warning"
-              (click)="imageUpload('P1')"
-            >
-              <ion-icon class="icon" name="cloud-upload-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-        </ion-row>
-      </div>
-
-      <div class="imagecard" *ngIf="p3imageuiflag">
-        <div class="title">
-          {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p3images' | translate}}
-        </div>
-        <ion-row class="form-row">
-          <ion-col>
-            <input
-              type="text"
-              class="h7 form-control"
-              formControlName="txt_p3imageupload"
-              placeholder="{{ 'HOURLYSTERILIZATIONSTATIONSAVE.uploadbuttonmessage' | translate}}"
-              readonly
-          /></ion-col>
-        </ion-row>
-
-        <ion-row style="margin-top: 10px">
-          <ion-col size="6" style="text-align: right !important">
-            <button
-              type="submit"
-              class="btn btn-general"
-              (click)="btn_view('P3')"
-            >
-              <ion-icon class="icon" name="eye-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.viewbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-
-          <ion-col size="6" style="text-align: left !important">
-            <button
-              type="submit"
-              class="btn btn-warning"
-              (click)="imageUpload('P3')"
-            >
-              <ion-icon class="icon" name="cloud-upload-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-        </ion-row>
-      </div>
+            <span class="icontext" *ngIf="peakimagesArr.length==0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+            </span>
+            <span class="icontext" *ngIf="peakimagesArr.length>0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+              ({{peakimagesArr.length}})
+            </span>
+          </button>
+        </ion-col>
+      </ion-row>
 
       <hr />
 
@@ -412,19 +393,19 @@
   <!-- To View Data before to Save -->
   <div
     class="home-box"
-    *ngIf="viewFlag && !fruittypeimageviewFlag && !p1imageviewFlag && !p3imageviewFlag"
+    *ngIf="viewFlag && !bpvimageviewFlag && !peakimageviewFlag"
   >
-    <div class="h6 text-light" style="margin-left: 10px">
-      {{ 'HOURLYSTERILIZATIONSTATIONSAVE.alert' | translate}}
+    <div class="h6" style="margin-left: 10px; margin-top: 10px; color: #3cd2a5">
+      <b>{{ 'HOURLYSTERILIZATIONSTATIONSAVE.alert' | translate}}</b>
     </div>
 
     <ion-row class="form-row">
-      <ion-col size="5">
+      <ion-col size="6">
         <div class="h7 text-light">
           {{ 'HOURLYSTERILIZATIONSTATIONSAVE.cycleno' | translate}}
         </div>
       </ion-col>
-      <ion-col size="7">
+      <ion-col size="6">
         <input
           type="text"
           class="h7 form-control"
@@ -436,12 +417,12 @@
     </ion-row>
 
     <ion-row class="form-row">
-      <ion-col size="5">
+      <ion-col size="6">
         <div class="h7 text-light">
           {{ 'HOURLYSTERILIZATIONSTATIONSAVE.sterilizerno' | translate}}
         </div>
       </ion-col>
-      <ion-col size="7">
+      <ion-col size="6">
         <input
           type="text"
           class="h7 form-control"
@@ -452,13 +433,13 @@
       </ion-col>
     </ion-row>
 
-    <ion-row class="form-row">
-      <ion-col size="5">
+    <!-- <ion-row class="form-row">
+      <ion-col size="6">
         <div class="h7 text-light">
           {{ 'HOURLYSTERILIZATIONSTATIONSAVE.fruittype' | translate}}
         </div>
       </ion-col>
-      <ion-col size="7">
+      <ion-col size="6">
         <input
           type="text"
           class="h7 form-control"
@@ -467,15 +448,15 @@
           readonly
         />
       </ion-col>
-    </ion-row>
+    </ion-row> -->
 
     <ion-row class="form-row">
-      <ion-col size="5">
+      <ion-col size="6">
         <div class="h7 text-light">
           {{ 'HOURLYSTERILIZATIONSTATIONSAVE.doorshuttime' | translate}}
         </div>
       </ion-col>
-      <ion-col size="7">
+      <ion-col size="6">
         <input
           type="text"
           class="h7 form-control"
@@ -487,12 +468,12 @@
     </ion-row>
 
     <ion-row class="form-row">
-      <ion-col size="5">
+      <ion-col size="6">
         <div class="h7 text-light">
           {{ 'HOURLYSTERILIZATIONSTATIONSAVE.dooropentime' | translate}}
         </div>
       </ion-col>
-      <ion-col size="7">
+      <ion-col size="6">
         <input
           type="text"
           class="h7 form-control"
@@ -504,12 +485,13 @@
     </ion-row>
 
     <ion-row class="form-row">
-      <ion-col size="5">
+      <ion-col size="6">
         <div class="h7 text-light">
           {{ 'HOURLYSTERILIZATIONSTATIONSAVE.backpressurereceiver' | translate}}
+          [PSI]
         </div>
       </ion-col>
-      <ion-col size="7">
+      <ion-col size="6">
         <input
           type="text"
           class="h7 form-control"
@@ -518,15 +500,19 @@
           readonly
         />
       </ion-col>
+
+      <!-- <ion-col size="1.5">
+        <div class="h7 text-light"><b>PSI</b></div>
+      </ion-col> -->
     </ion-row>
 
     <ion-row class="form-row">
-      <ion-col size="5">
+      <ion-col size="6">
         <div class="h7 text-light">
-          {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p1peak' | translate}}
+          {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p1peak' | translate}} [PSI]
         </div>
       </ion-col>
-      <ion-col size="7">
+      <ion-col size="6">
         <input
           type="text"
           class="h7 form-control"
@@ -538,12 +524,12 @@
     </ion-row>
 
     <ion-row class="form-row">
-      <ion-col size="5">
+      <ion-col size="6">
         <div class="h7 text-light">
-          {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p2peak' | translate}}
+          {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p2peak' | translate}} [PSI]
         </div>
       </ion-col>
-      <ion-col size="7">
+      <ion-col size="6">
         <input
           type="text"
           class="h7 form-control"
@@ -552,15 +538,18 @@
           readonly
         />
       </ion-col>
+      <!-- <ion-col size="1.5">
+        <div class="h7 text-light"><b>PSI</b></div>
+      </ion-col> -->
     </ion-row>
 
     <ion-row class="form-row">
-      <ion-col size="5">
+      <ion-col size="6">
         <div class="h7 text-light">
-          {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p3peak' | translate}}
+          {{ 'HOURLYSTERILIZATIONSTATIONSAVE.p3peak' | translate}} [PSI]
         </div>
       </ion-col>
-      <ion-col size="7">
+      <ion-col size="6">
         <input
           type="text"
           class="h7 form-control"
@@ -569,6 +558,9 @@
           readonly
         />
       </ion-col>
+      <!-- <ion-col size="1.5">
+        <div class="h7 text-light"><b>PSI</b></div>
+      </ion-col> -->
     </ion-row>
 
     <hr />
@@ -594,59 +586,44 @@
   </div>
 
   <!-- To View Images in Slider -->
-  <!-- Fruit Type Images -->
-  <div class="content" *ngIf="!viewFlag && fruittypeimageviewFlag">
+  <!-- Back Pressure Receiver Images -->
+  <div class="content" *ngIf="!viewFlag && bpvimageviewFlag">
     <ion-slides
       #sliders
       (ionSlidesDidLoad)="slidesDidLoad(sliders)"
       pager="true"
       [options]="slideOpts"
     >
-      <ion-slide *ngFor="let value of fruittypeimagesArr">
-        <img
-          style="width: 500px; height: 500px"
-          src="{{value}}"
-          alt=""
-          srcset=""
-        />
+      <ion-slide *ngFor="let value of bpvimagesArr">
+        <ion-card class="card">
+          <img
+            style="width: 500px; height: 500px"
+            src="{{value}}"
+            alt=""
+            srcset=""
+          />
+        </ion-card>
       </ion-slide>
     </ion-slides>
   </div>
 
-  <!-- P1 Images -->
-  <div class="content" *ngIf="!viewFlag && p1imageviewFlag">
+  <!-- Peak Images -->
+  <div class="content" *ngIf="!viewFlag && peakimageviewFlag">
     <ion-slides
       #sliders
       (ionSlidesDidLoad)="slidesDidLoad(sliders)"
       pager="true"
       [options]="slideOpts"
     >
-      <ion-slide *ngFor="let value of p1imagesArr">
-        <img
-          style="width: 500px; height: 500px"
-          src="{{value}}"
-          alt=""
-          srcset=""
-        />
-      </ion-slide>
-    </ion-slides>
-  </div>
-
-  <!-- P3 Images -->
-  <div class="content" *ngIf="!viewFlag && p3imageviewFlag">
-    <ion-slides
-      #sliders
-      (ionSlidesDidLoad)="slidesDidLoad(sliders)"
-      pager="true"
-      [options]="slideOpts"
-    >
-      <ion-slide *ngFor="let value of p3imagesArr">
-        <img
-          style="width: 500px; height: 500px"
-          src="{{value}}"
-          alt=""
-          srcset=""
-        />
+      <ion-slide *ngFor="let value of peakimagesArr">
+        <ion-card class="card">
+          <img
+            style="width: 500px; height: 500px"
+            src="{{value}}"
+            alt=""
+            srcset=""
+          />
+        </ion-card>
       </ion-slide>
     </ion-slides>
   </div>

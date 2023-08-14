@@ -15,7 +15,7 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-toolbar class="stepstoolbar">
+  <!-- <ion-toolbar class="stepstoolbar">
     <ion-row class="steps">
       <ion-col class="circle" [style.backgroundColor]="getStatusColor('STEP1')">
         <span><b> 1 </b></span>
@@ -28,29 +28,31 @@
       <ion-col class="circle" [style.backgroundColor]="getStatusColor('STEP2')">
         <span><b> 2 </b></span>
       </ion-col>
-
-      <ion-col>
-        <hr />
-      </ion-col>
-
-      <ion-col class="circle" [style.backgroundColor]="getStatusColor('STEP3')">
-        <span><b> 3 </b></span>
-      </ion-col>
     </ion-row>
-  </ion-toolbar>
+  </ion-toolbar> -->
 </ion-header>
 
-<ion-content>
+<ion-content #pageTop>
   <div class="content">
     <form
       [formGroup]="step1Form"
       style="margin-top: 10px; padding-left: 10px"
       *ngIf="stepFlag"
     >
+      <ion-row
+        class="form-row"
+        *ngIf="getmachinename!=''"
+        style="margin-bottom: 5px"
+      >
+        <ion-col>
+          <div class="machinetitle">{{getmachinename}}</div>
+        </ion-col>
+      </ion-row>
+
       <!-- Breakdown has been changed as Problem -->
-      <div *ngIf="breakdownFlag">
+      <div *ngIf="getbreakdownvalue!=''">
         <ion-row class="form-row">
-          <ion-col size="4.5">
+          <ion-col size="5.5">
             <div class="title">
               {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.problem' | translate}}
             </div>
@@ -62,39 +64,172 @@
             </div>
           </ion-col>
 
-          <ion-col size="7" *ngIf="getbreakdownvalue!=''">
-            <div class="viewtitle" style="text-align: center">
+          <ion-col size="6" *ngIf="getbreakdownvalue!=''">
+            <div class="viewtitle" style="text-align: left">
               <b>{{getbreakdownvalue}}</b>
             </div>
           </ion-col>
+        </ion-row>
+      </div>
 
-          <ion-col size="7" *ngIf="getbreakdownvalue==''">
-            <ion-select
-              [interfaceOptions]="breakdownOptions"
-              formControlName="select_breakdown"
-              multiple="false"
-              [okText]="'GENERALBUTTON.okay' | translate"
-              [cancelText]="'GENERALBUTTON.dismiss' | translate"
-              class="selectdropdown"
-              placeholder="{{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.select' | translate}}"
-              (ionChange)="breakdownhandleChange($event)"
-            >
-              <ion-select-option
-                value="{{parseString(value)}}"
-                *ngFor="let value of breakdownArr; let i = index"
-                >{{ value.breakdownCoding }}</ion-select-option
-              >
-            </ion-select>
+      <!-- Maintenance Type -->
+      <div *ngIf="getmaintenancetypevalue!=''">
+        <ion-row class="form-row">
+          <ion-col size="5.5">
+            <div class="title">
+              {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.maintenancetype' |
+              translate}}
+            </div>
+          </ion-col>
+
+          <ion-col size="0.5" style="text-align: center">
+            <div class="title">
+              <b>:</b>
+            </div>
+          </ion-col>
+
+          <ion-col size="6" *ngIf="getmaintenancetypevalue!=''">
+            <div class="viewtitle" style="text-align: left">
+              <b>{{getmaintenancetypevalue}}</b>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <!-- Part Defect -->
+      <div *ngIf="getpartdefectvalue!=''">
+        <ion-row class="form-row">
+          <ion-col size="5.5">
+            <div class="title">
+              {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.partdefect' |
+              translate}}
+            </div>
+          </ion-col>
+
+          <ion-col size="0.5" style="text-align: center">
+            <div class="title">
+              <b>:</b>
+            </div>
+          </ion-col>
+
+          <ion-col size="6" *ngIf="getpartdefectvalue!=''">
+            <div class="viewtitle" style="text-align: left">
+              <b>{{getpartdefectvalue}}</b>
+            </div>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <!-- Breakdown Causes -->
+      <div *ngIf="getbreakdowncausesvalue!=''">
+        <ion-row class="form-row">
+          <ion-col size="5.5">
+            <div class="title">
+              {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.breakdowncauses' |
+              translate}}
+            </div>
+          </ion-col>
+
+          <ion-col size="0.5" style="text-align: center">
+            <div class="title">
+              <b>:</b>
+            </div>
+          </ion-col>
+
+          <ion-col size="6" *ngIf="getbreakdowncausesvalue!=''">
+            <div class="viewtitle" style="text-align: left">
+              <b>{{getbreakdowncausesvalue}}</b>
+            </div>
           </ion-col>
         </ion-row>
 
-        <div class="hl4line"></div>
+        <div class="hl4line" *ngIf="getbreakdownremarksvalue==''"></div>
       </div>
 
+      <!-- Remarks -->
+      <div *ngIf="getbreakdownremarksvalue!=''">
+        <ion-row class="form-row">
+          <ion-col size="5.5">
+            <div class="title">
+              {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.remarks' | translate}}
+            </div>
+          </ion-col>
+
+          <ion-col size="0.5" style="text-align: center">
+            <div class="title">
+              <b>:</b>
+            </div>
+          </ion-col>
+
+          <ion-col size="6" *ngIf="getbreakdownremarksvalue!=''">
+            <div class="viewtitle" style="text-align: left">
+              <b>{{getbreakdownremarksvalue}}</b>
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <div class="hl4line" *ngIf="getbreakdownremarksvalue!=''"></div>
+      </div>
+
+      <!-- <div class="hl4line"></div> -->
+
+      <!-- Damage Type -->
+      <div *ngIf="damagetypeFlag">
+        <ion-row class="form-row">
+          <ion-col size="5.5">
+            <div class="title">
+              {{ 'MAINTENANCEACKNOWLEDGEMODAL.damagetype' | translate}}
+            </div>
+          </ion-col>
+
+          <ion-col size="0.5" style="text-align: center">
+            <div class="title">
+              <b>:</b>
+            </div>
+          </ion-col>
+
+          <ion-col size="6">
+            <ion-button class="optionbutton" (click)="openDamageType()"
+              >{{ 'MAINTENANCEACKNOWLEDGEMODAL.select' | translate}}
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+        <div class="hl4line" *ngIf="damagetypevalue==''"></div>
+
+        <div
+          class="selecteddata"
+          style="text-align: center"
+          *ngIf="damagetypevalue!=''"
+          [innerHTML]="damagetypevalue"
+        ></div>
+
+        <div class="hl4line" *ngIf="damagetypevalue!=''"></div>
+
+        <ion-select
+          mode="md"
+          [interfaceOptions]="damagetypeOptions"
+          formControlName="select_damagetype"
+          multiple="true"
+          [okText]="'GENERALBUTTON.okay' | translate"
+          [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
+          class="ionicselect"
+          (ionChange)="damagehandleChange($event)"
+          #damagetypeSelect
+        >
+          <ion-select-option
+            value="{{parseString(value)}}"
+            *ngFor="let value of damageArr; let i = index"
+            >{{ value.damage }}</ion-select-option
+          >
+        </ion-select>
+      </div>
+
+      <!-- Activity -->
       <div *ngIf="activityFlag">
         <div *ngIf="getactivityvalue!=''">
           <ion-row class="form-row" style="margin-top: 10px">
-            <ion-col size="4.5">
+            <ion-col size="5.5">
               <div class="title">
                 {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.activity' |
                 translate}}
@@ -107,7 +242,7 @@
               </div>
             </ion-col>
 
-            <ion-col size="7">
+            <ion-col size="6">
               <div class="viewtitle" style="text-align: center">
                 <b>{{getactivityvalue}}</b>
               </div>
@@ -119,7 +254,7 @@
 
         <div *ngIf="getactivityvalue==''">
           <ion-row class="form-row" style="margin-top: 10px">
-            <ion-col size="4.5">
+            <ion-col size="5.5">
               <div class="title">
                 {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.activity' |
                 translate}}
@@ -132,7 +267,7 @@
               </div>
             </ion-col>
 
-            <ion-col size="7">
+            <ion-col size="6">
               <ion-button
                 class="optionbutton"
                 (click)="callmodalcontroller('Activity')"
@@ -145,18 +280,7 @@
           <div class="hl4line" *ngIf="activityvalue==''"></div>
 
           <div
-            class="title"
-            style="margin-top: 10px; color: #3cd2a5"
-            *ngIf="activityvalue!=''"
-          >
-            <b
-              >{{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.selectedactivity' |
-              translate}}</b
-            >
-          </div>
-
-          <div
-            class="title"
+            class="selecteddata"
             style="text-align: center"
             *ngIf="activityvalue!=''"
             [innerHTML]="activityvalue"
@@ -223,9 +347,10 @@
         </div>
       </div>
 
+      <!-- Assigned To -->
       <div *ngIf="assignedtoFlag">
         <ion-row class="form-row">
-          <ion-col size="4.5">
+          <ion-col size="5.5">
             <div class="title">
               {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.assignto' |
               translate}}
@@ -238,42 +363,17 @@
             </div>
           </ion-col>
 
-          <ion-col size="7">
-            <!-- <ion-button class="optionbutton" (click)="openAssignedTo()"
+          <ion-col size="6">
+            <ion-button class="optionbutton" (click)="openAssignedTo()"
               >{{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.select' | translate}}
-            </ion-button> -->
-            <ion-select
-              [interfaceOptions]="assignedtoOptions"
-              formControlName="select_assignedto"
-              multiple="false"
-              [okText]="'GENERALBUTTON.okay' | translate"
-              [cancelText]="'GENERALBUTTON.dismiss' | translate"
-              class="selectdropdown"
-              placeholder="{{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.select' | translate}}"
-              (ionChange)="assignedtohandleChange($event)"
-              #assignedtoSelect
-            >
-              <ion-select-option
-                value="{{parseString(value)}}"
-                *ngFor="let value of assignedtoArr; let i = index"
-                >{{ value.name }}</ion-select-option
-              >
-            </ion-select>
+            </ion-button>
           </ion-col>
         </ion-row>
 
-        <div class="hl4line"></div>
-
-        <!-- <div
-          class="title"
-          style="margin-top: 10px; color: #3cd2a5"
-          *ngIf="assignedtovalue!=''"
-        >
-          <b>{{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.selectedfitter' | translate}}</b>
-        </div>
+        <div class="hl4line" *ngIf="assignedtovalue==''"></div>
 
         <div
-          class="title"
+          class="selecteddata"
           style="text-align: center"
           *ngIf="assignedtovalue!=''"
           [innerHTML]="assignedtovalue"
@@ -282,11 +382,12 @@
         <div class="hl4line" *ngIf="assignedtovalue!=''"></div>
 
         <ion-select
+          mode="md"
           [interfaceOptions]="assignedtoOptions"
           formControlName="select_assignedto"
           multiple="true"
           [okText]="'GENERALBUTTON.okay' | translate"
-          [cancelText]="'GENERALBUTTON.dismiss' | translate"
+          [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
           class="ionicselect"
           (ionChange)="assignedtohandleChange($event)"
           #assignedtoSelect
@@ -296,7 +397,7 @@
             *ngFor="let value of assignedtoArr; let i = index"
             >{{ value.name }}</ion-select-option
           >
-        </ion-select> -->
+        </ion-select>
       </div>
 
       <ion-row style="margin-top: 10px">
@@ -304,6 +405,7 @@
           <button
             type="submit"
             class="btn btn-next"
+            [disabled]="confirmDisable"
             (click)="btn_next('STEP1')"
           >
             <span class="icontext" style="color: #ffffff"
@@ -315,9 +417,19 @@
       </ion-row>
     </form>
 
-    <form *ngIf="viewFlag" style="padding-left: 10px">
-      <ion-row class="form-row" *ngIf="view_breakdown!=''">
-        <ion-col size="5">
+    <!-- <form *ngIf="viewFlag" style="margin-top: 10px; padding-left: 10px">
+      <ion-row
+        class="form-row"
+        *ngIf="getmachinename!=''"
+        style="margin-bottom: 5px"
+      >
+        <ion-col>
+          <div class="machinetitle">{{getmachinename}}</div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="form-row" *ngIf="getbreakdownvalue!=''">
+        <ion-col size="4.5">
           <div class="title">
             {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.problem' | translate}}
           </div>
@@ -327,15 +439,90 @@
             <b>:</b>
           </div>
         </ion-col>
-        <ion-col size="6.5" style="text-align: left">
+        <ion-col size="7" style="text-align: left">
           <div class="viewtitle">
-            <b>{{view_breakdown}}</b>
+            <b>{{getbreakdownvalue}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="form-row" *ngIf="getmaintenancetypevalue!=''">
+        <ion-col size="4.5">
+          <div class="title">
+            {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.maintenancetype' |
+            translate}}
+          </div>
+        </ion-col>
+        <ion-col size="0.5" style="text-align: right">
+          <div class="title">
+            <b>:</b>
+          </div>
+        </ion-col>
+        <ion-col size="7" style="text-align: left">
+          <div class="viewtitle">
+            <b>{{getmaintenancetypevalue}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="form-row" *ngIf="getpartdefectvalue!=''">
+        <ion-col size="4.5">
+          <div class="title">
+            {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.partdefect' |
+            translate}}
+          </div>
+        </ion-col>
+        <ion-col size="0.5" style="text-align: right">
+          <div class="title">
+            <b>:</b>
+          </div>
+        </ion-col>
+        <ion-col size="7" style="text-align: left">
+          <div class="viewtitle">
+            <b>{{getpartdefectvalue}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="form-row" *ngIf="getbreakdowncausesvalue!=''">
+        <ion-col size="4.5">
+          <div class="title">
+            {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.breakdowncauses' |
+            translate}}
+          </div>
+        </ion-col>
+        <ion-col size="0.5" style="text-align: right">
+          <div class="title">
+            <b>:</b>
+          </div>
+        </ion-col>
+        <ion-col size="7" style="text-align: left">
+          <div class="viewtitle">
+            <b>{{getbreakdowncausesvalue}}</b>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="form-row" *ngIf="getbreakdownremarksvalue!=''">
+        <ion-col size="4.5">
+          <div class="title">
+            {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.remarks' | translate}}
+          </div>
+        </ion-col>
+        <ion-col size="0.5" style="text-align: right">
+          <div class="title">
+            <b>:</b>
+          </div>
+        </ion-col>
+        <ion-col size="7" style="text-align: left">
+          <div class="viewtitle">
+            <b>{{getbreakdownremarksvalue}}</b>
           </div>
         </ion-col>
       </ion-row>
 
       <ion-row class="form-row" *ngIf="view_activity!=''">
-        <ion-col size="5">
+        <ion-col size="4.5">
           <div class="title">
             {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.activity' | translate}}
           </div>
@@ -345,7 +532,7 @@
             <b>:</b>
           </div>
         </ion-col>
-        <ion-col size="6.5" style="text-align: left">
+        <ion-col size="7" style="text-align: left">
           <div class="viewtitle">
             <b>{{view_activity}}</b>
           </div>
@@ -353,7 +540,7 @@
       </ion-row>
 
       <ion-row class="form-row" *ngIf="view_assignto!=''">
-        <ion-col size="5">
+        <ion-col size="4.5">
           <div class="title">
             {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.assignedto' |
             translate}}
@@ -364,7 +551,7 @@
             <b>:</b>
           </div>
         </ion-col>
-        <ion-col size="6.5" style="text-align: left">
+        <ion-col size="7" style="text-align: left">
           <div class="viewtitle">
             <b>{{view_assignto}}</b>
           </div>
@@ -386,6 +573,6 @@
           </button>
         </ion-col>
       </ion-row>
-    </form>
+    </form> -->
   </div>
 </ion-content>

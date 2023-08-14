@@ -1,0 +1,189 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-buttons slot="start" mode="md">
+      <ion-back-button color="whitefav"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title color="light" mode="ios"
+      >{{ 'REPORTS.oilloss' | translate}}</ion-title
+    >
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div>
+    <div class="title_header">
+      <div class="title_head">{{title}}</div>
+    </div>
+    <div>
+      <div class="maintitle"><span class="super">*</span>{{note}}</div>
+    </div>
+    <form [formGroup]="oillossesreportForm">
+      <ion-row class="form-row">
+        <ion-col class="history_btn">
+          <button
+            type="button"
+            class="h7 btn btn-general btn-sm"
+            (click)="navigate()"
+          >
+            {{ 'OILLOSSESNEW.history' | translate}}
+          </button>
+        </ion-col>
+      </ion-row>
+    </form>
+    <ion-slides
+      #sliders
+      (ionSlidesDidLoad)="slidesDidLoad(sliders)"
+      [options]="slideOpts"
+      *ngIf="didInit"
+    >
+      <ion-slide *ngFor="let pressvalue of pressdataArr">
+        <div class="content">
+          <div class="maincard">
+            <div>
+              <ion-row>
+                <ion-col></ion-col>
+                <ion-col>
+                  <div
+                    *ngIf="pressvalue.level==0"
+                    [ngClass]="{'circlenotblink' : getlanguage == 'English', 'circlenotblinkmalay' : getlanguage == 'Malay'}"
+                  >
+                    <div
+                      class="statustitle text-uppercase"
+                      [style.color]="getBackgroundColor(pressvalue.level)"
+                    >
+                      <b>{{pressvalue.levelvalue}}</b>
+                    </div>
+                  </div>
+                  <div
+                    class="circle"
+                    *ngIf="pressvalue.level!=0"
+                    [ngClass]="{'circle' : getlanguage == 'English', 'circlemalay' : getlanguage == 'Malay'}"
+                  >
+                    <div
+                      class="statustitle text-uppercase"
+                      [style.color]="getBackgroundColor(pressvalue.level)"
+                    >
+                      <b>{{pressvalue.levelvalue}}</b>
+                    </div>
+                  </div>
+                </ion-col>
+                <ion-col></ion-col>
+              </ion-row>
+              <div class="presscard">
+                <div class="presstitle text-uppercase">
+                  {{pressvalue.pressname}}
+                </div>
+              </div>
+            </div>
+            <div class="checkcard">
+              <div>
+                <ion-row>
+                  <ion-col size="8" class="mdfont"
+                    >{{ 'OILLOSSESNEW.time' | translate}}
+                  </ion-col>
+                  <ion-col size="4">
+                    <p class="mdfont"><b> : {{pressvalue.time}}</b></p>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size="8" class="mdfont"
+                    >{{ 'OILLOSSESNEW.predictedoilloss' | translate}}
+                    (%)</ion-col
+                  >
+                  <ion-col size="4">
+                    <p class="mdfont">
+                      <b> : {{pressvalue.predictedvalue}}</b>
+                    </p>
+                  </ion-col>
+                </ion-row>
+              </div>
+            </div>
+            <div class="reasoncard">
+              <div class="reasonheader">
+                <div class="reasontitle text-uppercase" style="color: #fff">
+                  {{ 'OILLOSSESNEW.reasonforoilloss' | translate}}
+                </div>
+              </div>
+              <div style="padding: 5px 5px 10px 5px">
+                <div *ngFor="let reason of pressvalue.reasons;let i = index;">
+                  <div class="mdfont" *ngIf="i<1">
+                    {{i+1}}) {{ reason.values.length > 30 ?
+                    reason.values.substring(0,30)+"..." : reason.values }}
+                  </div>
+                </div>
+                <div class="float-button-two">
+                  <div (click)="open_modal(pressvalue,'reason')">
+                    <ion-icon name="add-circle"></ion-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="actioncard">
+              <div class="actionheader">
+                <div class="actiontitle text-uppercase" style="color: #fff">
+                  {{ 'OILLOSSESNEW.recommendations' | translate}}
+                </div>
+              </div>
+              <div style="padding: 5px 5px 10px 5px">
+                <div *ngFor="let actions of pressvalue.actions;let i = index;">
+                  <div class="mdfont" *ngIf="i<2">
+                    <div *ngIf="i==0">{{i+1}}) {{ actions.values}}</div>
+                    <div *ngIf="i==1">
+                      {{i+1}}) {{ actions.values.length > 30 ?
+                      actions.values.substring(0,30)+"..." : actions.values }}
+                    </div>
+                  </div>
+                </div>
+                <div class="float-button-two">
+                  <div (click)="open_modal(pressvalue,'recommendation')">
+                    <ion-icon name="add-circle"></ion-icon>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <div
+              [ngClass]="{'actioncard' : selectedlanguage == 'English', 'malayactioncard' : selectedlanguage == 'Malay'}"
+            >
+              <div class="actionheader">
+                <div class="actiontitle text-uppercase">
+                  {{ 'OILLOSSESNEW.recommendations' | translate}}
+                </div>
+              </div>
+              <div style="padding: 5px 5px 10px 5px">
+                <div *ngFor="let actions of pressvalue.actions;let i = index;">
+                  <div class="mdfont" *ngIf="i<2">
+                    <div *ngIf="i==0">{{i+1}}) {{ actions.values}}</div>
+                    <div *ngIf="i==1">
+                      {{i+1}}) {{ actions.values.length > 30 ?
+                      actions.values.substring(0,30)+"..." : actions.values }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="float-button-two">
+                <div (click)="open_modal(pressvalue,'recommendation')">
+                  <ion-icon name="add-circle"></ion-icon>
+                </div>
+              </div>
+            </div> -->
+            <div class="norecords" *ngIf="pressvalue.length==0">
+              {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+            </div>
+          </div>
+        </div>
+      </ion-slide>
+    </ion-slides>
+    <div class="norecords" *ngIf="norecordsflag==true">
+      {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+    </div>
+    <div class="pleasewait" *ngIf="pleasewaitflag">
+      <div style="width: 100%; text-align: center">
+        <img
+          style="width: 80px; height: 80px"
+          src="../../../assets/img/loading.gif"
+        />
+      </div>
+      {{ 'NORECORDSFOUND.loading' | translate}}
+    </div>
+  </div>
+</ion-content>

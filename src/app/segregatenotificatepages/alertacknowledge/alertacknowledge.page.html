@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color modaltoolbar">
+    <ion-title mode="ios" color="light">{{title}}</ion-title>
+
+    <ion-buttons slot="primary">
+      <ion-button class="bg-light-color" (click)="btn_close()">
+        <ion-icon color="light" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content #pageTop>
+  <div class="content">
+    <!-- <div>
+    <ion-row class="marigin-10px row-reverse">
+      <ion-col>
+        <div class="title" [innerHTML]="notificationtext"></div>
+      </ion-col>
+    </ion-row>
+  </div> -->
+    <form [formGroup]="alertattendForm">
+      <div class="imagetitle">
+        {{ 'GENERALBUTTON.uploadimages' | translate}}
+      </div>
+      <!-- <ion-row class="form-row">
+        <ion-col>
+          <input
+            type="text"
+            class="h7 form-control"
+            formControlName="txt_attendimageupload"
+            placeholder="{{ 'HOURLYPRESSSTATIONSAVE.uploadbuttonmessage' | translate}}"
+            readonly
+        /></ion-col>
+      </ion-row> -->
+
+      <ion-row style="margin-top: 10px">
+        <ion-col style="text-align: center !important">
+          <button
+            type="submit"
+            class="btn btn-imageupload"
+            (click)="imageUpload('Attend')"
+          >
+            <ion-icon class="icon" name="camera-outline"></ion-icon>
+            <span class="icontext">
+              {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
+            >
+          </button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row style="margin-top: 10px">
+        <ion-col style="text-align: center !important">
+          <button
+            type="submit"
+            class="btn btn-imageview"
+            (click)="btn_view('Attend')"
+          >
+            <ion-icon class="icon" name="eye-outline"></ion-icon>
+            <span class="icontext" *ngIf="attendimagesArr.length==0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+            </span>
+            <span class="icontext" *ngIf="attendimagesArr.length>0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+              ({{attendimagesArr.length}})
+            </span>
+          </button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-row class="footerbutton">
+    <ion-col style="text-align: center !important">
+      <button
+        type="submit"
+        [disabled]="isDisable"
+        class="btn btn-attendrectify"
+        (click)="btn_save()"
+      >
+        {{ 'GENERALBUTTON.savebutton' | translate}}
+      </button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

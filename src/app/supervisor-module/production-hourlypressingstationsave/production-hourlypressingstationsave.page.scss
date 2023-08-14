@@ -121,31 +121,6 @@ form {
   border-style: unset !important;
 }
 
-.imagePreview {
-  width: 150px;
-  height: 150px;
-  border-radius: 5px;
-  background-position: center center;
-  background: url("../../../assets/img/noimage.png");
-  background-color: #ffffff;
-  background-size: cover;
-  background-repeat: no-repeat;
-  display: inline-block;
-  box-shadow: 0px -3px 6px 2px rgba(0, 0, 0, 0.2);
-}
-
-.imagePresent {
-  width: 150px;
-  height: 150px;
-  border-radius: 5px;
-  background-position: center center;
-  background-color: #ffffff;
-  background-size: cover;
-  background-repeat: no-repeat;
-  display: inline-block;
-  box-shadow: 0px -3px 6px 2px rgba(0, 0, 0, 0.2);
-}
-
 .btn-success {
   width: 150px;
   font-size: 12px;
@@ -219,21 +194,22 @@ ion-select::part(placeholder) {
 }
 
 .btn-imageview {
-  width: 125px;
+  //width: 125px;
   font-size: 12px;
   //background-color: #30beff;
   background-color: none;
-  border-color: #30beff;
+  border-color: #ff9f0c;
   color: #ffffff;
 }
 
 .btn-imageupload {
-  width: 125px;
+  //width: 125px;
   font-size: 12px;
   //background-color: #ff9f0c;
   background-color: none;
-  border-color: #ff9f0c;
+  border-color: #30beff;
   color: #ffffff;
+  margin-right: 10px;
 }
 
 .btn-general {
@@ -288,17 +264,12 @@ ion-select::part(placeholder) {
 }
 
 .icon {
+  font-size: 14px;
   vertical-align: middle;
 }
 
 .icontext {
   vertical-align: middle;
-}
-
-hr {
-  display: block;
-  height: 1px;
-  border-top: 1px solid #c2c2c2;
 }
 
 sup {
@@ -313,4 +284,10 @@ sup {
   border-top: 1px dashed #c2c2c2;
   height: 0px !important;
   margin: 20px;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border-top: 1px solid #ffffff;
 }

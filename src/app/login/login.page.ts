@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
 import { Location } from "@angular/common";
+import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { AIREIService } from "../api/api.service";
 import { AppVersion } from "@ionic-native/app-version/ngx";
@@ -35,7 +36,11 @@ export class LoginPage implements OnInit {
   userlist = JSON.parse(localStorage.getItem("userlist"));
 
   uiEnable = false;
-  isDisabled = true;
+  isDisabled = false;
+
+  // Password View
+  showPassword = false;
+  passwordIcon = "eye-outline";
 
   constructor(
     private popoverController: PopoverController,
@@ -47,6 +52,7 @@ export class LoginPage implements OnInit {
     private appVersion: AppVersion,
     private service: AIREIService,
     private nativeStorage: NativeStorage,
+    private screenOrientation: ScreenOrientation,
     private animationcontroller: AnimationController
   ) {
     this.loginForm = this.fb.group({
@@ -115,11 +121,14 @@ export class LoginPage implements OnInit {
   }
 
   onChangeMillCode(event) {
-    if (event.detail.value.length >= 4) {
-      //console.log(event.detail.value);
+    /*if (event.detail.value.length >= 4) {
       this.getapiurl(event.detail.value);
     } else {
       this.isDisabled = true;
+    }*/
+
+    if (event.detail.value.length == 4) {
+      this.getapiurl(event.detail.value);
     }
   }
 
@@ -138,7 +147,7 @@ export class LoginPage implements OnInit {
 
     var req = {
       millcode: value,
-      version: this.appVersion,
+      version: this.app_version,
       language: this.languageService.selected,
     };
 
@@ -148,16 +157,44 @@ export class LoginPage implements OnInit {
       var resultdata: any;
       resultdata = result;
       if (resultdata.httpcode == 200) {
-        this.isDisabled = false;
+        //this.isDisabled = false;
         localStorage.setItem("endpoint", String(resultdata.data.javaapiurl));
       } else {
-        this.isDisabled = true;
+        //this.isDisabled = true;
+
+        this.loginForm.controls.username.setValue("");
+        this.loginForm.controls.password.setValue("");
+
         localStorage.setItem("endpoint", "");
         this.service.presentToast(
           this.translate.instant("LOGIN.invalidmillcode")
         );
       }
     });
+  }
+
+  togglePassword() {
+    /*if (!this.isDisabled) {
+      if (this.loginForm.value.password != "") {
+        this.showPassword = !this.showPassword;
+
+        if (this.passwordIcon == "eye-outline") {
+          this.passwordIcon = "eye-off-outline";
+        } else {
+          this.passwordIcon = "eye-outline";
+        }
+      }
+    }*/
+
+    if (this.loginForm.value.password != "") {
+      this.showPassword = !this.showPassword;
+
+      if (this.passwordIcon == "eye-outline") {
+        this.passwordIcon = "eye-off-outline";
+      } else {
+        this.passwordIcon = "eye-outline";
+      }
+    }
   }
 
   btn_login() {
@@ -197,6 +234,8 @@ export class LoginPage implements OnInit {
       return;
     }
 
+    console.log(localStorage.getItem("endpoint"));
+
     if (localStorage.getItem("endpoint") == "") {
       this.service.presentToast(
         this.translate.instant("LOGIN.millcodeauthontication")
@@ -204,13 +243,15 @@ export class LoginPage implements OnInit {
       return;
     }
 
+    this.isDisabled = true;
+
     var req = {
       millcode: this.loginForm.value.millcode,
       username: this.loginForm.value.username,
       password: this.loginForm.value.password,
       language: this.languageService.selected,
       languageid: selectedlanguageid,
-      version: this.appVersion,
+      version: this.app_version,
     };
 
     console.log(req);
@@ -228,6 +269,8 @@ export class LoginPage implements OnInit {
         localStorage.setItem("userlist", JSON.stringify(resultdata.data));
 
         localStorage.setItem("runninghourid", "0");
+
+        localStorage.setItem("scheduledpopup", "");
 
         localStorage.setItem("profile", "");
 
@@ -247,11 +290,14 @@ export class LoginPage implements OnInit {
         );
 
         setTimeout(() => {
+          this.isDisabled = false;
           this.location.go("/");
           window.location.reload();
           this.router.navigate(["/tabs"]);
         }, 1000);
       } else {
+        this.isDisabled = false;
+
         this.service.presentToast(resultdata.message);
       }
     });

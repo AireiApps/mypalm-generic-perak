@@ -1,0 +1,502 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-avatar slot="start">
+      <ion-img
+        class="toolbarimage"
+        src="../../../assets/img/logo.png"
+      ></ion-img>
+    </ion-avatar>
+    <ion-title color="light" mode="ios" [innerHTML]="mill_name"></ion-title>
+
+    <ion-buttons slot="primary">
+      <!-- Production and Maintenance Count for Android - Start -->
+      <ion-button
+        class="bg-light-color"
+        *ngIf="getplatform == 'android'"
+        (click)="btn_notification('Production')"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : productioncountlength == 1, 'twodigitbadgecount' : productioncountlength >= 2}"
+          *ngIf="productioncount && productioncount != 0"
+          >{{ productioncount }}</ion-badge
+        >
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button class="bg-light-color" *ngIf="getplatform == 'android'">
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : maintenancecountlength == 1, 'twodigitbadgecount' : maintenancecountlength >= 2}"
+          *ngIf="maintenancecount && maintenancecount != 0"
+          >{{ maintenancecount }}</ion-badge
+        >
+        <ion-icon name="construct-outline"></ion-icon>
+      </ion-button>
+      <!-- Production and Maintenance Count for Android - End -->
+
+      <!-- Production and Maintenance Count for IOS - Start -->
+      <ion-button
+        class="bg-light-color"
+        *ngIf="getplatform == 'ios'"
+        (click)="btn_notification('Production')"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : productioncountlength == 1, 'iostwodigitbadgecount' : productioncountlength >= 2}"
+          *ngIf="productioncount && productioncount != 0"
+          >{{ productioncount }}</ion-badge
+        >
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button class="bg-light-color" *ngIf="getplatform == 'ios'">
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : maintenancecountlength == 1, 'iostwodigitbadgecount' : maintenancecountlength >= 2}"
+          *ngIf="maintenancecount && maintenancecount != 0"
+          >{{ maintenancecount }}</ion-badge
+        >
+        <ion-icon name="construct-outline"></ion-icon>
+      </ion-button>
+      <!-- Production and Maintenance Count for IOS - End -->
+
+      <!-- <ion-button class="bg-light-color" (click)="btn_notification()">
+        <ion-icon name="person-outline"></ion-icon>
+      </ion-button> -->
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div #myElementRef>
+    <!-- Portrait Orientation  - Start -->
+
+    <div>
+      <div
+        style="
+          font-size: 12px;
+          color: #ffffff;
+          text-align: center;
+          margin-top: 5px;
+        "
+      >
+        {{ 'OWNERMAINTENANCE.note' | translate}}
+      </div>
+
+      <div>
+        <ion-row class="form-row">
+          <ion-col class="history_btn">
+            <button
+              type="button"
+              class="h7 btn btn-general btn-sm"
+              (click)="navigate()"
+            >
+              {{ 'OWNERMAINTENANCE.statistics' | translate}}
+            </button>
+          </ion-col>
+        </ion-row>
+      </div>
+
+      <!-- Corrective Maintenance -->
+      <ion-row>
+        <ion-col>
+          <div class="titleheader">
+            <div class="col">
+              <div class="portraittitle text-uppercase">
+                {{ 'OWNERMAINTENANCE.corrective' | translate}} {{
+                'OWNERMAINTENANCE.cmaintenance' | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="stationcard"
+            style="padding-left: 20px; padding-right: 20px"
+          >
+            <ion-row *ngFor="let item of correctivemaintenanceArr">
+              <ion-col no-padding>
+                <ion-card class="portraitcard">
+                  <ion-row style="width: 100%; height: 100%; flex-flow: nowrap">
+                    <ion-col
+                      size="7.5"
+                      style="
+                        align-self: center;
+                        text-align: center;
+                        padding: 0px;
+                      "
+                    >
+                      <div class="h7">{{item.title}}</div>
+                    </ion-col>
+
+                    <ion-col
+                      size="0.2"
+                      style="align-self: center; padding: 0px"
+                    >
+                      <div class="portraitvl4line"></div>
+                    </ion-col>
+
+                    <ion-col
+                      size="4"
+                      style="
+                        align-self: center;
+                        text-align: center;
+                        padding: 0px;
+                      "
+                    >
+                      <div
+                        style="font-size: 18px; font-weight: bold"
+                        [style.color]="geTextColor(item.position)"
+                      >
+                        {{item.value}}
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Routine Preventive Maintenance -->
+      <ion-row>
+        <ion-col>
+          <div class="titleheader">
+            <div class="col">
+              <div class="portraittitle text-uppercase">
+                {{ 'OWNERMAINTENANCE.routinepreventivemaintenance' | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="stationcard"
+            style="padding-left: 20px; padding-right: 20px"
+          >
+            <ion-row *ngFor="let item of routinepreventivemaintenanceArr">
+              <ion-col no-padding>
+                <ion-card class="portraitcard">
+                  <ion-row style="width: 100%; height: 100%; flex-flow: nowrap">
+                    <ion-col
+                      size="7.5"
+                      style="
+                        align-self: center;
+                        text-align: center;
+                        padding: 0px;
+                      "
+                    >
+                      <div class="h7">{{item.title}}</div>
+                    </ion-col>
+
+                    <ion-col
+                      size="0.2"
+                      style="align-self: center; padding: 0px"
+                    >
+                      <div class="portraitvl4line"></div>
+                    </ion-col>
+
+                    <ion-col
+                      size="4"
+                      style="
+                        align-self: center;
+                        text-align: center;
+                        padding: 0px;
+                      "
+                    >
+                      <div
+                        style="font-size: 18px; font-weight: bold"
+                        [style.color]="geTextColor(item.position)"
+                      >
+                        {{item.value}}
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Replacement Preventive Maintenance -->
+      <ion-row>
+        <ion-col>
+          <div class="titleheader">
+            <div class="col">
+              <div class="portraittitle text-uppercase">
+                {{ 'OWNERMAINTENANCE.replacementpreventivemaintenance' |
+                translate}}
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="stationcard"
+            style="padding-left: 20px; padding-right: 20px"
+          >
+            <ion-row *ngFor="let item of replacementpreventivemaintenanceArr">
+              <ion-col no-padding>
+                <ion-card class="portraitcard">
+                  <ion-row style="width: 100%; height: 100%; flex-flow: nowrap">
+                    <ion-col
+                      size="7.5"
+                      style="
+                        align-self: center;
+                        text-align: center;
+                        padding: 0px;
+                      "
+                    >
+                      <div class="h7">{{item.title}}</div>
+                    </ion-col>
+
+                    <ion-col
+                      size="0.2"
+                      style="align-self: center; padding: 0px"
+                    >
+                      <div class="portraitvl4line"></div>
+                    </ion-col>
+
+                    <ion-col
+                      size="4"
+                      style="
+                        align-self: center;
+                        text-align: center;
+                        padding: 0px;
+                      "
+                    >
+                      <div
+                        style="font-size: 18px; font-weight: bold"
+                        [style.color]="geTextColor(item.position)"
+                      >
+                        {{item.value}}
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <div class="portraitpleasewait" *ngIf="pleasewaitflag">
+        <div style="width: 100%; text-align: center">
+          <img
+            style="width: 80px; height: 80px"
+            src="../../../assets/img/loading.gif"
+          />
+        </div>
+        {{ 'NORECORDSFOUND.loading' | translate}}
+      </div>
+    </div>
+    <!-- Portrait Orientation  - Stop -->
+
+    <!-- Landscape Orientation  - Start -->
+    <!-- <div
+      *ngIf="(getscreenorientation == 'landscape' || getscreenorientation == 'landscape-primary' || getscreenorientation == 'landscape-secondary')"
+    >
+      <ion-row style="margin-top: 2px">
+        <ion-col size="10" style="padding: 0px; margin: 0px">
+          <div
+            style="
+              font-size: 12px;
+              color: #ffffff;
+              text-align: center;
+              margin-right: -100px;
+            "
+          >
+            {{ 'OWNERMAINTENANCE.note' | translate}}
+          </div>
+        </ion-col>
+        <ion-col size="2" style="padding: 0px; margin: 0px">
+          <button
+            type="button"
+            class="btn btn-general1 btn-sm float-right"
+            style="margin-right: 10px"
+            (click)="navigate()"
+          >
+            {{ 'OWNERMAINTENANCE.statistics' | translate}}
+          </button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="4">
+          <div class="titleheader">
+            <div class="col">
+              <div class="title text-uppercase">
+                {{ 'OWNERMAINTENANCE.corrective' | translate}}<br />{{
+                'OWNERMAINTENANCE.cmaintenance' | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="stationcard">
+            <ion-row *ngFor="let item of correctivemaintenanceArr">
+              <ion-col style="padding: 0px">
+                <ion-card class="card">
+                  <ion-row style="width: 100%; height: 100%; flex-flow: nowrap">
+                    <ion-col
+                      size="7.5"
+                      style="
+                        align-self: center;
+                        text-align: center;
+                        padding: 0px;
+                      "
+                    >
+                      <div class="h7">{{item.title}}</div>
+                    </ion-col>
+
+                    <ion-col
+                      size="0.2"
+                      style="align-self: center; padding: 0px"
+                    >
+                      <div class="vl4line"></div>
+                    </ion-col>
+
+                    <ion-col
+                      size="4"
+                      style="
+                        align-self: center;
+                        text-align: center;
+                        padding: 0px;
+                      "
+                    >
+                      <div
+                        style="font-size: 18px; font-weight: bold"
+                        [style.color]="geTextColor(item.position)"
+                      >
+                        {{item.value}}
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-col>
+
+        <ion-col size="4">
+          <div class="titleheader">
+            <div class="col">
+              <div class="title text-uppercase">
+                {{ 'OWNERMAINTENANCE.routinepreventivemaintenance' | translate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="stationcard">
+            <ion-row *ngFor="let item of routinepreventivemaintenanceArr">
+              <ion-col style="padding: 0px">
+                <ion-card class="card">
+                  <ion-row style="width: 100%; height: 100%; flex-flow: nowrap">
+                    <ion-col
+                      size="7.5"
+                      style="
+                        align-self: center;
+                        text-align: center;
+                        padding: 0px;
+                      "
+                    >
+                      <div class="h7">{{item.title}}</div>
+                    </ion-col>
+
+                    <ion-col
+                      size="0.2"
+                      style="align-self: center; padding: 0px"
+                    >
+                      <div class="vl4line"></div>
+                    </ion-col>
+
+                    <ion-col
+                      size="4"
+                      style="
+                        align-self: center;
+                        text-align: center;
+                        padding: 0px;
+                      "
+                    >
+                      <div
+                        style="font-size: 18px; font-weight: bold"
+                        [style.color]="geTextColor(item.position)"
+                      >
+                        {{item.value}}
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-col>
+
+        <ion-col size="4">
+          <div class="titleheader">
+            <div class="col">
+              <div class="title text-uppercase">
+                {{ 'OWNERMAINTENANCE.replacementpreventivemaintenance' |
+                translate}}
+              </div>
+            </div>
+          </div>
+
+          <div class="stationcard">
+            <ion-row *ngFor="let item of replacementpreventivemaintenanceArr">
+              <ion-col style="padding: 0px">
+                <ion-card class="card">
+                  <ion-row style="width: 100%; height: 100%; flex-flow: nowrap">
+                    <ion-col
+                      size="7.5"
+                      style="
+                        align-self: center;
+                        text-align: center;
+                        padding: 0px;
+                      "
+                    >
+                      <div class="h7">{{item.title}}</div>
+                    </ion-col>
+
+                    <ion-col
+                      size="0.2"
+                      style="align-self: center; padding: 0px"
+                    >
+                      <div class="vl4line"></div>
+                    </ion-col>
+
+                    <ion-col
+                      size="4"
+                      style="
+                        align-self: center;
+                        text-align: center;
+                        padding: 0px;
+                      "
+                    >
+                      <div
+                        style="font-size: 18px; font-weight: bold"
+                        [style.color]="geTextColor(item.position)"
+                      >
+                        {{item.value}}
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <div class="landscapepleasewait" *ngIf="pleasewaitflag">
+        <div style="width: 100%; text-align: center">
+          <img
+            style="width: 80px; height: 80px"
+            src="../../../assets/img/loading.gif"
+          />
+        </div>
+        {{ 'NORECORDSFOUND.loading' | translate}}
+      </div>
+    </div> -->
+    <!-- Landscape Orientation  - Stop -->
+  </div>
+</ion-content>

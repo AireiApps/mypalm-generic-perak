@@ -163,6 +163,47 @@ p {
   text-align: center;
 }
 
+table {
+  font-size: 11px;
+  line-height: 1.42857143;
+  color: #333;
+  padding: 5px;
+  border-collapse: collapse;
+}
+
+.table td,
+.table th {
+  padding: 0.3rem !important;
+}
+
+.table_head {
+  background-color: #1d2730;
+  color: #ff9f0c;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+}
+
+td {
+  text-align: center;
+  vertical-align: middle;
+  color: #ffffff;
+}
+
+th {
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table th {
+  padding: 0rem !important;
+}
+
+.mdfont {
+  font-size: 11px;
+}
+
 #container {
   text-align: center;
 
@@ -283,6 +324,12 @@ p {
   .btn-update:hover {
     color: #ff9f0c;
   }
+}
+
+.btn-viewnotificationform {
+  background-color: none;
+  border-color: #30beff;
+  color: #ffffff;
 }
 
 hr {

@@ -16,6 +16,7 @@ import { Plugins } from "@capacitor/core";
 import { DatePickerPluginInterface } from "@capacitor-community/date-picker";
 const DatePicker: DatePickerPluginInterface = Plugins.DatePickerPlugin as any;
 import { LanguageService } from "src/app/services/language-service/language.service";
+
 @Component({
   selector: "app-report-pressstationhourlyperformance",
   templateUrl: "./report-pressstationhourlyperformance.page.html",
@@ -47,16 +48,15 @@ export class ReportPressstationhourlyperformancePage implements OnInit {
     private commonservice: AIREIService,
     private service: SupervisorService
   ) {
-    this.reportdate = this.route.snapshot.paramMap.get("reportdate");
+    /*this.reportdate = this.route.snapshot.paramMap.get("reportdate");
 
     if (this.reportdate == "") {
-      //this.reportdate = this.currentdate;
       this.reportdate = "";
     } else {
       this.reportdate = moment(this.reportdate, "YYYY-MM-DD").format(
         "DD-MM-YYYY"
       );
-    }
+    }*/
 
     this.pressstationreportForm = this.fb.group({
       pickdate: new FormControl(this.reportdate),
@@ -120,10 +120,10 @@ export class ReportPressstationhourlyperformancePage implements OnInit {
       fibreflowimages != "" ||
       hydraulicpressureimages != ""
     ) {
-      this.screenOrientation.unlock();
+      /*this.screenOrientation.unlock();
       this.screenOrientation.lock(
         this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY
-      );
+      );*/
 
       const modal = await this.modalController.create({
         component: PressingsterilizerstationImageSliderPage,
@@ -140,9 +140,9 @@ export class ReportPressstationhourlyperformancePage implements OnInit {
       });
 
       modal.onDidDismiss().then((data) => {
-        this.screenOrientation.lock(
+        /*this.screenOrientation.lock(
           this.screenOrientation.ORIENTATIONS.LANDSCAPE
-        );
+        );*/
       });
 
       return await modal.present();

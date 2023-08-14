@@ -11,10 +11,14 @@
       mode="ios"
       *ngIf="(temperatureimageviewFlag || motorimageviewFlag || levelimageviewFlag || drainageimageviewFlag || pressmotorimageviewFlag || pressfibreflowimageviewFlag || presshydraulicpressureimageviewFlag)"
       color="light"
-      ><div class="toolbar-title">
-        {{imagetype}} {{ 'HOURLYPRESSSTATIONSAVE.images' | translate}}
-      </div></ion-title
-    >
+      ><div class="toolbar-title" *ngIf="getlanguage=='English'">
+        {{imageviewtitle}} {{ 'HOURLYPRESSSTATIONSAVE.images' | translate}}
+      </div>
+
+      <div class="toolbar-title" *ngIf="getlanguage=='Malay'">
+        {{ 'HOURLYPRESSSTATIONSAVE.images' | translate}} {{imageviewtitle}}
+      </div>
+    </ion-title>
 
     <ion-buttons
       slot="start"
@@ -51,7 +55,7 @@
     [formGroup]="pressstationForm"
     *ngIf="!viewFlag && !temperatureimageviewFlag && !motorimageviewFlag && !levelimageviewFlag && !drainageimageviewFlag && !pressmotorimageviewFlag && !pressfibreflowimageviewFlag && !presshydraulicpressureimageviewFlag"
   >
-    <ion-row class="form-row">
+    <!-- <ion-row class="form-row">
       <ion-col size="5">
         <div class="h7 text-light">
           {{ 'HOURLYPRESSSTATIONSAVE.observationtime' | translate}}
@@ -68,22 +72,25 @@
         ></ion-datetime>
       </ion-col>
       <ion-col size="2"></ion-col>
-    </ion-row>
+    </ion-row> 
 
-    <div class="hl4line"></div>
+    <div class="hl4line"></div>-->
 
     <div class="digestorcard">
       <div class="title">{{digestortitle}}</div>
 
       <!-- Temperature -->
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
-            {{ 'HOURLYPRESSSTATIONSAVE.temperature' | translate}} <sup> *</sup>
+            {{ 'HOURLYPRESSSTATIONSAVE.temperature' | translate}} (<sup
+              class="degree"
+              >O</sup
+            >C) <sup> *</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
-          <select
+        <ion-col size="6">
+          <!-- <select
             formControlName="select_temperature"
             class="h7 form-control text-dark"
           >
@@ -96,84 +103,73 @@
             >
               {{ value.temperature }}
             </option>
-          </select>
+          </select> -->
+
+          <input
+            type="number"
+            class="h7 form-control text-dark"
+            placeholder="{{ 'GENERALBUTTON.enter' | translate}}"
+            (keypress)="decimalFilter($event)"
+            formControlName="txt_temperature"
+          />
         </ion-col>
-        <ion-col size="2">
+        <!-- <ion-col size="2">
           <div class="h7 text-white">
             <b><sup class="degree">O</sup>C</b>
           </div>
-        </ion-col>
+        </ion-col> -->
       </ion-row>
 
       <ion-row class="form-row" *ngIf="temperatureimagesettingsflag == 1">
         <ion-col style="text-align: right !important">
-          <button
+          <!-- <button
             type="submit"
             class="btn btn-add"
             (click)="addImages('Temperature')"
           >
             {{ 'HOURLYPRESSSTATIONSAVE.addimages' | translate}}
+          </button> -->
+
+          <button
+            type="submit"
+            class="btn btn-imageupload"
+            (click)="imageUpload('Temperature')"
+          >
+            <ion-icon class="icon" name="camera-outline"></ion-icon>
+            <span class="icontext">
+              {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
+            >
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-imageview"
+            (click)="btn_view('Temperature')"
+          >
+            <!-- <ion-icon class="icon" name="eye-outline"></ion-icon> -->
+
+            <span class="icontext" *ngIf="temperatureimagesArr.length==0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+            </span>
+            <span class="icontext" *ngIf="temperatureimagesArr.length>0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+              ({{temperatureimagesArr.length}})
+            </span>
           </button>
         </ion-col>
       </ion-row>
 
-      <div class="hl4line" *ngIf="!temperatureimageuiflag"></div>
-
-      <div class="imagecard" *ngIf="temperatureimageuiflag">
-        <div class="title">
-          {{ 'HOURLYPRESSSTATIONSAVE.temperatureimages' | translate}}
-        </div>
-        <ion-row class="form-row">
-          <ion-col>
-            <input
-              type="text"
-              class="h7 form-control"
-              formControlName="txt_temperatureimageupload"
-              placeholder="{{ 'HOURLYPRESSSTATIONSAVE.uploadbuttonmessage' | translate}}"
-              readonly
-          /></ion-col>
-        </ion-row>
-
-        <ion-row style="margin-top: 10px">
-          <ion-col size="6" style="text-align: right !important">
-            <button
-              type="submit"
-              class="btn btn-imageview"
-              (click)="btn_view('Temperature')"
-            >
-              <ion-icon class="icon" name="eye-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.viewbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-
-          <ion-col size="6" style="text-align: left !important">
-            <button
-              type="submit"
-              class="btn btn-imageupload"
-              (click)="imageUpload('Temperature')"
-            >
-              <ion-icon class="icon" name="cloud-upload-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-        </ion-row>
-      </div>
-
-      <div class="hl4line" *ngIf="temperatureimageuiflag"></div>
+      <div class="hl4line"></div>
 
       <!-- Digestor Motor -->
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
-            {{ 'HOURLYPRESSSTATIONSAVE.motor' | translate}} <sup>*</sup>
+            {{ 'HOURLYPRESSSTATIONSAVE.motor' | translate}} (A)<sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
-          <select
+        <ion-col size="6">
+          <!-- <select
             formControlName="select_digestormotoramps"
             class="h7 form-control text-dark"
           >
@@ -186,81 +182,61 @@
             >
               {{ value.digestoramps }}
             </option>
-          </select>
+          </select> -->
+
+          <input
+            type="number"
+            class="h7 form-control text-dark"
+            placeholder="{{ 'GENERALBUTTON.enter' | translate}}"
+            (keypress)="decimalFilter($event)"
+            formControlName="txt_digestormotoramps"
+          />
         </ion-col>
-        <ion-col size="2">
+        <!-- <ion-col size="2">
           <div class="h7 text-white"><b>A</b></div>
-        </ion-col>
+        </ion-col> -->
       </ion-row>
 
       <ion-row class="form-row" *ngIf="motorimagesettingsflag == 1">
         <ion-col style="text-align: right !important">
           <button
             type="submit"
-            class="btn btn-add"
-            (click)="addImages('Motor')"
+            class="btn btn-imageupload"
+            (click)="imageUpload('Motor')"
           >
-            {{ 'HOURLYPRESSSTATIONSAVE.addimages' | translate}}
+            <ion-icon class="icon" name="camera-outline"></ion-icon>
+            <span class="icontext">
+              {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
+            >
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-imageview"
+            (click)="btn_view('Motor')"
+          >
+            <!-- <ion-icon class="icon" name="eye-outline"></ion-icon> -->
+            <span class="icontext" *ngIf="motorimagesArr.length==0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+            </span>
+            <span class="icontext" *ngIf="motorimagesArr.length>0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+              ({{motorimagesArr.length}})
+            </span>
           </button>
         </ion-col>
       </ion-row>
 
-      <div class="hl4line" *ngIf="!motorimageuiflag"></div>
-
-      <div class="imagecard" *ngIf="motorimageuiflag">
-        <div class="title">
-          {{ 'HOURLYPRESSSTATIONSAVE.motorimages' | translate}}
-        </div>
-        <ion-row class="form-row">
-          <ion-col>
-            <input
-              type="text"
-              class="h7 form-control"
-              formControlName="txt_motorimageupload"
-              placeholder="{{ 'HOURLYPRESSSTATIONSAVE.uploadbuttonmessage' | translate}}"
-              readonly
-          /></ion-col>
-        </ion-row>
-
-        <ion-row style="margin-top: 10px">
-          <ion-col size="6" style="text-align: right !important">
-            <button
-              type="submit"
-              class="btn btn-imageview"
-              (click)="btn_view('Motor')"
-            >
-              <ion-icon class="icon" name="eye-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.viewbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-
-          <ion-col size="6" style="text-align: left !important">
-            <button
-              type="submit"
-              class="btn btn-imageupload"
-              (click)="imageUpload('Motor')"
-            >
-              <ion-icon class="icon" name="cloud-upload-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-        </ion-row>
-      </div>
-
-      <div class="hl4line" *ngIf="motorimageuiflag"></div>
+      <div class="hl4line"></div>
 
       <!-- Level -->
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
             {{ 'HOURLYPRESSSTATIONSAVE.level' | translate}} <sup> *</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
+        <ion-col size="6">
           <select
             formControlName="select_level"
             class="h7 form-control text-dark"
@@ -276,78 +252,50 @@
             </option>
           </select>
         </ion-col>
-        <ion-col size="2"></ion-col>
+        <!-- <ion-col size="2"></ion-col> -->
       </ion-row>
 
       <ion-row class="form-row" *ngIf="levelimagesettingsflag == 1">
         <ion-col style="text-align: right !important">
           <button
             type="submit"
-            class="btn btn-add"
-            (click)="addImages('Level')"
+            class="btn btn-imageupload"
+            (click)="imageUpload('Level')"
           >
-            {{ 'HOURLYPRESSSTATIONSAVE.addimages' | translate}}
+            <ion-icon class="icon" name="camera-outline"></ion-icon>
+            <span class="icontext">
+              {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
+            >
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-imageview"
+            (click)="btn_view('Level')"
+          >
+            <!-- <ion-icon class="icon" name="eye-outline"></ion-icon> -->
+            <span class="icontext" *ngIf="levelimagesArr.length==0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+            </span>
+            <span class="icontext" *ngIf="levelimagesArr.length>0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+              ({{levelimagesArr.length}})
+            </span>
           </button>
         </ion-col>
       </ion-row>
 
-      <div class="hl4line" *ngIf="!levelimageuiflag"></div>
-
-      <div class="imagecard" *ngIf="levelimageuiflag">
-        <div class="title">
-          {{ 'HOURLYPRESSSTATIONSAVE.levelimages' | translate}}
-        </div>
-        <ion-row class="form-row">
-          <ion-col>
-            <input
-              type="text"
-              class="h7 form-control"
-              formControlName="txt_levelimageupload"
-              placeholder="{{ 'HOURLYPRESSSTATIONSAVE.uploadbuttonmessage' | translate}}"
-              readonly
-          /></ion-col>
-        </ion-row>
-
-        <ion-row style="margin-top: 10px">
-          <ion-col size="6" style="text-align: right !important">
-            <button
-              type="submit"
-              class="btn btn-imageview"
-              (click)="btn_view('Level')"
-            >
-              <ion-icon class="icon" name="eye-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.viewbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-
-          <ion-col size="6" style="text-align: left !important">
-            <button
-              type="submit"
-              class="btn btn-imageupload"
-              (click)="imageUpload('Level')"
-            >
-              <ion-icon class="icon" name="cloud-upload-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-        </ion-row>
-      </div>
-
-      <div class="hl4line" *ngIf="levelimageuiflag"></div>
+      <div class="hl4line"></div>
 
       <!-- Digestor Drainage -->
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
             {{ 'HOURLYPRESSSTATIONSAVE.digestordrainage' | translate}}
             <sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
+        <ion-col size="6">
           <select
             formControlName="select_digestordrainoilflow"
             class="h7 form-control text-dark"
@@ -363,78 +311,52 @@
             </option>
           </select>
         </ion-col>
-        <ion-col size="2"></ion-col>
+        <!-- <ion-col size="2"></ion-col> -->
       </ion-row>
 
       <ion-row class="form-row" *ngIf="drainageimagesettingsflag == 1">
         <ion-col style="text-align: right !important">
           <button
             type="submit"
-            class="btn btn-add"
-            (click)="addImages('Drainage')"
+            class="btn btn-imageupload"
+            (click)="imageUpload('Drainage')"
           >
-            {{ 'HOURLYPRESSSTATIONSAVE.addimages' | translate}}
+            <ion-icon class="icon" name="camera-outline"></ion-icon>
+            <span class="icontext">
+              {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
+            >
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-imageview"
+            (click)="btn_view('Drainage')"
+          >
+            <!-- <ion-icon class="icon" name="eye-outline"></ion-icon> -->
+            <span class="icontext" *ngIf="drainageimagesArr.length==0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+            </span>
+            <span class="icontext" *ngIf="drainageimagesArr.length>0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+              ({{drainageimagesArr.length}})
+            </span>
           </button>
         </ion-col>
       </ion-row>
-
-      <div class="imagecard" *ngIf="drainageimageuiflag">
-        <div class="title">
-          {{ 'HOURLYPRESSSTATIONSAVE.drainageimages' | translate}}
-        </div>
-        <ion-row class="form-row">
-          <ion-col>
-            <input
-              type="text"
-              class="h7 form-control"
-              formControlName="txt_drainageimageupload"
-              placeholder="{{ 'HOURLYPRESSSTATIONSAVE.uploadbuttonmessage' | translate}}"
-              readonly
-          /></ion-col>
-        </ion-row>
-
-        <ion-row style="margin-top: 10px">
-          <ion-col size="6" style="text-align: right !important">
-            <button
-              type="submit"
-              class="btn btn-imageview"
-              (click)="btn_view('Drainage')"
-            >
-              <ion-icon class="icon" name="eye-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.viewbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-
-          <ion-col size="6" style="text-align: left !important">
-            <button
-              type="submit"
-              class="btn btn-imageupload"
-              (click)="imageUpload('Drainage')"
-            >
-              <ion-icon class="icon" name="cloud-upload-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-        </ion-row>
-      </div>
     </div>
 
-    <div class="hl4line"></div>
+    <hr />
 
     <div class="presscard">
       <div class="title">{{presstitle}}</div>
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
-            {{ 'HOURLYPRESSSTATIONSAVE.motor' | translate}} <sup>*</sup>
+            {{ 'HOURLYPRESSSTATIONSAVE.motor' | translate}} (A)<sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
-          <select
+        <ion-col size="6">
+          <!-- <select
             formControlName="select_pressmotoramps"
             class="h7 form-control text-dark"
           >
@@ -447,81 +369,61 @@
             >
               {{ value.pressureamps }}
             </option>
-          </select>
+          </select> -->
+
+          <input
+            type="number"
+            class="h7 form-control text-dark"
+            placeholder="{{ 'GENERALBUTTON.enter' | translate}}"
+            (keypress)="decimalFilter($event)"
+            formControlName="txt_pressmotoramps"
+          />
         </ion-col>
-        <ion-col size="2">
+        <!-- <ion-col size="2">
           <div class="h7 text-white"><b>A</b></div>
-        </ion-col>
+        </ion-col> -->
       </ion-row>
 
       <ion-row class="form-row" *ngIf="pressmotorimagesettingsflag == 1">
         <ion-col style="text-align: right !important">
           <button
             type="submit"
-            class="btn btn-add"
-            (click)="addImages('PressMotor')"
+            class="btn btn-imageupload"
+            (click)="imageUpload('PressMotor')"
           >
-            {{ 'HOURLYPRESSSTATIONSAVE.addimages' | translate}}
+            <ion-icon class="icon" name="camera-outline"></ion-icon>
+            <span class="icontext">
+              {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
+            >
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-imageview"
+            (click)="btn_view('PressMotor')"
+          >
+            <!-- <ion-icon class="icon" name="eye-outline"></ion-icon> -->
+            <span class="icontext" *ngIf="pressmotorimagesArr.length==0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+            </span>
+            <span class="icontext" *ngIf="pressmotorimagesArr.length>0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+              ({{pressmotorimagesArr.length}})
+            </span>
           </button>
         </ion-col>
       </ion-row>
 
-      <div class="hl4line" *ngIf="!pressmotorimageuiflag"></div>
-
-      <div class="imagecard" *ngIf="pressmotorimageuiflag">
-        <div class="title">
-          {{ 'HOURLYPRESSSTATIONSAVE.motorimages' | translate}}
-        </div>
-        <ion-row class="form-row">
-          <ion-col>
-            <input
-              type="text"
-              class="h7 form-control"
-              formControlName="txt_pressmotorimageupload"
-              placeholder="{{ 'HOURLYPRESSSTATIONSAVE.uploadbuttonmessage' | translate}}"
-              readonly
-          /></ion-col>
-        </ion-row>
-
-        <ion-row style="margin-top: 10px">
-          <ion-col size="6" style="text-align: right !important">
-            <button
-              type="submit"
-              class="btn btn-imageview"
-              (click)="btn_view('PressMotor')"
-            >
-              <ion-icon class="icon" name="eye-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.viewbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-
-          <ion-col size="6" style="text-align: left !important">
-            <button
-              type="submit"
-              class="btn btn-imageupload"
-              (click)="imageUpload('PressMotor')"
-            >
-              <ion-icon class="icon" name="cloud-upload-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-        </ion-row>
-      </div>
-
-      <div class="hl4line" *ngIf="pressmotorimageuiflag"></div>
+      <div class="hl4line"></div>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
             {{ 'HOURLYPRESSSTATIONSAVE.presscakedrainage' | translate}}
             <sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
+        <ion-col size="6">
           <select
             formControlName="select_fiberflow"
             class="h7 form-control text-dark"
@@ -537,78 +439,50 @@
             </option>
           </select>
         </ion-col>
-        <ion-col size="2"></ion-col>
+        <!-- <ion-col size="2"></ion-col> -->
       </ion-row>
 
       <ion-row class="form-row" *ngIf="pressfibreflowimagesettingsflag == 1">
         <ion-col style="text-align: right !important">
           <button
             type="submit"
-            class="btn btn-add"
-            (click)="addImages('PressFibreFlow')"
+            class="btn btn-imageupload"
+            (click)="imageUpload('PressFibreFlow')"
           >
-            {{ 'HOURLYPRESSSTATIONSAVE.addimages' | translate}}
+            <ion-icon class="icon" name="camera-outline"></ion-icon>
+            <span class="icontext">
+              {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
+            >
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-imageview"
+            (click)="btn_view('PressFibreFlow')"
+          >
+            <!-- <ion-icon class="icon" name="eye-outline"></ion-icon> -->
+            <span class="icontext" *ngIf="pressfibreflowimagesArr.length==0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+            </span>
+            <span class="icontext" *ngIf="pressfibreflowimagesArr.length>0">
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+              ({{pressfibreflowimagesArr.length}})
+            </span>
           </button>
         </ion-col>
       </ion-row>
 
-      <div class="hl4line" *ngIf="!pressfibreflowimageuiflag"></div>
-
-      <div class="imagecard" *ngIf="pressfibreflowimageuiflag">
-        <div class="title">
-          {{ 'HOURLYPRESSSTATIONSAVE.fibreflowimages' | translate}}
-        </div>
-        <ion-row class="form-row">
-          <ion-col>
-            <input
-              type="text"
-              class="h7 form-control"
-              formControlName="txt_pressfibreflowimageupload"
-              placeholder="{{ 'HOURLYPRESSSTATIONSAVE.uploadbuttonmessage' | translate}}"
-              readonly
-          /></ion-col>
-        </ion-row>
-
-        <ion-row style="margin-top: 10px">
-          <ion-col size="6" style="text-align: right !important">
-            <button
-              type="submit"
-              class="btn btn-imageview"
-              (click)="btn_view('PressFibreFlow')"
-            >
-              <ion-icon class="icon" name="eye-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.viewbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-
-          <ion-col size="6" style="text-align: left !important">
-            <button
-              type="submit"
-              class="btn btn-imageupload"
-              (click)="imageUpload('PressFibreFlow')"
-            >
-              <ion-icon class="icon" name="cloud-upload-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-        </ion-row>
-      </div>
-
-      <div class="hl4line" *ngIf="pressfibreflowimageuiflag"></div>
+      <div class="hl4line"></div>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
-            {{ 'HOURLYPRESSSTATIONSAVE.hydraulicpressure' | translate}}
+            {{ 'HOURLYPRESSSTATIONSAVE.hydraulicpressure' | translate}} (Bar)
             <sup> *</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
-          <select
+        <ion-col size="6">
+          <!-- <select
             formControlName="select_hydraulicpressure"
             class="h7 form-control text-dark"
           >
@@ -621,11 +495,19 @@
             >
               {{ value.pressure }}
             </option>
-          </select>
+          </select> -->
+
+          <input
+            type="number"
+            class="h7 form-control text-dark"
+            placeholder="{{ 'GENERALBUTTON.enter' | translate}}"
+            (keypress)="decimalFilter($event)"
+            formControlName="txt_hydraulicpressure"
+          />
         </ion-col>
-        <ion-col size="2">
+        <!-- <ion-col size="2">
           <div class="h7 text-white"><b>Bar</b></div>
-        </ion-col>
+        </ion-col> -->
       </ion-row>
 
       <ion-row
@@ -635,57 +517,37 @@
         <ion-col style="text-align: right !important">
           <button
             type="submit"
-            class="btn btn-add"
-            (click)="addImages('PressHydraulicPressure')"
+            class="btn btn-imageupload"
+            (click)="imageUpload('PressHydraulicPressure')"
           >
-            {{ 'HOURLYPRESSSTATIONSAVE.addimages' | translate}}
+            <ion-icon class="icon" name="camera-outline"></ion-icon>
+            <span class="icontext">
+              {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
+            >
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-imageview"
+            (click)="btn_view('PressHydraulicPressure')"
+          >
+            <!-- <ion-icon class="icon" name="eye-outline"></ion-icon> -->
+            <span
+              class="icontext"
+              *ngIf="presshydraulicpressureimagesArr.length==0"
+            >
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+            </span>
+            <span
+              class="icontext"
+              *ngIf="presshydraulicpressureimagesArr.length>0"
+            >
+              {{ 'GENERALBUTTON.viewbutton' | translate}}
+              ({{presshydraulicpressureimagesArr.length}})
+            </span>
           </button>
         </ion-col>
       </ion-row>
-
-      <div class="imagecard" *ngIf="presshydraulicpressureimageuiflag">
-        <div class="title">
-          {{ 'HOURLYPRESSSTATIONSAVE.hydraulicpressureimages' | translate}}
-        </div>
-        <ion-row class="form-row">
-          <ion-col>
-            <input
-              type="text"
-              class="h7 form-control"
-              formControlName="txt_presshydraulicpressureimageupload"
-              placeholder="{{ 'HOURLYPRESSSTATIONSAVE.uploadbuttonmessage' | translate}}"
-              readonly
-          /></ion-col>
-        </ion-row>
-
-        <ion-row style="margin-top: 10px">
-          <ion-col size="6" style="text-align: right !important">
-            <button
-              type="submit"
-              class="btn btn-imageview"
-              (click)="btn_view('PressHydraulicPressure')"
-            >
-              <ion-icon class="icon" name="eye-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.viewbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-
-          <ion-col size="6" style="text-align: left !important">
-            <button
-              type="submit"
-              class="btn btn-imageupload"
-              (click)="imageUpload('PressHydraulicPressure')"
-            >
-              <ion-icon class="icon" name="cloud-upload-outline"></ion-icon>
-              <span class="icontext">
-                {{ 'GENERALBUTTON.uploadbutton' | translate}}</span
-              >
-            </button>
-          </ion-col>
-        </ion-row>
-      </div>
     </div>
 
     <!-- <div class="dilutiontemperaturecard">
@@ -718,7 +580,7 @@
 
     <hr />
 
-    <ion-row style="margin-top: 10px">
+    <ion-row style="margin-top: 10px; margin-bottom: 10px">
       <ion-col size="6" style="text-align: right !important">
         <button type="submit" class="btn btn-save" (click)="confirm()">
           {{ 'GENERALBUTTON.savebutton' | translate}}
@@ -738,11 +600,11 @@
     class="home-box"
     *ngIf="viewFlag && !temperatureimageviewFlag && !motorimageviewFlag && !levelimageviewFlag && !drainageimageviewFlag && !pressmotorimageviewFlag && !pressfibreflowimageviewFlag && !presshydraulicpressureimageviewFlag"
   >
-    <div class="h6 text-light" style="margin-left: 10px; margin-top: 10px">
-      {{ 'HOURLYPRESSSTATIONSAVE.alert' | translate}}
+    <div class="h6" style="margin-left: 10px; margin-top: 10px; color: #3cd2a5">
+      <b>{{ 'HOURLYPRESSSTATIONSAVE.alert' | translate}}</b>
     </div>
 
-    <ion-row class="form-row">
+    <!-- <ion-row class="form-row">
       <ion-col size="5">
         <div class="h7 text-light">
           {{ 'HOURLYPRESSSTATIONSAVE.observationtime' | translate}}
@@ -761,18 +623,21 @@
       <ion-col size="2"></ion-col>
     </ion-row>
 
-    <div class="hl4line"></div>
+    <div class="hl4line"></div> -->
 
     <div class="digestorcard">
       <div class="title">{{digestortitle}}</div>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
-            {{ 'HOURLYPRESSSTATIONSAVE.temperature' | translate}} <sup> *</sup>
+            {{ 'HOURLYPRESSSTATIONSAVE.temperature' | translate}} (<sup
+              class="degree"
+              >O</sup
+            >C)<sup> *</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
+        <ion-col size="6">
           <input
             type="text"
             class="h7 form-control"
@@ -781,20 +646,20 @@
             readonly
           />
         </ion-col>
-        <ion-col size="2">
+        <!-- <ion-col size="2">
           <div class="h7 text-white">
             <b><sup class="degree">O</sup>C</b>
           </div>
-        </ion-col>
+        </ion-col> -->
       </ion-row>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
-            {{ 'HOURLYPRESSSTATIONSAVE.motor' | translate}} <sup>*</sup>
+            {{ 'HOURLYPRESSSTATIONSAVE.motor' | translate}} (A)<sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
+        <ion-col size="6">
           <input
             type="text"
             class="h7 form-control"
@@ -803,18 +668,18 @@
             readonly
           />
         </ion-col>
-        <ion-col size="2">
+        <!-- <ion-col size="2">
           <div class="h7 text-white"><b>A</b></div>
-        </ion-col>
+        </ion-col> -->
       </ion-row>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
             {{ 'HOURLYPRESSSTATIONSAVE.level' | translate}} <sup> *</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
+        <ion-col size="6">
           <input
             type="text"
             class="h7 form-control"
@@ -823,17 +688,17 @@
             readonly
           />
         </ion-col>
-        <ion-col size="2"></ion-col>
+        <!-- <ion-col size="2"></ion-col> -->
       </ion-row>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
             {{ 'HOURLYPRESSSTATIONSAVE.digestordrainage' | translate}}
             <sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
+        <ion-col size="6">
           <input
             type="text"
             class="h7 form-control"
@@ -842,22 +707,22 @@
             readonly
           />
         </ion-col>
-        <ion-col size="2"></ion-col>
+        <!-- <ion-col size="2"></ion-col> -->
       </ion-row>
     </div>
 
-    <div class="hl4line"></div>
+    <hr />
 
     <div class="presscard">
       <div class="title">{{presstitle}}</div>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
-            {{ 'HOURLYPRESSSTATIONSAVE.motor' | translate}} <sup>*</sup>
+            {{ 'HOURLYPRESSSTATIONSAVE.motor' | translate}} (A)<sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
+        <ion-col size="6">
           <input
             type="text"
             class="h7 form-control"
@@ -866,19 +731,19 @@
             readonly
           />
         </ion-col>
-        <ion-col size="2">
+        <!-- <ion-col size="2">
           <div class="h7 text-white"><b>A</b></div>
-        </ion-col>
+        </ion-col> -->
       </ion-row>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
             {{ 'HOURLYPRESSSTATIONSAVE.presscakedrainage' | translate}}
             <sup>*</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
+        <ion-col size="6">
           <input
             type="text"
             class="h7 form-control"
@@ -887,17 +752,17 @@
             readonly
           />
         </ion-col>
-        <ion-col size="2"></ion-col>
+        <!-- <ion-col size="2"></ion-col> -->
       </ion-row>
 
       <ion-row class="form-row">
-        <ion-col size="5">
+        <ion-col size="6">
           <div class="h7 text-white">
-            {{ 'HOURLYPRESSSTATIONSAVE.hydraulicpressure' | translate}}
+            {{ 'HOURLYPRESSSTATIONSAVE.hydraulicpressure' | translate}} (Bar)
             <sup> *</sup>
           </div>
         </ion-col>
-        <ion-col size="5">
+        <ion-col size="6">
           <input
             type="text"
             class="h7 form-control"
@@ -906,15 +771,15 @@
             readonly
           />
         </ion-col>
-        <ion-col size="2">
+        <!-- <ion-col size="2">
           <div class="h7 text-white"><b>Bar</b></div>
-        </ion-col>
+        </ion-col> -->
       </ion-row>
     </div>
 
     <hr />
 
-    <ion-row style="margin-top: 10px">
+    <ion-row style="margin-top: 10px; margin-bottom: 10px">
       <ion-col size="6" style="text-align: right !important">
         <button
           type="submit"

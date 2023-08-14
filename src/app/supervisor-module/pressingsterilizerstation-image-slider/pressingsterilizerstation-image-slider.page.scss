@@ -8,19 +8,14 @@
   transform: translateY(-50%);
 }
 
-img {
-  width: 500px;
-  height: 500px;
+
+
+.screenportraitimage{
+    width: 500px;
+    height: 500px;
 }
 
-.card {
-  //margin-top: 10%;
-  text-align: center;
-  position: relative;
-  border-radius: 10px;
-}
-
-.overlay {
+.screenportraitoverlay {
   width: 100%;
   height: 10%;
   padding-top: 5%;
@@ -33,3 +28,31 @@ img {
   font-weight: bold;
   background-color: black;
 }
+
+.screenlandscapeimage{
+    width: 400px;
+    height: 280px;
+}
+
+.screenlandscapeoverlay{
+  width: 100%;
+  padding-top: 10px;
+  text-align: center;
+  position: absolute;
+  z-index: 99;
+  opacity: 0.5;
+  color: white;
+  font-weight: bold;
+  background-color: black;
+}
+
+.card {
+  //margin-top: 10%;
+  text-align: center;
+  position: relative;
+  border-radius: 10px;
+  
+}
+
+
+

@@ -190,6 +190,7 @@ export class MaintenanceMaterialsearchPage implements OnInit {
   getvalue(getitem) {
     this.modalController.dismiss({
       dismissed: true,
+      searchtext: this.searchTerm,
       data: JSON.stringify(getitem),
     });
   }
@@ -231,6 +232,7 @@ export class MaintenanceMaterialsearchPage implements OnInit {
   dismiss() {
     this.modalController.dismiss({
       dismissed: true,
+      searchtext: "",
       data: "",
     });
   }

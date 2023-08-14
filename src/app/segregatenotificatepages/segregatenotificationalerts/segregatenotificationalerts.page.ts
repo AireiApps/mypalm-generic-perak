@@ -1,9 +1,15 @@
 import { Component, OnInit } from "@angular/core";
+import { Location } from "@angular/common";
+import { App, AppState } from "@capacitor/core";
 import { AIREIService } from "src/app/api/api.service";
 import { ActivatedRoute, Router } from "@angular/router";
+import { ModalController, AlertController } from "@ionic/angular";
 import * as moment from "moment";
 import { TranslateService } from "@ngx-translate/core";
 import { LanguageService } from "src/app/services/language-service/language.service";
+
+import { PressingsterilizerstationImageSliderPage } from "src/app/supervisor-module/pressingsterilizerstation-image-slider/pressingsterilizerstation-image-slider.page";
+
 @Component({
   selector: "app-segregatenotificationalerts",
   templateUrl: "./segregatenotificationalerts.page.html",
@@ -27,8 +33,9 @@ export class SegregatenotificationalertsPage implements OnInit {
   todaysnotificationclick = 0;
   oldernotificationclick = 0;
 
-  filterstatus = 3;
+  filterstatus = 4;
   enableflag = false;
+  isDisable = false;
 
   currentdate = moment(new Date().toISOString()).format("DD-MM-YYYY");
 
@@ -37,24 +44,121 @@ export class SegregatenotificationalertsPage implements OnInit {
     private translate: TranslateService,
     private service: AIREIService,
     private activatedroute: ActivatedRoute,
-    private router: Router
+    private alertController: AlertController,
+    public modalController: ModalController,
+    private router: Router,
+    private location: Location
   ) {
     this.activatedroute.params.subscribe((val) => {
-      this.getNotification();
+      if (this.designationid == "2") {
+        this.getalert();
+      } else {
+        this.getNotification();
+      }
     });
-    // this.getNotification();
   }
 
   ngOnInit() {
-    this.getNotification();
+    App.addListener("appStateChange", (state: AppState) => {
+      if (state.isActive == true) {
+        //this.getNotification();
+        //this.router.navigate(["/segregatenotification"]);
+        if (this.router.url == "/segregatenotificationalerts") {
+          this.reloadCurrentPage();
+        }
+      }
+    });
+    //this.getNotification();
   }
 
   ngAfterViewInit(): void {
-    this.getNotification();
+    //this.getNotification();
   }
 
   ionViewDidEnter() {
-    this.getNotification();
+    if (this.designationid == "2") {
+      this.getalert();
+    } else {
+      this.getNotification();
+    }
+  }
+
+  reloadCurrentPage() {
+    let currentUrl = this.router.url;
+
+    this.router.navigateByUrl("/", { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl]);
+    });
+  }
+
+  geBorderColor(value) {
+    let color;
+
+    if (value == "") {
+      color = "#ffffff";
+    }
+
+    // Sterilizer
+    if (value == "1") {
+      color = "#FF9800";
+    }
+
+    // Press
+    if (value == "2") {
+      color = "#03A9F4";
+    }
+
+    // Oil loss
+    if (value == "3") {
+      color = "#F44336";
+    }
+
+    // Grading
+    if (value == "4") {
+      color = "#4CAF50";
+    }
+
+    return color;
+  }
+
+  getBackgroundColor(value) {
+    //console.log(value);
+
+    let color;
+
+    if (value == "") {
+      color = "#ffffff";
+    }
+
+    // Sterilizer
+    if (value == "1") {
+      color = "#FFF3E0";
+    }
+
+    // Press
+    if (value == "2") {
+      color = "#E1F5FE";
+    }
+
+    // Oil loss
+    if (value == "3") {
+      color = "#FFEBEE";
+    }
+
+    // Grading
+    if (value == "4") {
+      color = "#E8F5E9";
+    }
+
+    return color;
+  }
+
+  getTextColor(value) {
+    let color;
+
+    color = "#ffffff";
+
+    return color;
   }
 
   gettodaysnotification() {
@@ -89,14 +193,95 @@ export class SegregatenotificationalertsPage implements OnInit {
     }
   }
 
-  getNotification() {
-    /*this.todaysnotificationflag = false;
-    this.yesterdaynotificationflag = false;
-    this.oldernotificationflag = false;*/
-
+  getalert() {
     const req = {
       userid: this.userlist.userId,
       departmentid: this.userlist.dept_id,
+      millcode: this.userlist.millcode,
+      filter: "4",
+      language: this.languageService.selected,
+    };
+
+    //console.log(req);
+
+    this.service.getalertnotification(req).then((result) => {
+      let resultdata: any;
+      resultdata = result;
+      if (resultdata.httpcode == 200) {
+        this.todaysnotificationcount = resultdata.todaycount;
+        this.oldernotificationcount = resultdata.oldercount;
+
+        this.todaysnotificationArr = resultdata.data.today;
+        this.oldernotificationArr = resultdata.data.older;
+
+        if (this.todaysnotificationArr.length > 0) {
+          let eachArr = [];
+
+          for (let i = 0; i < this.todaysnotificationArr.length; i++) {
+            let eachitem = this.todaysnotificationArr[i];
+            let eachreq = {
+              redirect: eachitem.redirect,
+              rectify_status: eachitem.rectify_status,
+              notification_date: eachitem.notification_date,
+              rectify_remarks: eachitem.rectify_remarks,
+              id: eachitem.id,
+              baseid: eachitem.baseid,
+              title: eachitem.title,
+              notification_text: this.nl2br(eachitem.notification_text),
+              status: eachitem.status,
+              type: eachitem.type,
+              images: eachitem.images,
+            };
+
+            eachArr.push(eachreq);
+          }
+
+          this.todaysnotificationArr = eachArr;
+        }
+
+        if (this.oldernotificationArr.length > 0) {
+          let eachArr = [];
+
+          for (let i = 0; i < this.oldernotificationArr.length; i++) {
+            let eachitem = this.oldernotificationArr[i];
+            let eachreq = {
+              redirect: eachitem.redirect,
+              rectify_status: eachitem.rectify_status,
+              notification_date: eachitem.notification_date,
+              rectify_remarks: eachitem.rectify_remarks,
+              id: eachitem.id,
+              baseid: eachitem.baseid,
+              title: eachitem.title,
+              notification_text: this.nl2br(eachitem.notification_text),
+              status: eachitem.status,
+              type: eachitem.type,
+              images: eachitem.images,
+            };
+
+            eachArr.push(eachreq);
+          }
+
+          this.oldernotificationArr = eachArr;
+        }
+
+        this.enableflag = false;
+      } else {
+        this.todaysnotificationcount = 0;
+        this.oldernotificationcount = 0;
+
+        this.todaysnotificationArr = [];
+        this.oldernotificationArr = [];
+
+        this.enableflag = true;
+      }
+    });
+  }
+
+  getNotification() {
+    const req = {
+      userid: this.userlist.userId,
+      departmentid: this.userlist.dept_id,
+      designationid: this.userlist.desigId,
       millcode: this.userlist.millcode,
       filter: this.filterstatus,
       language: this.languageService.selected,
@@ -127,6 +312,96 @@ export class SegregatenotificationalertsPage implements OnInit {
     });
   }
 
+  btn_rectify(value) {
+    this.save("", "1", value.baseid, value.id, value.type);
+  }
+
+  btn_notrectify(value) {
+    //let alertmessage = "Please enter Reason for Breakdown and Balance Crop";
+    let alertmessage = this.translate.instant("ALERTACKNOWLEDGE.reasontitle");
+
+    this.alertController
+      .create({
+        mode: "md",
+        header: "",
+        message: alertmessage,
+        cssClass: "customalertmessagetwobuttons",
+        backdropDismiss: false,
+        inputs: [
+          {
+            name: "reason",
+            type: "textarea",
+            cssClass: "alertinput",
+            placeholder: this.translate.instant(
+              "ALERTACKNOWLEDGE.reasonplaceholder"
+            ),
+          },
+        ],
+        buttons: [
+          {
+            text: "",
+            handler: (cancel) => {
+              //console.log("Confirm Cancel");
+            },
+          },
+          {
+            text: "",
+            handler: (data: any) => {
+              if (data.reason != "") {
+                this.save(data.reason, "2", value.baseid, value.id, value.type);
+              } else {
+                this.service.presentToast(
+                  this.translate.instant("ALERTACKNOWLEDGE.reasonmandatory")
+                );
+                return false;
+              }
+            },
+          },
+        ],
+      })
+      .then((res) => {
+        res.present();
+      });
+  }
+
+  save(getreason, getrectifystatus, getbaseid, getid, gettype) {
+    var req = {
+      userid: this.userlist.userId,
+      departmentid: this.userlist.dept_id,
+      designationid: this.userlist.desigId,
+      millcode: this.userlist.millcode,
+      baseid: getbaseid,
+      id: getid,
+      type: gettype,
+      rectify_status: getrectifystatus,
+      remarks: getreason,
+      language: this.languageService.selected,
+    };
+
+    console.log(req);
+
+    this.service.updatealertnotification(req).then((result) => {
+      var resultdata: any;
+      resultdata = result;
+
+      if (resultdata.httpcode == 200) {
+        this.isDisable = false;
+
+        this.service.presentToast(
+          this.translate.instant("ALERTACKNOWLEDGE.acknowledgementsuccess")
+        );
+
+        this.getalert();
+      } else {
+        this.isDisable = false;
+
+        this.service.presentToast(
+          this.translate.instant("ALERTACKNOWLEDGE.acknowledgementfailed")
+        );
+      }
+    });
+  }
+
   updateNotification(value) {
     let req = {
       user_id: this.userlist.userId,
@@ -151,41 +426,40 @@ export class SegregatenotificationalertsPage implements OnInit {
     });
   }
 
-  async callmodalcontroller(value) {
-    this.getNotification();
+  async btn_ViewImages(images) {
+    //console.log(images);
+    if (images != "") {
+      const modal = await this.modalController.create({
+        component: PressingsterilizerstationImageSliderPage,
+        componentProps: {
+          from: "Alert",
+          alertitem: images,
+        },
+      });
 
-    if (value.redirect == "ROUTINE PREVENTIVE MAINTENANCE NOTIFICATION") {
-      if (this.designationid == 5 || this.designationid == 11) {
-        this.router.navigate(["/tabs/tabmaintenancehome"]);
-      } else {
-        this.router.navigate(["/maintenance-pvrpv-list"]);
-      }
-    } else if (
-      value.redirect == "REPLACEMENT PREVENTIVE MAINTENANCE NOTIFICATION"
-    ) {
-      if (this.designationid == 5 || this.designationid == 11) {
-        this.router.navigate(["/tabs/tabmaintenancehome"]);
-      } else {
-        this.router.navigate(["/maintenance-pvrpv-list"]);
-      }
-    } else if (value.redirect == "CORRECTIVE MAINTENANCE NOTIFICATION") {
-      //this.router.navigate(["/maintenance-correctivemaintenance-list"]);
+      modal.onDidDismiss().then((data) => {});
 
-      if (this.departmentid == 4) {
-        this.router.navigate(["/production-notification-list"]);
-      } else {
-        if (this.designationid == 5 || this.designationid == 11) {
-          this.router.navigate(["/tabs/tabmaintenancehome"]);
-        } else {
-          this.router.navigate(["/maintenance-notification-list"]);
-        }
-      }
-    } else if (value.redirect == "HOURLY PRESS") {
-      this.router.navigate(["/production-hourlypressingstation"]);
-    } else if (value.redirect == "HOURLY STERILIZER") {
-      this.router.navigate(["/production-hourlysterilizerstation"]);
-    } else if (value.redirect == "HOURLY OIL LOSS") {
-      this.router.navigate(["/lab-oillosses-list", { reportdate: "" }]);
+      return await modal.present();
     }
+  }
+
+  async callmodalcontroller(value) {
+    if (this.designationid == "2") {
+      this.getalert();
+    } else {
+      this.getNotification();
+    }
+
+    if (value.redirect == "HIGH OIL LOSS") {
+      this.router.navigate(["/production-oilloss"]);
+    }
+  }
+
+  nl2br(text: string) {
+    return text.replace(new RegExp("\r?\n", "g"), "<br />");
+  }
+
+  back() {
+    this.location.back();
   }
 }

@@ -1,12 +1,35 @@
 <ion-header>
   <ion-toolbar class="bg-brown-color">
-    <ion-avatar slot="start">
+    <ion-avatar
+      slot="start"
+      *ngIf="designationid != 1 && designationid != 12 && designationid != 13 && designationid != 14"
+    >
       <ion-img
         class="toolbarimage"
         src="../../../assets/img/logo.png"
       ></ion-img>
     </ion-avatar>
-    <ion-title color="light" [innerHTML]="mill_name"></ion-title>
+    <ion-title
+      color="light"
+      [innerHTML]="mill_name"
+      *ngIf="designationid != 1 && designationid != 12 && designationid != 13 && designationid != 14"
+    ></ion-title>
+
+    <ion-buttons
+      slot="start"
+      mode="md"
+      *ngIf="designationid == 1 || designationid == 12 || designationid == 13 || designationid == 14"
+    >
+      <ion-back-button color="whitefav"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title
+      color="light"
+      mode="ios"
+      *ngIf="designationid == 1 || designationid == 12 || designationid == 13 || designationid == 14"
+      >Profile</ion-title
+    >
+
     <ion-buttons slot="end">
       <ion-button (click)="openLanguagePopOver($event)">
         <ion-icon name="ellipsis-vertical-outline" color="light"></ion-icon>

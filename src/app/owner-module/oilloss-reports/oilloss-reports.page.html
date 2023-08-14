@@ -1,0 +1,131 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-buttons slot="start" mode="md">
+      <ion-back-button color="whitefav"></ion-back-button>
+    </ion-buttons>
+    <ion-title color="light" mode="ios">Oil Losses Summary</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div id="chartContainer8" style="margin: 10px">
+    <form [formGroup]="oillossesForm">
+      <ion-row class="form-row">
+        <ion-col size="2"></ion-col>
+        <ion-col size="2.70">
+          <div class="h7 text-white" style="text-align: right">
+            <b>{{ 'REPORTOILLOSSES.month' | translate}} :</b>
+          </div>
+        </ion-col>
+        <ion-col size="3.30">
+          <ion-datetime
+            mode="ios"
+            class="h7 form-control"
+            formControlName="pickdate"
+            display-format="MM-YYYY"
+            [(ngModel)]="reportdate"
+            cancelText="{{ 'GENERALBUTTON.cancelbutton' | translate}}"
+            doneText="{{ 'GENERALBUTTON.okay' | translate}}"
+          ></ion-datetime>
+        </ion-col>
+        <ion-col size="2">
+          <button
+            type="button"
+            class="h7 btn btn-general btn-sm margin-5px float-left"
+            (click)="getreport()"
+          >
+            {{ 'GENERALBUTTON.getrecords' | translate}}
+          </button>
+        </ion-col>
+        <ion-col size="2"> </ion-col>
+      </ion-row>
+    </form>
+
+    <div>
+      <div *ngIf="mtd!='' && oermtdflag==1">
+        <ion-row>
+          <ion-col size="1"></ion-col>
+          <ion-col size="10" class="bg-oermtd" style="font-weight: bold">
+            OER (%) Month to Date : <span style="color: #3cd2a5">{{mtd}}</span>
+          </ion-col>
+          <ion-col size="1"></ion-col>
+        </ion-row>
+      </div>
+
+      <ion-card class="bg-card" *ngFor="let item of oillossesArr">
+        <ion-card-header>
+          <ion-row>
+            <ion-col size="6" style="font-weight: bold" class="text-uppercase">
+              {{ 'OWNERSTATISTICS.date' | translate}} : {{item.date}}
+            </ion-col>
+            <ion-col size="6" style="text-align: right; font-weight: bold">
+              OER (%): {{item.oer}}
+            </ion-col>
+          </ion-row>
+        </ion-card-header>
+        <ion-card-content class="cardcontent">
+          <table style="width: 100%; height: 100%" class="table table-bordered">
+            <tr style="font-weight: bold">
+              <th scope="row" style="overflow: auto">Press</th>
+              <th scope="row" style="overflow: auto">MyPalm</th>
+              <th scope="row" style="overflow: auto">MyPalm Average</th>
+              <th scope="row" style="overflow: auto">Lab Composite Oil Loss</th>
+            </tr>
+            <tr *ngFor="let data of item.pressdata">
+              <td scope="row" style="overflow: auto" width="15%">
+                {{data.pressvalue}}
+              </td>
+              <td scope="row" style="overflow: auto" width="35%">
+                <ion-row>
+                  <ion-col size="9" style="align-self: center">
+                    <div
+                      style="margin-left: 15px"
+                      *ngIf="data.mypalm != '' && data.mypalm != '-'"
+                    >
+                      {{data.mypalm}}
+                    </div>
+                    <div
+                      style="margin-left: 15px; margin-top: 20px"
+                      *ngIf="data.mypalm == '' || data.mypalm == '-'"
+                    >
+                      {{data.mypalm}}
+                    </div>
+                  </ion-col>
+                  <ion-col
+                    size="3"
+                    style="align-self: center"
+                    *ngIf="data.mypalmArr.length>0"
+                  >
+                    <div
+                      (click)="open_popup(data.mypalmArr)"
+                      class="float-button-two"
+                    >
+                      <ion-icon name="add-circle"></ion-icon>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </td>
+              <td scope="row" style="overflow: auto" width="25%">
+                {{data.mypalmavg}}
+              </td>
+              <td scope="row" style="overflow: auto" width="25%">
+                {{data.laboilloss}}
+              </td>
+            </tr>
+          </table>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <div class="norecords" *ngIf="norecordsflag">
+      {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+    </div>
+    <div class="pleasewait" *ngIf="pleasewaitflag">
+      <div style="width: 100%; text-align: center">
+        <img
+          style="width: 80px; height: 80px"
+          src="../../../assets/img/loading.gif"
+        />
+      </div>
+      {{ 'NORECORDSFOUND.loading' | translate}}
+    </div>
+  </div>
+</ion-content>

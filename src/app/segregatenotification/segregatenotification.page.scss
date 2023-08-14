@@ -25,6 +25,33 @@ ion-icon {
   --ionicon-stroke-width: 20px;
 }
 
+.alertcard {
+  --background: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  margin: 10px 5px 0px 5px;
+
+  .form-row {
+    margin: 0px !important;
+  }
+
+  ion-card-content {
+    padding: 0px;
+  }
+
+  ion-card-header {
+    padding: 8px;
+    background-color: #000000;
+  }
+
+  .btn-acknowledge {
+    background-color: none;
+    border-color: #cb4335;
+  }
+}
+
 .segment-card {
   display: flex;
   overflow-x: scroll;
@@ -46,6 +73,15 @@ ion-icon {
   border-radius: 5px;
 }
 
+.alertcheckcard {
+  width: 100%;
+  height: 50px;
+  box-shadow: 0 5px 5px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  background-color: #fffff0;
+  text-align: left;
+}
+
 .checkcard {
   width: 100%;
   height: 50px;
@@ -53,7 +89,7 @@ ion-icon {
   transition: 0.3s;
   background-color: #fffff0;
   text-align: left;
-  margin-bottom: 10px;
+  //margin-bottom: 10px;
 }
 
 .todaybadge {
@@ -118,7 +154,37 @@ ion-icon {
   }
 }
 
-.btn-read {
+.btn-attendrectify {
+  font-size: 12px;
   background-color: none;
-  border-color: #ff9f0c;
+  border: 1px solid #008000;
+  color: #000000;
+}
+
+.btn-unabletorectify {
+  margin-left: 5px;
+  font-size: 12px;
+  background-color: none;
+  border: 1px solid #cb4335;
+  color: #000000;
+}
+
+.btn-read {
+  font-size: 12px;
+  background-color: none;
+  border: 1px solid #ff9f0c;
+  color: #000000;
+}
+
+.btn-acknowledge {
+  font-size: 12px;
+  background-color: none;
+  border: 1px solid #cb4335;
+  color: #000000;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border-top: 1px solid #ffffff71;
 }

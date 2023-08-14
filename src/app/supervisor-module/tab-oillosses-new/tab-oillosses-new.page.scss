@@ -1,0 +1,258 @@
+.content {
+  width: 100%;
+  background-color:none;
+  text-align: center;
+  margin-top: 0px;
+}
+.form-row{
+  margin-top: -25px;
+  margin-left: 2px;
+}
+.form-rowtime{
+  margin-top: 5px;
+}
+.form-row {
+  margin: 5px;
+  align-items: center;
+}
+
+.form-control:disabled,
+.form-control[readonly] {
+  background-color: transparent;
+  color: #ffffff;
+}
+
+p{
+  margin: 0px !important;
+}
+.history_btn{
+  display: flex;
+  text-align: right;
+  justify-content: end;
+}
+.norecords {
+  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.pleasewait {
+  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #ffffff;
+}
+.circle{
+  background-position: center center;
+  background-size: contain;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #c2c2c2;
+  padding: 10px;
+  height: 70px;
+  text-align: center;
+  width: 70px;
+  margin-top: 10px;
+  padding-top: 25px;
+  margin-bottom: 5px;
+  animation: blink 1s linear infinite;
+}
+.circlenotblink{
+  background-position: center center;
+  background-size: contain;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #c2c2c2;
+  padding: 10px;
+  height: 70px;
+  text-align: center;
+  width: 70px;
+  margin-top: 10px;
+  padding-top: 25px;
+  margin-bottom: 5px;
+}
+.presscard{
+  background-color: black;
+  padding: 10px;
+}
+.statustitle{
+  font-size: 16px;
+  //color: #fff;
+}
+.mdfont {
+  font-size: 12px;
+  text-align: left;
+}
+.bg-light-color {
+  --color: var(--ion-color-white);
+}
+.presstitle{
+  border-radius: 5px 5px 0px 0px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #ff9f0c;
+}
+.title{
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+  margin: 5px;
+}
+.data{
+  font-size: 14px;
+  color: #000;
+  margin: 0px;
+  text-align: left;
+}
+
+.maincard{
+  //height: auto;
+  height: 550px;
+  width: auto;
+  margin: 5px;
+  background-color: #1d2730;
+  border: 1px solid #fff;
+  text-align: center;
+  border-radius: 20px 20px 10px 10px;
+}
+
+hr {
+  border-top: 1px dashed #21202071;
+  height: 0px !important;
+  margin: 5px;
+}
+
+.rowdata{
+  padding-left: 10px;
+}
+
+ion-slides {
+  --bullet-background: #6d6969;
+  --bullet-background-active: #cba60f;
+}
+
+.checkcard {
+  box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  border-radius: 5px;
+  background-color: #f7f7f7;
+  margin: 5px;
+  //padding: 5px 5px 10px 5px;
+  background-image: url(../../../assets/img/palmbg.png);
+  background-size: cover;
+}
+
+.reasoncard {
+  box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  border-radius: 5px;
+  background-color: #f7f7f7;
+  margin: 5px;
+  //padding: 5px 5px 10px 5px;
+  background-image: url(../../../assets/img/palmbg.png);
+  background-size: cover;
+  height: 158px;
+}
+
+.actioncard {
+  box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  border-radius: 5px;
+  background-color: #f7f7f7;
+  margin: 5px;
+  //padding: 5px 5px 10px 5px;
+  background-image: url(../../../assets/img/palmbg.png);
+  background-size: cover;
+  height: 158px;
+}
+
+.slider-pager-page:only-of-type{ display:none; }
+.btn-general {
+  background-color: none;
+  border-color: #ff9f0c;
+  color: #ffffff;
+}
+
+.checkcarddetails {
+  box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  border-radius: 0px 0px 5px 5px;
+  background-color: #f7f7f7;
+  margin: 5px;
+  //padding: 5px 5px 10px 5px;
+  background-image: url(../../../assets/img/palmbg.png);
+  background-size: cover;
+}
+
+.badgecolor {
+  position: absolute;
+  opacity: 0.9;
+  background: blue;
+  padding: 5px;
+  margin: 5px;
+  color: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.twodigitbadgecount {
+  background: white;
+  padding: 5px;
+  color: red;
+  border-radius: 20px;
+  position: absolute;
+  right: -0.8rem;
+  opacity: 0.9;
+  font-size: 15px;
+  margin: 5px;
+}
+
+.iostwodigitbadgecount {
+  background: white;
+  padding: 5px;
+  color: red;
+  border-radius: 20px;
+  position: absolute;
+  right: -0.6rem;
+  opacity: 0.9;
+  font-size: 15px;
+  margin: 5px;
+}
+
+.onedigitbadgecount {
+  background: white;
+  padding: 5px;
+  color: red;
+  border-radius: 20px;
+  position: absolute;
+  right: -0.2rem;
+  opacity: 0.9;
+  font-size: 15px;
+  margin: 5px;
+}
+
+.badgeblink {
+  animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

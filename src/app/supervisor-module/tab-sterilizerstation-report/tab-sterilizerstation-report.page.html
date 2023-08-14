@@ -1,0 +1,281 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-avatar slot="start">
+      <ion-img
+        class="toolbarimage"
+        src="../../../assets/img/logo.png"
+      ></ion-img>
+    </ion-avatar>
+    <ion-title color="light" [innerHTML]="mill_name"></ion-title>
+
+    <ion-buttons slot="primary">
+      <!-- <ion-button class="bg-light-color" (click)="btn_notification()">
+        <ion-badge class="todaybadge" *ngIf="count && count != 0" color="accent"
+          >{{ count }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button> -->
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'android'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'twodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'ios'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'iostwodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="chartContainer8" style="margin: 10px">
+    <form [formGroup]="sterilizerreportForm">
+      <ion-row class="form-row">
+        <ion-col size="2.35"> </ion-col>
+
+        <ion-col size="2">
+          <div class="h7 text-white" style="text-align: right">
+            <b>{{ 'REPORTSTERILIZATION.date' | translate}} </b>
+          </div>
+        </ion-col>
+
+        <ion-col size="3.30">
+          <input
+            type="text"
+            style="padding: 5px"
+            class="h7 form-control readonly"
+            formControlName="pickdate"
+            placeholder="DD-MM-YYYY"
+            (click)="openDateTimePicker()"
+            readonly
+          />
+        </ion-col>
+
+        <ion-col size="2">
+          <button
+            type="button"
+            class="h7 btn btn-general btn-sm margin-5px float-left"
+            (click)="getreport()"
+          >
+            {{ 'GENERALBUTTON.getrecords' | translate}}
+          </button>
+        </ion-col>
+
+        <ion-col size="2.35"> </ion-col>
+      </ion-row>
+
+      <hr />
+    </form>
+
+    <div style="overflow-x: auto; margin-top: 20px" *ngIf="!norecordsflag">
+      <div *ngFor="let general of sterilizerhourlyperformanceArr">
+        <!-- <table style="width: 100%; height: 100%" class="table table-bordered">
+          <tr>
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont" style="color: white"
+                >{{ 'REPORTSTERILIZATION.millstartdate' | translate}}</span
+              >
+            </th>
+
+            <td style="background-color: green; color: white">
+              {{general.start_date}}
+            </td>
+
+            <th
+              colspan="1"
+              scope="colgroup"
+              style="padding: 4px !important"
+              *ngIf="general.stop_date!=''"
+            >
+              <span class="mdfont" style="color: white"
+                >{{ 'REPORTSTERILIZATION.millstopdate' | translate}}</span
+              >
+            </th>
+
+            <td
+              style="background-color: red; color: white"
+              *ngIf="general.stop_date!=''"
+            >
+              {{general.stop_date}}
+            </td>
+          </tr>
+          <tr>
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont" style="color: white"
+                >{{ 'REPORTSTERILIZATION.millstarttime' | translate}}</span
+              >
+            </th>
+
+            <td style="background-color: green; color: white">
+              {{general.start_time}}
+            </td>
+
+            <th
+              colspan="1"
+              scope="colgroup"
+              style="padding: 4px !important"
+              *ngIf="general.stop_time!=''"
+            >
+              <span class="mdfont" style="color: white"
+                >{{ 'REPORTSTERILIZATION.millstoptime' | translate}}</span
+              >
+            </th>
+
+            <td
+              style="background-color: red; color: white"
+              *ngIf="general.stop_time!=''"
+            >
+              {{general.stop_time}}
+            </td>
+          </tr>
+        </table> -->
+
+        <div *ngFor="let sterilizername of general.data">
+          <table style="width: 100%; height: 100%" class="table table-bordered">
+            <tr class="table_head">
+              <th rowspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont">{{sterilizername.sterilizername}}</span>
+              </th>
+              <th rowspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTSTERILIZATION.cycle' | translate}}</span
+                >
+              </th>
+              <!-- <th rowspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTSTERILIZATION.ripeness' | translate}}</span
+                >
+              </th> -->
+              <th colspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTSTERILIZATION.door' | translate}}</span
+                >
+              </th>
+              <!-- <th rowspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont">Initial Steam Admission Time</span>
+              </th>
+              <th rowspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont">Final Blowdown Time</span>
+              </th>
+              <th colspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont">Cooking</span>
+              </th> -->
+              <th rowspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTSTERILIZATION.bpv' | translate}}<br />(PSI)</span
+                >
+              </th>
+              <th rowspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTSTERILIZATION.p1peak' | translate}}<br />(PSI)</span
+                >
+              </th>
+              <th rowspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTSTERILIZATION.p2peak' | translate}}<br />(PSI)</span
+                >
+              </th>
+              <th rowspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTSTERILIZATION.p3peak' | translate}}<br />(PSI)</span
+                >
+              </th>
+              <th
+                rowspan="2"
+                scope="colgroup"
+                style="padding: 4px !important"
+                *ngIf="general.image==1"
+              >
+                <span class="mdfont"
+                  >{{ 'REPORTSTERILIZATION.image' | translate}}</span
+                >
+              </th>
+              <th rowspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTSTERILIZATION.doneby' | translate}}</span
+                >
+              </th>
+            </tr>
+            <tr class="table_head">
+              <th style="padding: 4px !important">
+                {{ 'REPORTSTERILIZATION.shuttime' | translate}}
+              </th>
+              <th style="padding: 4px !important">
+                {{ 'REPORTSTERILIZATION.opentime' | translate}}
+              </th>
+            </tr>
+            <ng-container *ngFor="let value of sterilizername.sterilizerdata">
+              <tr>
+                <td scope="row">{{value.time}}</td>
+                <td scope="row">{{value.cycleno}}</td>
+                <!-- <td scope="row">{{value.fruittype}}</td> -->
+                <td scope="row">{{value.door_shut_time}}</td>
+                <td scope="row">{{value.door_open_time}}</td>
+                <td scope="row">{{value.backpressurereceiver}}</td>
+                <td scope="row">{{value.p1}}</td>
+                <td scope="row">{{value.p2}}</td>
+                <td scope="row">{{value.p3}}</td>
+                <td scope="row" *ngIf="general.image==1">
+                  <button
+                    type="button"
+                    class="h7 btn btn-imageview btn-sm"
+                    (click)="btn_ViewImages(value.bpvimages, value.p1images, value.p3images)"
+                    *ngIf="(value.bpvimages!='' || value.p1images!='' || value.p3images!='')"
+                  >
+                    <span class="icontext"
+                      >{{ 'REPORTSTERILIZATION.view' | translate}}</span
+                    >
+                  </button>
+                  <span
+                    *ngIf="(value.bpvimages =='' && value.p1images =='' && value.p3images =='')"
+                    >-</span
+                  >
+                </td>
+                <td scope="row">{{value.rasiedby}}</td>
+              </tr>
+            </ng-container>
+          </table>
+        </div>
+        <div class="nosterilizerrecords" *ngIf="general.data.length==0">
+          {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+        </div>
+
+        <hr />
+      </div>
+    </div>
+
+    <div class="norecords" *ngIf="norecordsflag">
+      {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+    </div>
+
+    <div class="pleasewait" *ngIf="pleasewaitflag">
+      <div style="width: 100%; text-align: center">
+        <img
+          style="width: 80px; height: 80px"
+          src="../../../assets/img/loading.gif"
+        />
+      </div>
+      {{ 'NORECORDSFOUND.loading' | translate}}
+    </div>
+  </div>
+</ion-content>

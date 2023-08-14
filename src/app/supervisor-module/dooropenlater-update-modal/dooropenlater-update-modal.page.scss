@@ -1,0 +1,144 @@
+ .home-box {
+    padding: 0px 10px 0px 10px;
+  }
+  
+  .home {
+    padding: 0px 5px 0px 5px;
+  }
+  
+  .form-row {
+
+    align-items: center;
+  }
+  
+  .form-control:disabled,
+  .form-control[readonly] {
+    background-color: transparent;
+    color: #ffffff;
+  }
+
+
+  .bg-light-color {
+    --color: var(--ion-color-white);
+  }
+
+  p {
+    font-size: 11px;
+    padding: 0%;
+    margin: 0px;
+  }
+  
+  .row-reverse {
+    flex-direction: row-reverse;
+  }
+
+
+  table {
+    font-size: 11px;
+    line-height: 1.42857143;
+    padding: 5px;
+    border-collapse: collapse;
+  }
+  
+  table th:first-child {
+    border: 1px solid #ffffff;
+    text-align: center;
+    background-color: #000000;  
+  }
+  
+  .table td,
+  .table th {
+    color: #ffffff;
+    padding: 0.3rem !important;
+  }
+  
+  td {
+    white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  th {
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  .table th {
+    padding: 0rem !important;
+  }
+
+  
+  .mdfont {
+    font-size: 11px;
+    font-weight: bold;
+    color: #ffffff;
+  }
+  
+  .para {
+    font-size: 12px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  
+  .icon {
+    vertical-align: middle;
+  }
+  
+  ion-icon {
+    color: white;
+  }
+  
+  .norecords {
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 60%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #ffffff;
+  }
+  
+  .nolastupdatedrecords {
+    text-align: center;
+    margin-top: 50%;
+    margin-bottom: 50%;
+    font-size: 14px;
+    color: #000000;
+  }
+  
+  .pleasewait {
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 80%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #ffffff;
+  }
+  
+  hr {
+    display: block;
+    height: 1px;
+    border-top: 1px dashed #000000;
+  }
+  
+  .form-control {
+    font-weight: 300;
+    line-height: 1.5;
+    //color: rgba(255, 255, 255, 0.75);
+    background-clip: padding-box;
+    border: 0px;
+    appearance: none;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  .btn-save {
+    width: 150px;
+    font-size: 14px;
+    background-color: none;
+    border-color: #3cd2a5;
+    color: #ffffff;
+  }
+  

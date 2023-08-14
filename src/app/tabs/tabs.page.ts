@@ -6,6 +6,7 @@ import { HttpserviceService } from "../services/httpservice/httpservice.service"
 import "rxjs/add/observable/interval";
 import { Observable } from "rxjs";
 import { IonTabs } from "@ionic/angular";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-tabs",
@@ -19,7 +20,11 @@ export class TabsPage implements OnInit {
   designationid = this.userlist.desigId;
   departmentId = 1;
 
-  constructor(private httpservice: HttpserviceService, private zone: NgZone) {
+  constructor(
+    private httpservice: HttpserviceService,
+    private zone: NgZone,
+    private translate: TranslateService
+  ) {
     // Observable.interval(10000)
     //   .subscribe((val) => {  });
     // this.zone.runOutsideAngular(() => {

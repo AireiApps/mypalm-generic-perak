@@ -8,6 +8,7 @@
     </ion-avatar>
     <ion-title
       color="light"
+      mode="ios"
       *ngIf="userdepartmentid!=25"
       [innerHTML]="mill_name"
     ></ion-title>
@@ -15,16 +16,45 @@
       >{{ 'MAINTENANCEDASHBOARD.home' | translate}}</ion-title
     >
     <ion-buttons slot="primary">
-      <ion-button
-        class="bg-light-color"
-        (click)="callmodalcontroller('SCHEDULING')"
-      >
-        <ion-icon name="calendar-outline"></ion-icon>
+      <ion-button class="bg-light-color" (click)="btn_QRcodescanner()">
+        <ion-icon name="qr-code-outline"></ion-icon>
       </ion-button>
 
-      <ion-button class="bg-light-color" (click)="btn_notification()">
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="(userdesignation != 2 && userdesignation != 4 && userdesignation != 6)"
+      >
         <ion-badge *ngIf="count && count != 0" color="accent"
           >{{ count }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'android' && (userdesignation == 2 || userdesignation == 4 || userdesignation == 6)"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'twodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'ios' && (userdesignation == 2 || userdesignation == 4 || userdesignation == 6)"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'iostwodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
         >
         <ion-icon name="notifications-outline"></ion-icon>
       </ion-button>
@@ -130,6 +160,17 @@
                 -
               </p>
 
+              <div
+                style="margin: 10px 0px 10px 0px"
+                *ngIf="breakdownreason != ''"
+              >
+                <p class="mdfont">
+                  {{ 'MAINTENANCEDASHBOARD.breakdownreason' | translate}}
+                </p>
+
+                <p class="mdfont" style="color: #cb4335">{{breakdownreason}}</p>
+              </div>
+
               <div>
                 <button
                   type="button"
@@ -188,7 +229,7 @@
 
                       <ion-col
                         class="vertical-align-content"
-                        [style.background-color]="getBackGroundColor(eachitem.machinestatus)"
+                        [style.background-color]="getBackGroundColor(eachitem.machinestatus, eachitem.breakdownstatus)"
                         [style.color]="getStatusTextColor(eachitem.machinestatus)"
                         size="9"
                       >
@@ -198,6 +239,84 @@
                   </ion-card>
                 </ion-col>
               </ion-row>
+
+              <!-- FFB Cages - Start -->
+              <div *ngIf="ffbcageenableflag == 1">
+                <ng-container *ngFor="let machines of station.machines">
+                  <ng-container *ngFor="let eachitem of machines">
+                    <div
+                      style="margin: 0px 5px 0px 5px"
+                      *ngIf="eachitem.ffbcageflag==1"
+                    >
+                      <div class="ffbcageheader">
+                        <ion-row>
+                          <ion-col
+                            style="
+                              padding: 0px;
+                              margin: 0px;
+                              align-self: center;
+                            "
+                          >
+                            <div class="ffbcagetitle text-uppercase">
+                              {{eachitem.machinename}}
+                            </div>
+                          </ion-col>
+                        </ion-row>
+                      </div>
+
+                      <table
+                        style="width: 100%; height: 100%"
+                        class="table table-bordered"
+                      >
+                        <tr>
+                          <th style="padding: 4px !important">
+                            <span class="tablefont"
+                              >{{ 'FFBCAGES.total' | translate}}</span
+                            >
+                          </th>
+
+                          <th colspan="1" style="padding: 4px !important">
+                            <span class="tablefont"
+                              >{{ 'FFBCAGES.inuse' | translate}}</span
+                            >
+                          </th>
+
+                          <th colspan="1" style="padding: 4px !important">
+                            <span class="tablefont"
+                              >{{ 'FFBCAGES.notinuse' | translate}}</span
+                            >
+                          </th>
+
+                          <th colspan="1" style="padding: 4px !important">
+                            <span class="tablefont"
+                              >{{ 'FFBCAGES.underrepair' | translate}}</span
+                            >
+                          </th>
+                        </tr>
+
+                        <tr>
+                          <td scope="row">
+                            <b>{{ffbtotal}}</b>
+                          </td>
+
+                          <td scope="row">
+                            <b>{{ffbinuse}}</b>
+                          </td>
+
+                          <td scope="row">
+                            <b>{{ffbnotinuse}}</b>
+                          </td>
+
+                          <td scope="row">
+                            <b>{{ffbunderrepair}}</b>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+              <!-- FFB Cages - End -->
             </div>
           </div>
         </div>

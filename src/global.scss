@@ -73,6 +73,10 @@
   color: white;
 }
 
+.bg-summary-color {
+  --background: #ff9f0c;
+}
+
 .bg-brown-color {
   //--background: var(--ion-color-appcolor);
   //--background: linear-gradient(180deg, #02af16 0%, #006426 74%);
@@ -248,10 +252,20 @@ ion-title {
   .alert-message.sc-ion-alert-md,
   .alert-input-group.sc-ion-alert-md {
     padding-bottom: 0px;
-    padding-top: 10px;
+    padding-top: 0px;
+  }
+
+  .alert-message.sc-ion-alert-ios,
+  .alert-input-group.sc-ion-alert-ios {
+    padding-bottom: 0px;
+    padding-top: 0px;
   }
 
   .alert-head.sc-ion-alert-md {
+    padding-bottom: 0px;
+  }
+
+  .alert-head.sc-ion-alert-ios {
     padding-bottom: 0px;
   }
 
@@ -263,6 +277,7 @@ ion-title {
     button {
       border: 1px solid #ffffff;
       width: 45%;
+      height: 40px;
       border-radius: 5px;
       &:first-child {
         background-color: #ff6060;
@@ -282,6 +297,357 @@ ion-title {
       }
     }
   }
+}
+
+ion-alert {
+  background: rgb(0, 0, 0, 0.6);
+}
+
+.customalertmessagetwobuttons .alert-wrapper {
+  border-radius: 10px;
+  border: 2px solid #ff9f0c;
+  //background-color: #dcfff4;
+
+  .alert-title {
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  .alert-input.sc-ion-alert-md {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 12px;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    min-height: 80px;
+  }
+
+  .alert-message {
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+    color: black;
+  }
+
+  .alert-message.sc-ion-alert-md,
+  .alert-input-group.sc-ion-alert-md {
+    padding-bottom: 10px;
+    padding-top: 0px;
+  }
+
+  .alert-message.sc-ion-alert-ios,
+  .alert-input-group.sc-ion-alert-ios {
+    padding-bottom: 10px;
+    padding-top: 0px;
+  }
+
+  .alert-head.sc-ion-alert-md {
+    padding-bottom: 0px;
+  }
+
+  .alert-head.sc-ion-alert-ios {
+    padding-bottom: 0px;
+  }
+
+  .alert-button.sc-ion-alert-md {
+    color: #f7f7f7;
+  }
+
+  .alert-button.sc-ion-alert-ios {
+    color: #f7f7f7;
+    border: 0px;
+    margin-bottom: 10px;
+  }
+
+  .alert-button-group {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding-top: 0px;
+
+    button {
+      //border: 1px solid #f7f7f7;
+      //width: 30%;
+      //height: 50px;
+      //border-radius: 5px;
+
+      width: 56px;
+      height: 56px;
+      margin: 0px;
+
+      &:first-child {
+        //background-color: none;
+        //border-color: none;
+
+        //background-color: #ff6060;
+        border: 3px solid #ff6060 !important;
+        background-image: url("assets/img/cancel.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 40px 40px;
+        border-radius: 50%;
+        color: black;
+        font-size: 12px;
+        margin-right: 60px;
+      }
+
+      &:last-child {
+        //background-color: none;
+        //border-color: none;
+
+        //background-color: #3cd2a5;
+        border: 3px solid #3cd2a5 !important;
+        background-image: url("assets/img/okay.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 40px 40px;
+        border-radius: 50%;
+        color: black;
+        font-size: 12px;
+      }
+
+      span {
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+
+  /*.alert-button-group sc-ion-alert-ios {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding-top: 10px;
+  }*/
+}
+
+.customalertmessageonebuttons .alert-wrapper {
+  border-radius: 10px;
+  border: 2px solid #ff9f0c;
+
+  .alert-title {
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  /*.alert-input {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 6px 12px 6px 12px;
+    font-size: 12px;
+  }*/
+
+  .alert-input.sc-ion-alert-md {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 12px;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    min-height: 80px;
+  }
+
+  .alert-message {
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+    color: black;
+  }
+
+  .alert-message.sc-ion-alert-md,
+  .alert-input-group.sc-ion-alert-md {
+    padding-bottom: 10px;
+    padding-top: 0px;
+  }
+
+  .alert-message.sc-ion-alert-ios,
+  .alert-input-group.sc-ion-alert-ios {
+    padding-bottom: 10px;
+    padding-top: 0px;
+  }
+
+  .alert-head.sc-ion-alert-md {
+    padding-bottom: 0px;
+  }
+
+  .alert-head.sc-ion-alert-ios {
+    padding-bottom: 0px;
+  }
+
+  .alert-button.sc-ion-alert-md {
+    color: #f7f7f7;
+  }
+
+  .alert-button.sc-ion-alert-ios {
+    color: #f7f7f7;
+    border: 0px;
+    margin-bottom: 10px;
+  }
+
+  .alert-button-group {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+
+    button {
+      /*border: 1px solid #f7f7f7;
+      width: 45%;
+      height: 50px;
+      border-radius: 5px;*/
+
+      width: 56px;
+      height: 56px;
+      margin: 0px;
+      border: 3px solid #3cd2a5 !important;
+      background-image: url("assets/img/okay.png");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 40px 40px;
+      border-radius: 50%;
+      color: black;
+      font-size: 12px;
+
+      span {
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+
+  /*.alert-button-group sc-ion-alert-ios {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }*/
+}
+
+.millstartstopalertmessagetwobuttons .alert-wrapper {
+  border-radius: 10px;
+  border: 2px solid #ff9f0c;
+  //background-color: #dcfff4;
+
+  .alert-title {
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  .alert-input.sc-ion-alert-md {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 12px;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+  }
+
+  .alert-message {
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+    color: black;
+  }
+
+  .alert-message.sc-ion-alert-md,
+  .alert-input-group.sc-ion-alert-md {
+    padding-bottom: 10px;
+    padding-top: 0px;
+  }
+
+  .alert-message.sc-ion-alert-ios,
+  .alert-input-group.sc-ion-alert-ios {
+    padding-bottom: 10px;
+    padding-top: 0px;
+  }
+
+  .alert-head.sc-ion-alert-md {
+    padding-bottom: 0px;
+  }
+
+  .alert-head.sc-ion-alert-ios {
+    padding-bottom: 0px;
+  }
+
+  .alert-button.sc-ion-alert-md {
+    color: #f7f7f7;
+  }
+
+  .alert-button.sc-ion-alert-ios {
+    color: #f7f7f7;
+    border: 0px;
+    margin-bottom: 10px;
+  }
+
+  .alert-button-group {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    padding-top: 0px;
+
+    button {
+      width: 56px;
+      height: 56px;
+      margin: 0px;
+
+      &:first-child {
+        border: 3px solid #ff6060 !important;
+        background-image: url("assets/img/cancel.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 40px 40px;
+        border-radius: 50%;
+        color: black;
+        font-size: 12px;
+        margin-right: 60px;
+      }
+
+      &:last-child {
+        border: 3px solid #3cd2a5 !important;
+        background-image: url("assets/img/okay.png");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 40px 40px;
+        border-radius: 50%;
+        color: black;
+        font-size: 12px;
+      }
+
+      span {
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+.okaybutton {
+  background-image: url("assets/img/alertokay.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 40px 40px;
+}
+
+.cancelbutton {
+  background-image: url("assets/img/alertcancel.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 40px 40px;
 }
 
 .breakdownalertmessage .alert-wrapper {
@@ -552,6 +918,27 @@ ion-footer {
   }
 }
 
+.alertattend-modal {
+  --width: 95% !important;
+  --height: 45% !important;
+  --border-radius: 10px !important;
+  --backdrop-opacity: 0.8;
+  //--background: #000000b2;
+  --background: #1d2730;
+  backdrop-filter: blur(1px);
+
+  .modal-wrapper {
+    border: 2px solid #ffffff;
+    border-radius: 10px !important;
+  }
+
+  ion-content {
+    --background: none;
+    background-color: #1d2730;
+    background-image: none;
+  }
+}
+
 .notification-modal {
   --width: 95% !important;
   --height: 60% !important;
@@ -605,6 +992,69 @@ ion-footer {
   }
 }
 
+.oillossreport-modal {
+  --width: 95% !important;
+  --height: 45% !important;
+  --border-radius: 10px !important;
+  --backdrop-opacity: 0.8;
+  //--background: #000000b2;
+  --background: #1d2730;
+  backdrop-filter: blur(1px);
+
+  .modal-wrapper {
+    border: 2px solid #ffffff;
+    border-radius: 10px !important;
+  }
+
+  ion-content {
+    --background: none;
+    background-color: #1d2730;
+    background-image: none;
+  }
+}
+
+.owneroiloss-modal {
+  --width: 95% !important;
+  --height: 60% !important;
+  --border-radius: 10px !important;
+  --backdrop-opacity: 0.8;
+  //--background: #000000b2;
+  --background: #1d2730;
+  backdrop-filter: blur(1px);
+  overflow: auto;
+  .modal-wrapper {
+    border: 2px solid #ffffff;
+    border-radius: 10px !important;
+  }
+
+  ion-content {
+    --background: none;
+    background-color: #1d2730;
+    background-image: none;
+  }
+}
+
+.summarypopup-modal {
+  --width: 95% !important;
+  --height: 90% !important;
+  --border-radius: 10px !important;
+  --backdrop-opacity: 0.8;
+  //--background: #000000b2;
+  --background: #1d2730;
+  backdrop-filter: blur(1px);
+
+  .modal-wrapper {
+    border: 2px solid #ffffff;
+    border-radius: 10px !important;
+  }
+
+  ion-content {
+    --background: none;
+    background-color: #1d2730;
+    background-image: none;
+  }
+}
+
 .vehicle-modal {
   --width: 95% !important;
   --height: 80% !important;
@@ -626,12 +1076,100 @@ ion-footer {
   }
 }
 
+.ffbcagepopup-modal {
+  --width: 80% !important;
+  --height: 45% !important;
+  --border-radius: 10px !important;
+  --backdrop-opacity: 0.8;
+  //--background: #000000b2;
+  --background: #ffffff;
+  backdrop-filter: blur(1px);
+
+  .modal-wrapper {
+    border: 2px solid #ff9f0c;
+    border-radius: 10px !important;
+  }
+
+  ion-content {
+    --background: none;
+    background-color: #ffffff;
+    background-image: none;
+  }
+}
+
+.ropmrepm-multipart-modal {
+  --width: 95% !important;
+  --height: 75% !important;
+  --border-radius: 10px !important;
+  --backdrop-opacity: 0.8;
+  //--background: #000000b2;
+  --background: #1d2730;
+  backdrop-filter: blur(1px);
+
+  .modal-wrapper {
+    border: 2px solid #ffffff;
+    border-radius: 10px !important;
+  }
+
+  ion-content {
+    --background: none;
+    background-color: #1d2730;
+    background-image: none;
+  }
+}
+
+.ropmrepmpopup-modal {
+  --width: 80% !important;
+  --height: 50% !important;
+  --border-radius: 10px !important;
+  --backdrop-opacity: 0.8;
+  //--background: #000000b2;
+  --background: #ffffff;
+  backdrop-filter: blur(1px);
+
+  .modal-wrapper {
+    border: 2px solid #ff9f0c;
+    border-radius: 10px !important;
+  }
+
+  ion-content {
+    --background: none;
+    background-color: #ffffff;
+    background-image: none;
+  }
+}
+
+.ropmrepmselectpopup-modal {
+  --width: 90% !important;
+  --height: 45% !important;
+  --border-radius: 10px !important;
+  --backdrop-opacity: 0.8;
+  //--background: #000000b2;
+  --background: #ffffff;
+  backdrop-filter: blur(1px);
+
+  .modal-wrapper {
+    border: 2px solid #ff9f0c;
+    border-radius: 10px !important;
+  }
+
+  ion-content {
+    --background: none;
+    background-color: #ffffff;
+    background-image: none;
+  }
+}
+
 // .checklistassign-modal .modal-wrapper {
 //   min-height: 400px;
 //   height: auto;
 // }
 
 // Custom Date Picker - Start
+ion-picker {
+  touch-action: none;
+}
+
 .picker-wrapper.sc-ion-picker-ios {
   border-radius: 10px 10px 0px 0px;
 }
@@ -642,16 +1180,30 @@ ion-footer {
 
 .picker-toolbar.sc-ion-picker-ios {
   background-image: linear-gradient(180deg, #1d2730 0%, #1d2730 74%);
+
+  .picker-toolbar-button.sc-ion-picker-ios:first-child
+    .picker-button.sc-ion-picker-ios {
+    color: #ff6060;
+  }
+
+  .picker-toolbar-button.sc-ion-picker-ios:last-child
+    .picker-button.sc-ion-picker-ios {
+    color: #3cd2a5;
+  }
 }
 
 .picker-button.sc-ion-picker-ios,
 .picker-button.ion-activated.sc-ion-picker-ios {
   color: white;
 }
+
 // Custom Date Picker - End
 
 // Multipselect Dropdown - Start
 .multiselect .alert-wrapper {
+  border-radius: 10px;
+  border: 2px solid #ffffff;
+
   [aria-checked="true"].sc-ion-alert-md .alert-checkbox-icon.sc-ion-alert-md,
   [aria-checked="true"].sc-ion-alert-ios .alert-checkbox-icon.sc-ion-alert-ios {
     border-color: #3cd2a5;
@@ -705,14 +1257,49 @@ ion-footer {
     background-color: #1d2730;
   }
 
-  .alert-button-inner.sc-ion-alert-md {
+  /*.alert-button-inner.sc-ion-alert-md,   
+  .alert-button-inner.sc-ion-alert-ios {
     color: #1d2730;
+  }*/
+
+  .alert-button-group {
+    display: flex;
+    width: 100%;
+    padding: 10px;
+
+    button {
+      border: 1px solid #ffffff;
+      width: 45%;
+      height: 40px;
+      border-radius: 5px;
+      &:first-child {
+        background-color: none;
+        border: 1px solid #ff6060;
+        color: black;
+        font-size: 12px;
+      }
+
+      &:last-child {
+        background-color: none;
+        border: 1px solid #3cd2a5;
+        color: black;
+        font-size: 12px;
+      }
+
+      span {
+        display: flex;
+        justify-content: center;
+      }
+    }
   }
 }
 // Multipselect Dropdown - End
 
 // Singleselect Dropdown - Start
 .singleselect .alert-wrapper {
+  border-radius: 10px;
+  border: 2px solid #ffffff;
+
   [aria-checked="true"].sc-ion-alert-ios .alert-radio-label.sc-ion-alert-ios {
     color: #000000;
   }
@@ -758,9 +1345,40 @@ ion-footer {
     background-color: #1d2730;
   }
 
-  .alert-button-inner.sc-ion-alert-md,
+  /*.alert-button-inner.sc-ion-alert-md,
   .alert-button-inner.sc-ion-alert-ios {
     color: #1d2730;
+  }*/
+
+  .alert-button-group {
+    display: flex;
+    width: 100%;
+    padding: 10px;
+
+    button {
+      border: 1px solid #ffffff;
+      width: 45%;
+      height: 40px;
+      border-radius: 5px;
+      &:first-child {
+        background-color: none;
+        border: 1px solid #ff6060;
+        color: black;
+        font-size: 12px;
+      }
+
+      &:last-child {
+        background-color: none;
+        border: 1px solid #3cd2a5;
+        color: black;
+        font-size: 12px;
+      }
+
+      span {
+        display: flex;
+        justify-content: center;
+      }
+    }
   }
 }
 // Singleselect Dropdown - End
@@ -805,6 +1423,31 @@ ion-content {
 
 .swiper-pagination-bullet-active {
   background: #ffffff;
+}
+
+.modal-fullscreen {
+  .modal-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.loadmore {
+  min-height: 1px !important;
+  --color: #ffffff;
+  .infinite-scroll-content-md .infinite-loading-text {
+    color: #ffffff;
+  }
+}
+
+.splashfooter {
+  --background: transparent;
+  background-color: #1d2730;
+  text-align: center;
 }
 
 // Custom Loader CSS ---Start

@@ -1,0 +1,55 @@
+.bg-light-color {
+  --color: var(--ion-color-white);
+}
+
+.twodigitbadgecount {
+  background: white;
+  padding: 5px;
+  color: red;
+  border-radius: 20px;
+  position: absolute;
+  right: -0.8rem;
+  opacity: 0.9;
+  font-size: 15px;
+  margin: 5px;
+}
+
+.iostwodigitbadgecount {
+  background: white;
+  padding: 5px;
+  color: red;
+  border-radius: 20px;
+  position: absolute;
+  right: -0.6rem;
+  opacity: 0.9;
+  font-size: 15px;
+  margin: 5px;
+}
+
+.onedigitbadgecount {
+  background: white;
+  padding: 5px;
+  color: red;
+  border-radius: 20px;
+  position: absolute;
+  right: -0.2rem;
+  opacity: 0.9;
+  font-size: 15px;
+  margin: 5px;
+}
+
+.badgeblink {
+  animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

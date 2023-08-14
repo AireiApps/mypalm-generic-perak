@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { appsettings } from "src/app/appsettings";
+import { timeout } from "rxjs/operators";
 import { AIREIService } from "src/app/api/api.service";
 
 @Injectable({
@@ -242,7 +243,7 @@ export class SupervisorService {
     });
   }
 
-  getNotificationView(params) {
+  /*getNotificationView(params) {
     var reqOpts: any;
     reqOpts = this.formParams(params);
 
@@ -260,7 +261,43 @@ export class SupervisorService {
         }
       );
     });
+  }*/
+
+  getNotificationView(params) {
+    var newurl =
+      localStorage.getItem("endpoint") +
+      appsettings.getmaintenancenotificationview +
+      "?" +
+      "user_id=" +
+      params.user_id +
+      "&" +
+      "dept_id=" +
+      params.dept_id +
+      "&" +
+      "millcode=" +
+      params.millcode +
+      "&" +
+      "id=" +
+      params.id +
+      "&" +
+      "language=" +
+      params.language;
+
+    //console.log(newurl);
+
+    return new Promise((resolve, reject) => {
+      this.httpClient.get(newurl).subscribe(
+        (data) => {
+          resolve(data);
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        }
+      );
+    });
   }
+
   getNotificationQRcodeScanDetails(params) {
     var reqOpts: any;
     reqOpts = this.formParams(params);
@@ -365,6 +402,36 @@ export class SupervisorService {
         },
         (error) => {
           //this.commonservice.dimmissLoading();
+          console.log(error);
+
+          reject(error);
+        }
+      );
+    });
+  }
+
+  saveffbcages(params) {
+    /*if (params.isrefresh == "0") {
+      this.commonservice.startLoading();
+    }*/
+
+    var reqOpts: any;
+    reqOpts = this.formParams(params);
+
+    var api = localStorage.getItem("endpoint") + appsettings.saveallffbcages;
+    return new Promise((resolve, reject) => {
+      this.httpClient.post(api, reqOpts).subscribe(
+        (data) => {
+          /*if (params.isrefresh == "0") {
+            this.commonservice.stopLoading();
+          }*/
+          console.log(data);
+          resolve(data);
+        },
+        (error) => {
+          /*if (params.isrefresh == "0") {
+            this.commonservice.stopLoading();
+          }*/
           console.log(error);
 
           reject(error);
@@ -548,6 +615,26 @@ export class SupervisorService {
     var api =
       localStorage.getItem("endpoint") +
       appsettings.getpressingstationalertdata;
+    return new Promise((resolve, reject) => {
+      this.httpClient.post(api, reqOpts).subscribe(
+        (data) => {
+          console.log(data);
+          resolve(data);
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  getDoorOpenLaterData(params) {
+    var reqOpts: any;
+    reqOpts = this.formParams(params);
+
+    var api =
+      localStorage.getItem("endpoint") + appsettings.getdooroopenlaterdata;
     return new Promise((resolve, reject) => {
       this.httpClient.post(api, reqOpts).subscribe(
         (data) => {
@@ -768,16 +855,22 @@ export class SupervisorService {
     var api =
       localStorage.getItem("endpoint") + appsettings.savehourlypressingstation;
     return new Promise((resolve, reject) => {
-      this.httpClient.post(api, reqOpts).subscribe(
-        (data) => {
-          console.log(data);
-          resolve(data);
-        },
-        (error) => {
-          console.log(error);
-          reject(error);
-        }
-      );
+      this.httpClient
+        .post(api, reqOpts)
+        .pipe(timeout(15000))
+        .subscribe(
+          (data) => {
+            console.log(data);
+            resolve(data);
+          },
+          (error) => {
+            console.log(error);
+            if (error.name == "TimeoutError" || error.status == 500) {
+              this.commonservice.presentToast("Something went wrong...!");
+            }
+            reject(error);
+          }
+        );
     });
   }
 
@@ -809,16 +902,22 @@ export class SupervisorService {
       localStorage.getItem("endpoint") +
       appsettings.savehourlysterilizerstation;
     return new Promise((resolve, reject) => {
-      this.httpClient.post(api, reqOpts).subscribe(
-        (data) => {
-          console.log(data);
-          resolve(data);
-        },
-        (error) => {
-          console.log(error);
-          reject(error);
-        }
-      );
+      this.httpClient
+        .post(api, reqOpts)
+        .pipe(timeout(15000))
+        .subscribe(
+          (data) => {
+            console.log(data);
+            resolve(data);
+          },
+          (error) => {
+            console.log(error);
+            if (error.name == "TimeoutError" || error.status == 500) {
+              this.commonservice.presentToast("Something went wrong...!");
+            }
+            reject(error);
+          }
+        );
     });
   }
 
@@ -937,6 +1036,48 @@ export class SupervisorService {
       this.httpClient.post(api, reqOpts).subscribe(
         (data) => {
           console.log(data);
+          resolve(data);
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  getLastDoorOpenTime(params) {
+    //var newurl = appsettings.chatapi + "?" + "msg=" + params;
+    var newurl =
+      localStorage.getItem("endpoint") +
+      appsettings.getsterilizerdooropentime +
+      "?" +
+      "userid=" +
+      params.userid +
+      "&" +
+      "departmentid=" +
+      params.departmentid +
+      "&" +
+      "designationid=" +
+      params.designationid +
+      "&" +
+      "millcode=" +
+      params.millcode +
+      "&" +
+      "sterilizerid=" +
+      params.sterilizerid +
+      "&" +
+      "stationid=" +
+      params.stationid +
+      "&" +
+      "language=" +
+      params.language;
+
+    //console.log(newurl);
+
+    return new Promise((resolve, reject) => {
+      this.httpClient.get(newurl).subscribe(
+        (data) => {
           resolve(data);
         },
         (error) => {
@@ -1233,7 +1374,7 @@ export class SupervisorService {
   }*/
 
   getProductionStaions(params) {
-    if (
+    /*if (
       params.designationid != 1 &&
       params.designationid != 2 &&
       params.designationid != 4 &&
@@ -1243,7 +1384,7 @@ export class SupervisorService {
       params.designationid != 8
     ) {
       this.commonservice.startLoading();
-    }
+    }*/
 
     var newurl =
       localStorage.getItem("endpoint") +
@@ -1269,7 +1410,7 @@ export class SupervisorService {
     return new Promise((resolve, reject) => {
       this.httpClient.get(newurl).subscribe(
         (data) => {
-          if (
+          /*if (
             params.designationid != 1 &&
             params.designationid != 2 &&
             params.designationid != 4 &&
@@ -1279,12 +1420,12 @@ export class SupervisorService {
             params.designationid != 8
           ) {
             this.commonservice.stopLoading();
-          }
+          }*/
 
           resolve(data);
         },
         (error) => {
-          if (
+          /*if (
             params.designationid != 1 &&
             params.designationid != 2 &&
             params.designationid != 4 &&
@@ -1294,7 +1435,7 @@ export class SupervisorService {
             params.designationid != 8
           ) {
             this.commonservice.stopLoading();
-          }
+          }*/
 
           console.log(error);
 
@@ -1327,6 +1468,114 @@ export class SupervisorService {
           reject(error);
         }
       );
+    });
+  }
+
+  getOillossesvalues(params) {
+    var reqOpts: any;
+    reqOpts = this.formParams(params);
+
+    var api =
+      localStorage.getItem("endpoint") + appsettings.get_oilloss_prediction;
+    return new Promise((resolve, reject) => {
+      this.httpClient
+        .post(api, reqOpts)
+        .pipe(timeout(15000))
+        .subscribe(
+          (data) => {
+            console.log(data);
+            resolve(data);
+          },
+          (error) => {
+            console.log(error);
+            if (error.name == "TimeoutError" || error.status == 500) {
+              this.commonservice.presentToast("Something went wrong...!");
+            }
+            reject(error);
+          }
+        );
+    });
+  }
+
+  saveDoorOpenTimeLater(params) {
+    var reqOpts: any;
+    reqOpts = this.formParams(params);
+
+    var api = localStorage.getItem("endpoint") + appsettings.savedooropenlater;
+    return new Promise((resolve, reject) => {
+      this.httpClient
+        .post(api, reqOpts)
+        .pipe(timeout(15000))
+        .subscribe(
+          (data) => {
+            console.log(data);
+            resolve(data);
+          },
+          (error) => {
+            console.log(error);
+            if (error.name == "TimeoutError" || error.status == 500) {
+              this.commonservice.presentToast("Something went wrong...!");
+            }
+            reject(error);
+          }
+        );
+    });
+  }
+
+  getMultiPartDefectViewList(params) {
+    //var newurl = appsettings.chatapi + "?" + "msg=" + params;
+    var newurl =
+      localStorage.getItem("endpoint") +
+      appsettings.getmultipartdefectviewlist +
+      "?" +
+      "userid=" +
+      params.userid +
+      "&" +
+      "departmentid=" +
+      params.departmentid +
+      "&" +
+      "designationid=" +
+      params.designationid +
+      "&" +
+      "millcode=" +
+      params.millcode +
+      "&" +
+      "id=" +
+      params.id +
+      "&" +
+      "stationid=" +
+      params.stationid +
+      "&" +
+      "equipment=" +
+      params.equipment +
+      "&" +
+      "partdefectid=" +
+      params.partdefectid +
+      "&" +
+      "pvflag=" +
+      params.pvflag +
+      "&" +
+      "language=" +
+      params.language;
+
+    //console.log(newurl);
+
+    return new Promise((resolve, reject) => {
+      this.httpClient
+        .get(newurl)
+        .pipe(timeout(15000))
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            console.log(error);
+            if (error.name == "TimeoutError" || error.status == 500) {
+              this.commonservice.presentToast("Something went wrong...!");
+            }
+            reject(error);
+          }
+        );
     });
   }
 }

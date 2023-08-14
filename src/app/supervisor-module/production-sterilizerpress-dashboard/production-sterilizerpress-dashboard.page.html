@@ -8,17 +8,41 @@
     </ion-avatar>
     <ion-title color="light" [innerHTML]="mill_name"></ion-title>
     <ion-buttons slot="primary">
-      <ion-button class="bg-light-color" (click)="callmodalcontroller()">
+      <!-- <ion-button class="bg-light-color" (click)="callmodalcontroller()">
         <ion-icon name="calendar-outline"></ion-icon>
+      </ion-button> -->
+
+      <!-- <ion-button class="bg-light-color" (click)="btn_notification()">
+        <ion-badge *ngIf="count && count != 0" color="accent"
+          >{{ count }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button> -->
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'android'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'twodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
       </ion-button>
 
       <ion-button
         class="bg-light-color"
         (click)="btn_notification()"
-        *ngIf="userdesignation!=8"
+        *ngIf="getplatform == 'ios'"
       >
-        <ion-badge *ngIf="count && count != 0" color="accent"
-          >{{ count }}</ion-badge
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'iostwodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
         >
         <ion-icon name="notifications-outline"></ion-icon>
       </ion-button>
@@ -43,162 +67,409 @@
   </div>
 
   <div class="home-box" #myElementRef>
-    <div *ngIf="!nomachinesfound">
-      <form [formGroup]="dashboardForm">
-        <div class="titleheader" *ngIf="productionflag!=''">
+    <div *ngIf="userdesignation==7">
+      <div class="titleheader">
+        <div class="col">
+          <div class="title text-uppercase">
+            {{ 'PRESSSTATIONPOPUP.lastupdatedrecord' | translate}}
+          </div>
+        </div>
+      </div>
+
+      <div class="checkcard">
+        <div *ngFor="let value of pressstationalertArr; let i=index">
+          <div class="home">
+            <div
+              style="
+                font-size: 15px;
+                text-align: center;
+                color: #000000;
+                text-transform: uppercase;
+              "
+            >
+              <b>{{value.title}}</b>
+            </div>
+
+            <table
+              style="width: 100%; height: 100%"
+              class="table table-bordered"
+            >
+              <tr>
+                <td style="padding: 4px !important; text-align: left">
+                  <span class="mdfont"
+                    >{{ 'PRESSSTATIONPOPUP.lastupdatedon' | translate}}</span
+                  >
+                </td>
+
+                <td>{{value.lastupdatedon}}</td>
+              </tr>
+              <tr>
+                <td style="padding: 4px !important; text-align: left">
+                  <span class="mdfont"
+                    >{{ 'PRESSSTATIONPOPUP.doneby' | translate}}</span
+                  >
+                </td>
+
+                <td>{{value.doneby}}</td>
+              </tr>
+            </table>
+
+            <table
+              style="width: 100%; height: 100%"
+              class="table table-bordered"
+            >
+              <tr>
+                <th
+                  colspan="2"
+                  style="
+                    padding: 5px 0px 5px 0px !important;
+                    background-color: #ff9f0c;
+                    color: #000000;
+                  "
+                >
+                  <span class="para"
+                    >{{ 'PRESSSTATIONPOPUP.digestor' | translate}}</span
+                  >
+                </th>
+              </tr>
+
+              <tr>
+                <td style="width: 50%; font-weight: bold; text-align: left">
+                  {{ 'PRESSSTATIONPOPUP.temperature' | translate}}
+                  (<sup>O</sup>C)
+                </td>
+                <td style="width: 50%">{{value.digestertemperature}}</td>
+              </tr>
+
+              <tr>
+                <td style="width: 50%; font-weight: bold; text-align: left">
+                  {{ 'PRESSSTATIONPOPUP.motor' | translate}}
+                </td>
+                <td style="width: 50%">{{value.digestermotor}}</td>
+              </tr>
+
+              <tr>
+                <td style="width: 50%; font-weight: bold; text-align: left">
+                  {{ 'PRESSSTATIONPOPUP.level' | translate}} (%)
+                </td>
+                <td style="width: 50%">{{value.diegesterlevel}}</td>
+              </tr>
+
+              <tr>
+                <td style="width: 50%; font-weight: bold; text-align: left">
+                  {{ 'PRESSSTATIONPOPUP.digestordrainage' | translate}}
+                </td>
+                <td style="width: 50%">{{value.digesterdrainage}}</td>
+              </tr>
+            </table>
+
+            <table
+              style="width: 100%; height: 100%"
+              class="table table-bordered"
+            >
+              <tr class="table_head">
+                <th
+                  colspan="2"
+                  style="
+                    padding: 5px 0px 5px 0px !important;
+                    background-color: #000000;
+                    border: 1px solid #ffffff;
+                    color: #ff9f0c;
+                  "
+                >
+                  <span class="para"
+                    >{{ 'PRESSSTATIONPOPUP.press' | translate}}</span
+                  >
+                </th>
+              </tr>
+
+              <tr>
+                <td style="width: 50%; font-weight: bold; text-align: left">
+                  {{ 'PRESSSTATIONPOPUP.motor' | translate}}
+                </td>
+                <td style="width: 50%">{{value.pressmotor}}</td>
+              </tr>
+
+              <tr>
+                <td style="width: 50%; font-weight: bold; text-align: left">
+                  {{ 'PRESSSTATIONPOPUP.presscakedrainage' | translate}}
+                </td>
+                <td style="width: 50%">{{value.presscakedrainage}}</td>
+              </tr>
+
+              <tr>
+                <td style="width: 50%; font-weight: bold; text-align: left">
+                  {{ 'PRESSSTATIONPOPUP.hydraulicpressure' | translate}}
+                </td>
+                <td style="width: 50%">{{value.presshydraulicpressure}}</td>
+              </tr>
+            </table>
+
+            <hr *ngIf="(i+1)<pressstationalertArr.length" />
+          </div>
+        </div>
+
+        <div class="nolastupdatedrecords" *ngIf="enableflag">
+          {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+        </div>
+
+        <div style="text-align: center">
+          <button
+            type="submit"
+            class="h6 btn btn-ok"
+            (click)="btn_pressstation()"
+          >
+            {{ 'GENERALBUTTON.addnewdatabutton' | translate}}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="userdesignation==8">
+      <div *ngIf="!uinorecordFlag">
+        <div class="titleheader">
           <div class="col">
             <div class="title text-uppercase">
-              {{ 'MAINTENANCEDASHBOARD.millproductionstatus' | translate}}
+              {{ 'STERILIZATIONSTATIONPOPUP.lastupdatedrecord' | translate}}
             </div>
           </div>
         </div>
 
-        <div class="checkcard" *ngIf="productionflag!=''">
-          <ion-row>
-            <ion-col style="display: grid; justify-content: center">
-              <div
-                class="productionstatustitleheader"
-                [style.backgroundColor]="getProductionStatusBackGroundColor(productionflag)"
+        <div class="checkcard">
+          <div *ngFor="let general of sterilizerstationalertArr; let i=index">
+            <div class="home">
+              <table
+                style="width: 100%; height: 100%"
+                class="table table-bordered"
               >
-                <div class="productionstatustitle text-uppercase">
-                  {{txt_millproductionstatus}}
-                </div>
-              </div>
-            </ion-col>
-          </ion-row>
+                <tr>
+                  <td style="padding: 4px !important; text-align: left">
+                    <span class="mdfont"
+                      >{{ 'STERILIZATIONSTATIONPOPUP.lastupdatedon' |
+                      translate}}</span
+                    >
+                  </td>
 
-          <ion-row>
-            <ion-col style="text-align: center" *ngIf="productionflag=='1'">
-              <p class="mdfont">{{txt_millstartstop}}</p>
-              <p
-                class="mdfont"
-                style="color: #008000"
-                *ngIf="millstartdatetime != ''"
+                  <td>{{general.lastupdatedon}}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 4px !important; text-align: left">
+                    <span class="mdfont"
+                      >{{ 'STERILIZATIONSTATIONPOPUP.doneby' | translate}}</span
+                    >
+                  </td>
+
+                  <td>{{general.rasiedby}}</td>
+                </tr>
+              </table>
+
+              <table
+                style="width: 100%; height: 100%"
+                class="table table-bordered"
               >
-                {{millstartdatetime}}
-              </p>
+                <tr>
+                  <th
+                    colspan="2"
+                    style="
+                      padding: 5px 0px 5px 0px !important;
+                      background-color: #ff9f0c;
+                      color: #000000;
+                    "
+                  >
+                    <span class="para">{{general.sterilizer}}</span>
+                  </th>
+                </tr>
 
-              <p
-                class="mdfont"
-                style="color: #008000"
-                *ngIf="millstartdatetime == ''"
-              >
-                -
-              </p>
+                <tr>
+                  <td style="width: 50%; font-weight: bold; text-align: left">
+                    {{ 'STERILIZATIONSTATIONPOPUP.cycle' | translate}}
+                  </td>
+                  <td style="width: 50%">{{general.cycleno}}</td>
+                </tr>
 
-              <div>
-                <button
-                  type="button"
-                  class="h7 btn btn-refresh btn-sm float-right"
-                  (click)="refreshRecords()"
-                >
-                  {{ 'GENERALBUTTON.refresh' | translate}}
-                </button>
-              </div>
-            </ion-col>
+                <tr>
+                  <td style="width: 50%; font-weight: bold; text-align: left">
+                    {{ 'STERILIZATIONSTATIONPOPUP.doorshutdatetime' |
+                    translate}}
+                  </td>
+                  <td style="width: 50%">{{general.door_shut_time}}</td>
+                </tr>
 
-            <ion-col style="text-align: center" *ngIf="productionflag!='1'">
-              <p class="mdfont">{{txt_millstartstop}}</p>
-              <p
-                class="mdfont"
-                style="color: #cb4335"
-                *ngIf="millstopdatetime != ''"
-              >
-                {{millstopdatetime}}
-              </p>
+                <tr>
+                  <td style="width: 50%; font-weight: bold; text-align: left">
+                    {{ 'STERILIZATIONSTATIONPOPUP.dooropendatetime' |
+                    translate}}
+                  </td>
+                  <td style="width: 50%">{{general.door_open_time}}</td>
+                </tr>
 
-              <p
-                class="mdfont"
-                style="color: #cb4335"
-                *ngIf="millstopdatetime == ''"
-              >
-                -
-              </p>
+                <tr>
+                  <td style="width: 50%; font-weight: bold; text-align: left">
+                    {{ 'STERILIZATIONSTATIONPOPUP.bpv' | translate}} [PSI]
+                  </td>
+                  <td style="width: 50%">{{general.backpressurereceiver}}</td>
+                </tr>
 
-              <div>
-                <button
-                  type="button"
-                  class="h7 btn btn-refresh btn-sm float-right"
-                  (click)="refreshRecords()"
-                >
-                  {{ 'GENERALBUTTON.refresh' | translate}}
-                </button>
-              </div>
-            </ion-col>
-          </ion-row>
-        </div>
+                <tr>
+                  <td style="width: 50%; font-weight: bold; text-align: left">
+                    {{ 'STERILIZATIONSTATIONPOPUP.p1peak' | translate}} [PSI]
+                  </td>
+                  <td style="width: 50%">{{general.p1}}</td>
+                </tr>
 
-        <div style="padding: 0px 5px 0px 5px; margin-top: 10px">
-          <select
-            formControlName="select_station"
-            [ngClass]="{'selectdropdown' : (getplatform=='android'), 'iosselectdropdown' : (getplatform=='ios')}"
-            (change)="onChangeStation()"
-          >
-            <option value="" selected>
-              {{ 'MAINTENANCEDASHBOARD.searchbystation' | translate}}
-            </option>
-            <option
-              value="{{item.station_id}}"
-              *ngFor="let item of stationlistArr"
+                <tr>
+                  <td style="width: 50%; font-weight: bold; text-align: left">
+                    {{ 'STERILIZATIONSTATIONPOPUP.p2peak' | translate}} [PSI]
+                  </td>
+                  <td style="width: 50%">{{general.p2}}</td>
+                </tr>
+
+                <tr>
+                  <td style="width: 50%; font-weight: bold; text-align: left">
+                    {{ 'STERILIZATIONSTATIONPOPUP.p3peak' | translate}} [PSI]
+                  </td>
+                  <td style="width: 50%">{{general.p3}}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="nolastupdatedrecords" *ngIf="enableflag">
+            {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+          </div>
+
+          <div style="text-align: center">
+            <button
+              type="submit"
+              class="h6 btn btn-ok"
+              (click)="btn_sterilizerstation()"
             >
-              {{ item.station_name }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Stations and Machines -->
-        <div *ngIf="uienable && !pleasewaitflag" style="margin-top: 10px">
-          <div *ngFor="let station of stationsArr | filter:filterTerm">
-            <div class="titleheader">
-              <div class="col">
-                <div class="title text-uppercase">{{station.stationname}}</div>
-              </div>
-            </div>
-
-            <div class="stationcard">
-              <ion-row *ngFor="let machines of station.machines">
-                <ion-col size="6" *ngFor="let eachitem of machines">
-                  <ion-card class="card card-height">
-                    <!-- <ion-badge class="badgecolor">100</ion-badge> -->
-                    <ion-row style="height: 100%">
-                      <ion-col class="imagecenter" size="3">
-                        <img
-                          src="../../../assets/img/productiondashboard.png"
-                        />
-                        <!-- <img src="{{eachitem.imageurl}}" alt="PROFILE" /> -->
-                      </ion-col>
-
-                      <ion-col
-                        class="vertical-align-content"
-                        size="9"
-                        [style.background-color]="getBackGroundColor(eachitem.machinestatus)"
-                        [style.color]="getStatusTextColor(eachitem.machinestatus)"
-                      >
-                        <div class="h7">{{eachitem.machinename}}</div>
-                      </ion-col>
-                    </ion-row>
-                  </ion-card>
-                </ion-col>
-              </ion-row>
-            </div>
+              {{ 'GENERALBUTTON.addnewdatabutton' | translate}}
+            </button>
           </div>
         </div>
-        <!-- End -->
-      </form>
-    </div>
-  </div>
+      </div>
 
-  <div class="norecords" *ngIf="nomachinesfound">
-    {{ 'NOMACHINESFOUND.nomachinesfound' | translate}}
-  </div>
+      <div *ngIf="uinorecordFlag">
+        <ion-row>
+          <ion-col size="6"></ion-col>
+          <ion-col size="6" style="text-align: right !important">
+            <button
+              type="submit"
+              class="h6 btn btn-ok"
+              (click)="btn_sterilizerstation()"
+            >
+              <span class="icontext" style="color: #ffffff">
+                {{ 'GENERALBUTTON.addnewdatabutton' | translate}}
+              </span>
+            </button>
+          </ion-col>
+        </ion-row>
 
-  <div class="pleasewait" *ngIf="pleasewaitflag">
-    <div style="width: 100%; text-align: center">
-      <img
-        style="width: 80px; height: 80px"
-        src="../../../assets/img/loading.gif"
-      />
+        <div class="updatelatertitleheader text-uppercase">
+          {{ 'STERILIZATIONSTATIONPOPUP.dooropentimeupdaterecord' | translate}}
+        </div>
+
+        <ion-card class="bg-card" *ngFor="let value of sterilizerlistArr">
+          <ion-card-content class="cardcontent">
+            <ion-row>
+              <ion-col>
+                <p class="title-content">
+                  {{value.sterilizer}} &nbsp;&nbsp;&nbsp;&nbsp;
+                  {{value.lastupdatedon}}
+                </p>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="value.cycleno!=''">
+              <ion-col size="6">
+                {{ 'STERILIZATIONSTATIONPOPUP.cycle' | translate}}</ion-col
+              >
+
+              <ion-col size="6">
+                <p class="data">: {{value.cycleno}}</p>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="value.door_shut_time!=''">
+              <ion-col size="6"
+                >{{ 'STERILIZATIONSTATIONPOPUP.doorshutdatetime' |
+                translate}}</ion-col
+              >
+
+              <ion-col size="6">
+                <p class="data">: {{value.door_shut_time}}</p>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="value.door_open_time!=''">
+              <ion-col size="6"
+                >{{ 'STERILIZATIONSTATIONPOPUP.dooropendatetime' |
+                translate}}</ion-col
+              >
+
+              <ion-col size="6">
+                <p class="data">: {{value.door_open_time}}</p>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="value.backpressurereceiver!=''">
+              <ion-col size="6"
+                >{{ 'STERILIZATIONSTATIONPOPUP.bpv' | translate}} [PSI]</ion-col
+              >
+
+              <ion-col size="6">
+                <p class="data">: {{value.backpressurereceiver}}</p>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="value.p1!=''">
+              <ion-col size="6"
+                >{{ 'STERILIZATIONSTATIONPOPUP.p1peak' | translate}}
+                [PSI]</ion-col
+              >
+
+              <ion-col size="6">
+                <p class="data">: {{value.p1}}</p>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="value.p2!=''">
+              <ion-col size="6"
+                >{{ 'STERILIZATIONSTATIONPOPUP.p2peak' | translate}}
+                [PSI]</ion-col
+              >
+
+              <ion-col size="6">
+                <p class="data">: {{value.p2}}</p>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="value.p3!=''">
+              <ion-col size="6"
+                >{{ 'STERILIZATIONSTATIONPOPUP.p3peak' | translate}}
+                [PSI]</ion-col
+              >
+
+              <ion-col size="6">
+                <p class="data">: {{value.p3}}</p>
+              </ion-col>
+            </ion-row>
+
+            <ion-row style="float: right; margin-bottom: 8px">
+              <ion-col>
+                <button
+                  type="button"
+                  class="h7 btn btn-update btn-sm"
+                  (click)="callmodalcontroller(value)"
+                >
+                  {{ 'GENERALBUTTON.updatebutton' | translate}}
+                </button>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </div>
     </div>
-    {{ 'NORECORDSFOUND.loading' | translate}}
   </div>
 </ion-content>

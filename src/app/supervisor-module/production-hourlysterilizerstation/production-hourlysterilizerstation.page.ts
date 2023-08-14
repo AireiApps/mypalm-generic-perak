@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit } from "@angular/core";
 import { Location } from "@angular/common";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { AIREIService } from "src/app/api/api.service";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import {
   ModalController,
   AlertController,
@@ -12,6 +12,7 @@ import {
 import { SupervisorService } from "src/app/services/supervisor-service/supervisor.service";
 import { ImageUploadService } from "src/app/services/imageupload-service/imageupload";
 import * as moment from "moment";
+import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 
 import { ProductionHourlysterilizerstationAlertPage } from "src/app/supervisor-module/production-hourlysterilizerstation-alert/production-hourlysterilizerstation-alert.page";
 
@@ -35,6 +36,7 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
   @ViewChild("backpressurereceiver") backpressureInput;
 
   userlist = JSON.parse(localStorage.getItem("userlist"));
+  getlanguage = this.userlist.language;
 
   sterilizerstationForm;
 
@@ -44,6 +46,8 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
 
   cycleno = "";
 
+  dooropentime_min = "";
+  doorshuttime_min = "";
   p1peakthreshold_min = "";
   p1peakthreshold_max = "";
   p2peakthreshold_min = "";
@@ -85,6 +89,8 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
 
   uienableflag = false;
   norecordsflag = false;
+  datevalidationflag = false;
+  doorshutdatevalidationflag = false;
 
   currendatetime = new Date().toISOString();
   cookingstartdate = new Date().toISOString();
@@ -92,19 +98,18 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
 
   isDisabled = false;
   viewFlag = false;
-  fruittypeimagesettingsflag = 0;
-  p1imagesettingsflag = 0;
-  p3imagesettingsflag = 0;
 
-  fruittypeimageuiflag = false;
-  p1imageuiflag = false;
-  p3imageuiflag = false;
+  bpvimagesettingsflag = 0;
+  peakimagesettingsflag = 0;
 
-  fruittypeimageviewFlag = false;
-  p1imageviewFlag = false;
-  p3imageviewFlag = false;
+  bpvimageuiflag = false;
+  peakimageuiflag = false;
+
+  bpvimageviewFlag = false;
+  peakimageviewFlag = false;
 
   imagetype = "";
+  imageviewtitle = "";
 
   /*Variable to for to View entered Data*/
   view_cycleno = "";
@@ -123,14 +128,18 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
   sterilizerstationalertflag = 0;
 
   imagePaths = {
-    fruittypeimage_path: "",
-    p1image_path: "",
-    p3image_path: "",
+    bpvmage_path: "",
+    peakimage_path: "",
   };
 
-  fruittypeimagesArr = [];
-  p1imagesArr = [];
-  p3imagesArr = [];
+  bpvimagesArr = [];
+  peakimagesArr = [];
+
+  conditiondooropenSelected = "";
+  dooropenlaterFlag = false;
+
+  minimumdate = "";
+  doorshutminimumdate = "";
 
   constructor(
     private languageService: LanguageService,
@@ -139,39 +148,47 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
     private alertController: AlertController,
     private fb: FormBuilder,
     private router: Router,
+    private activatedroute: ActivatedRoute,
     private commonservice: AIREIService,
     private supervisorservice: SupervisorService,
     private imgUpload: ImageUploadService,
-    private location: Location
+    private location: Location,
+    private screenOrientation: ScreenOrientation
   ) {
     this.sterilizerstationForm = this.fb.group({
       txt_cyclenumber: new FormControl("", Validators.required),
       txt_doorshuttime: new FormControl("", Validators.required),
-      txt_dooropentime: new FormControl("", Validators.required),
+      txt_dooropentime: new FormControl(""),
       select_sterilizer: new FormControl("", Validators.required),
-      select_fruittype: new FormControl("", Validators.required),
+      //select_fruittype: new FormControl("", Validators.required),
       txt_backpressurereceiver: new FormControl("", Validators.required),
       txt_p1: new FormControl("", Validators.required),
       txt_p2: new FormControl("", Validators.required),
       txt_p3: new FormControl("", Validators.required),
-      txt_fruittypeimageupload: new FormControl(""),
-      txt_p1imageupload: new FormControl(""),
-      txt_p3imageupload: new FormControl(""),
+      txt_bpvimageupload: new FormControl(""),
+      txt_peakimageupload: new FormControl(""),
+    });
+
+    this.activatedroute.params.subscribe((val) => {
+      this.screenOrientation.lock(
+        this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY
+      );
+
+      //this.getCycleNo();
     });
   }
 
   ngOnInit() {}
 
   ngAfterViewInit(): void {
-    this.getSterilizerStationAlertFlag();
     //this.getCycleNo();
   }
 
   ionViewDidEnter() {
-    //this.getCycleNo();
+    this.getCycleNo();
   }
 
-  openDateTimePicker(type) {
+  /*openDateTimePicker(type) {
     DatePicker.present({
       mode: "dateAndTime",
       format: "dd-MM-yyyy HH:mm",
@@ -228,7 +245,7 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
         alert(JSON.stringify(err));
       }
     );
-  }
+  }*/
 
   slideOpts = {
     centeredSlides: true,
@@ -250,97 +267,65 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
         resultdata = JSON.parse(resultdata.response);
 
         if (resultdata.httpcode == 200) {
-          if (type == "FruitType") {
-            this.imagePaths.fruittypeimage_path = resultdata.data.uploaded_path;
+          if (type == "BPV") {
+            this.imagePaths.bpvmage_path = resultdata.data.uploaded_path;
 
-            this.fruittypeimagesArr.push(this.imagePaths.fruittypeimage_path);
+            this.bpvimagesArr.push(this.imagePaths.bpvmage_path);
 
-            if (this.fruittypeimagesArr.length == 1) {
-              this.sterilizerstationForm.controls.txt_fruittypeimageupload.setValue(
+            if (this.bpvimagesArr.length == 1) {
+              this.sterilizerstationForm.controls.txt_bpvimageupload.setValue(
                 this.translate.instant(
                   "HOURLYSTERILIZATIONSTATIONSAVE.uploded"
                 ) +
-                  this.fruittypeimagesArr.length +
+                  this.bpvimagesArr.length +
                   this.translate.instant(
                     "HOURLYSTERILIZATIONSTATIONSAVE.image1"
                   )
               );
-            } else if (this.fruittypeimagesArr.length > 1) {
-              this.sterilizerstationForm.controls.txt_fruittypeimageupload.setValue(
+            } else if (this.bpvimagesArr.length > 1) {
+              this.sterilizerstationForm.controls.txt_bpvimageupload.setValue(
                 this.translate.instant(
                   "HOURLYSTERILIZATIONSTATIONSAVE.uploded"
                 ) +
-                  this.fruittypeimagesArr.length +
+                  this.bpvimagesArr.length +
                   this.translate.instant(
                     "HOURLYSTERILIZATIONSTATIONSAVE.image2"
                   )
               );
             } else {
-              this.sterilizerstationForm.controls.txt_fruittypeimageupload.setValue(
+              this.sterilizerstationForm.controls.txt_bpvimageupload.setValue(
                 ""
               );
             }
           }
 
-          if (type == "P1") {
-            this.imagePaths.p1image_path = resultdata.data.uploaded_path;
+          if (type == "Peak") {
+            this.imagePaths.peakimage_path = resultdata.data.uploaded_path;
 
-            this.p1imagesArr.push(this.imagePaths.p1image_path);
+            this.peakimagesArr.push(this.imagePaths.peakimage_path);
 
-            if (this.p1imagesArr.length == 1) {
-              this.sterilizerstationForm.controls.txt_p1imageupload.setValue(
+            if (this.peakimagesArr.length == 1) {
+              this.sterilizerstationForm.controls.txt_peakimageupload.setValue(
                 this.translate.instant(
                   "HOURLYSTERILIZATIONSTATIONSAVE.uploded"
                 ) +
-                  this.p1imagesArr.length +
+                  this.peakimagesArr.length +
                   this.translate.instant(
                     "HOURLYSTERILIZATIONSTATIONSAVE.image1"
                   )
               );
-            } else if (this.p1imagesArr.length > 1) {
-              this.sterilizerstationForm.controls.txt_p1imageupload.setValue(
+            } else if (this.peakimagesArr.length > 1) {
+              this.sterilizerstationForm.controls.txt_peakimageupload.setValue(
                 this.translate.instant(
                   "HOURLYSTERILIZATIONSTATIONSAVE.uploded"
                 ) +
-                  this.p1imagesArr.length +
+                  this.peakimagesArr.length +
                   this.translate.instant(
                     "HOURLYSTERILIZATIONSTATIONSAVE.image2"
                   )
               );
             } else {
-              this.sterilizerstationForm.controls.txt_p1imageupload.setValue(
-                ""
-              );
-            }
-          }
-
-          if (type == "P3") {
-            this.imagePaths.p3image_path = resultdata.data.uploaded_path;
-
-            this.p3imagesArr.push(this.imagePaths.p3image_path);
-
-            if (this.p3imagesArr.length == 1) {
-              this.sterilizerstationForm.controls.txt_p3imageupload.setValue(
-                this.translate.instant(
-                  "HOURLYSTERILIZATIONSTATIONSAVE.uploded"
-                ) +
-                  this.p3imagesArr.length +
-                  this.translate.instant(
-                    "HOURLYSTERILIZATIONSTATIONSAVE.image1"
-                  )
-              );
-            } else if (this.p3imagesArr.length > 1) {
-              this.sterilizerstationForm.controls.txt_p3imageupload.setValue(
-                this.translate.instant(
-                  "HOURLYSTERILIZATIONSTATIONSAVE.uploded"
-                ) +
-                  this.p3imagesArr.length +
-                  this.translate.instant(
-                    "HOURLYSTERILIZATIONSTATIONSAVE.image2"
-                  )
-              );
-            } else {
-              this.sterilizerstationForm.controls.txt_p3imageupload.setValue(
+              this.sterilizerstationForm.controls.txt_peakimageupload.setValue(
                 ""
               );
             }
@@ -362,52 +347,21 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
     );
   }
 
-  getSterilizerStationAlertFlag() {
-    const req = {
-      userid: this.userlist.userId,
-      millcode: this.userlist.millcode,
-      dept_id: this.userlist.dept_id,
-      language: this.languageService.selected,
-    };
-
-    this.supervisorservice.getPressSterilizerAlertFlag(req).then((result) => {
-      let resultdata: any;
-      resultdata = result;
-      if (resultdata.httpcode == 200) {
-        this.sterilizerstationalertflag =
-          resultdata.data[0].pressstationalertenableflag;
-
-        if (this.sterilizerstationalertflag == 1) {
-          this.getSterilizerStationAlertData();
-        } else {
-          this.getCycleNo();
-        }
-      } else {
-        this.sterilizerstationalertflag = 0;
-        this.getCycleNo();
-      }
-    });
+  onDoorOpenTimeChange() {
+    this.dooropenlaterFlag = false;
   }
 
-  getSterilizerStationAlertData() {
-    const req = {
-      userid: this.userlist.userId,
-      millcode: this.userlist.millcode,
-      dept_id: this.userlist.dept_id,
-      language: this.languageService.selected,
-    };
+  onConditionDoorOpenChange(value) {
+    this.conditiondooropenSelected = value;
 
-    this.supervisorservice.getSterilizerStationAlertData(req).then((result) => {
-      let resultdata: any;
-      resultdata = result;
-      if (resultdata.httpcode == 200) {
-        this.sterilizerstationalertArr = resultdata.data;
-        this.sterilizerstationalert();
-      } else {
-        this.sterilizerstationalertArr = [];
-        this.getCycleNo();
+    if (this.conditiondooropenSelected == "Yes") {
+      this.sterilizerstationForm.controls.txt_dooropentime.setValue("");
+      this.dooropenlaterFlag = true;
+
+      if (!this.datevalidationflag) {
+        this.datevalidationflag = true;
       }
-    });
+    }
   }
 
   getCycleNo() {
@@ -423,6 +377,28 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
       resultdata = result;
       if (resultdata.httpcode == 200) {
         this.cycleno = resultdata.data[0].cycleno;
+
+        this.dooropentime_min = resultdata.data[0].dooropentime_min;
+
+        //console.log(this.dooropentime_min);
+
+        if (
+          this.dooropentime_min == "" ||
+          typeof this.dooropentime_min == "undefined"
+        ) {
+          //Current Date - 1
+          this.minimumdate = new Date(
+            new Date().getTime() + -1 * 24 * 60 * 60 * 1000
+          ).toISOString();
+        } else {
+          //API given Date - 1
+          this.minimumdate = new Date(
+            new Date(
+              moment(this.dooropentime_min).format("YYYY-MM-DD")
+            ).getTime() +
+              -1 * 24 * 60 * 60 * 1000
+          ).toISOString();
+        }
 
         this.p1peakthreshold_min = resultdata.data[0].p1peakthreshold_min;
         this.p1peakthreshold_max = resultdata.data[0].p1peakthreshold_max;
@@ -465,6 +441,8 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
         this.getSterilizers();
       } else {
         this.cycleno = "";
+
+        this.minimumdate = new Date().toISOString();
 
         this.p1peakthreshold_min = "0";
         this.p1peakthreshold_max = "50";
@@ -567,32 +545,118 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
       let resultdata: any;
       resultdata = result;
       if (resultdata.httpcode == 200) {
-        this.fruittypeimagesettingsflag =
+        this.bpvimagesettingsflag =
           resultdata.data[0].fruittypeimagesettingsflag;
-        this.p1imagesettingsflag = resultdata.data[0].p1imagesettingsflag;
-        this.p3imagesettingsflag = resultdata.data[0].p3imagesettingsflag;
+        this.peakimagesettingsflag = resultdata.data[0].p1imagesettingsflag;
 
-        if (this.fruittypeimagesettingsflag == 1) {
-          this.fruittypeimageuiflag = true;
+        if (this.bpvimagesettingsflag == 1) {
+          this.bpvimageuiflag = true;
         } else {
-          this.fruittypeimageuiflag = false;
+          this.bpvimageuiflag = false;
         }
 
-        if (this.p1imagesettingsflag == 1) {
-          this.p1imageuiflag = true;
+        if (this.peakimagesettingsflag == 1) {
+          this.peakimageuiflag = true;
         } else {
-          this.p1imageuiflag = false;
-        }
-
-        if (this.p3imagesettingsflag == 1) {
-          this.p3imageuiflag = true;
-        } else {
-          this.p3imageuiflag = false;
+          this.peakimageuiflag = false;
         }
       } else {
-        this.fruittypeimagesettingsflag = 0;
-        this.p1imagesettingsflag = 0;
-        this.p3imagesettingsflag = 0;
+        this.bpvimagesettingsflag = 0;
+        this.peakimagesettingsflag = 0;
+      }
+    });
+  }
+
+  addImages(type) {
+    if (type == "BPV") {
+      if (this.bpvimagesettingsflag == 1) {
+        if (this.bpvimageuiflag) {
+          this.bpvimageuiflag = false;
+        } else {
+          this.bpvimageuiflag = true;
+        }
+      }
+
+      if (this.peakimagesettingsflag == 1) {
+        if (this.peakimageuiflag) {
+          this.peakimageuiflag = false;
+        }
+      }
+    }
+
+    if (type == "Peak") {
+      if (this.bpvimagesettingsflag == 1) {
+        if (this.bpvimageuiflag) {
+          this.bpvimageuiflag = false;
+        }
+      }
+
+      if (this.peakimagesettingsflag == 1) {
+        if (this.peakimageuiflag) {
+          this.peakimageuiflag = false;
+        } else {
+          this.peakimageuiflag = true;
+        }
+      }
+    }
+  }
+
+  onConditionSterilizer() {
+    var sterilizerid = JSON.parse(
+      this.sterilizerstationForm.value.select_sterilizer
+    ).machine_id;
+
+    if (
+      sterilizerid != "" &&
+      typeof sterilizerid !== "undefined" &&
+      sterilizerid !== null
+    ) {
+      this.getDoorShutTime(sterilizerid);
+    }
+  }
+
+  getDoorShutTime(getsterilizerid) {
+    const req = {
+      userid: this.userlist.userId,
+      millcode: this.userlist.millcode,
+      departmentid: this.userlist.dept_id,
+      designationid: this.userlist.desigId,
+      sterilizerid: getsterilizerid,
+      language: this.languageService.selected,
+    };
+
+    //console.log(req);
+
+    this.supervisorservice.getLastDoorOpenTime(req).then((result) => {
+      let resultdata: any;
+      resultdata = result;
+      if (resultdata.httpcode == 200) {
+        this.sterilizerstationForm.controls.txt_doorshuttime.setValue("");
+        this.sterilizerstationForm.controls.txt_dooropentime.setValue("");
+
+        this.doorshuttime_min = resultdata.dooropentime_min;
+
+        //console.log(this.doorshuttime_min);
+
+        if (
+          this.doorshuttime_min == "" ||
+          typeof this.doorshuttime_min == "undefined"
+        ) {
+          //Current Date - 1
+          this.doorshutminimumdate = new Date(
+            new Date().getTime() + -1 * 24 * 60 * 60 * 1000
+          ).toISOString();
+        } else {
+          //API given Date - 1
+          this.doorshutminimumdate = new Date(
+            new Date(
+              moment(this.doorshuttime_min).format("YYYY-MM-DD")
+            ).getTime() +
+              -1 * 24 * 60 * 60 * 1000
+          ).toISOString();
+        }
+      } else {
+        this.doorshutminimumdate = new Date().toISOString();
       }
     });
   }
@@ -696,20 +760,22 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
   btn_view(type) {
     this.imagetype = type;
 
-    if (this.imagetype == "FruitType") {
-      if (this.fruittypeimagesArr.length > 0) {
-        this.fruittypeimageviewFlag = true;
+    if (this.imagetype == "BPV") {
+      if (this.bpvimagesArr.length > 0) {
+        this.imageviewtitle = "Back Pressure Receiver (BPV)";
+
+        this.bpvimageviewFlag = true;
       } else {
-        if (this.fruittypeimagesArr.length > 1) {
+        if (this.bpvimagesArr.length > 1) {
           this.commonservice.presentToast(
-            type +
+            "Back Pressure Receiver (BPV)" +
               this.translate.instant(
                 "HOURLYSTERILIZATIONSTATIONSAVE.imagesnotfound"
               )
           );
         } else {
           this.commonservice.presentToast(
-            type +
+            "Back Pressure Receiver (BPV)" +
               this.translate.instant(
                 "HOURLYSTERILIZATIONSTATIONSAVE.imagenotfound"
               )
@@ -718,42 +784,21 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
       }
     }
 
-    if (this.imagetype == "P1") {
-      if (this.p1imagesArr.length > 0) {
-        this.p1imageviewFlag = true;
+    if (this.imagetype == "Peak") {
+      if (this.peakimagesArr.length > 0) {
+        this.imageviewtitle = "Peak (P1, P2, P3)";
+        this.peakimageviewFlag = true;
       } else {
-        if (this.p1imagesArr.length > 1) {
+        if (this.peakimagesArr.length > 1) {
           this.commonservice.presentToast(
-            type +
+            "Peak (P1, P2, P3)" +
               this.translate.instant(
                 "HOURLYSTERILIZATIONSTATIONSAVE.imagesnotfound"
               )
           );
         } else {
           this.commonservice.presentToast(
-            type +
-              this.translate.instant(
-                "HOURLYSTERILIZATIONSTATIONSAVE.imagenotfound"
-              )
-          );
-        }
-      }
-    }
-
-    if (this.imagetype == "P3") {
-      if (this.p3imagesArr.length > 0) {
-        this.p3imageviewFlag = true;
-      } else {
-        if (this.p3imagesArr.length > 1) {
-          this.commonservice.presentToast(
-            type +
-              this.translate.instant(
-                "HOURLYSTERILIZATIONSTATIONSAVE.imagesnotfound"
-              )
-          );
-        } else {
-          this.commonservice.presentToast(
-            type +
+            "Peak (P1, P2, P3)" +
               this.translate.instant(
                 "HOURLYSTERILIZATIONSTATIONSAVE.imagenotfound"
               )
@@ -764,16 +809,12 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
   }
 
   imageviewcancel() {
-    if (this.imagetype == "FruitType") {
-      this.fruittypeimageviewFlag = false;
+    if (this.imagetype == "BPV") {
+      this.bpvimageviewFlag = false;
     }
 
-    if (this.imagetype == "P1") {
-      this.p1imageviewFlag = false;
-    }
-
-    if (this.imagetype == "P3") {
-      this.p3imageviewFlag = false;
+    if (this.imagetype == "Peak") {
+      this.peakimageviewFlag = false;
     }
   }
 
@@ -788,7 +829,7 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
         return;
       }
 
-      if (this.view_doorshuttime == "") {
+      if (this.sterilizerstationForm.value.txt_doorshuttime == "") {
         this.commonservice.presentToast(
           this.translate.instant(
             "HOURLYSTERILIZATIONSTATIONSAVE.doorshuttimemandatory"
@@ -797,27 +838,75 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
         return;
       }
 
-      if (this.view_dooropentime == "") {
-        this.commonservice.presentToast(
-          this.translate.instant(
-            "HOURLYSTERILIZATIONSTATIONSAVE.dooropentimemandatory"
-          )
-        );
+      // Validation for door shut time - Start
+      let doorshuttime_previous = new Date(
+        moment(this.doorshuttime_min).format("YYYY-MM-DD HH:mm")
+      );
+
+      let doorshuttime_current = new Date(
+        moment(this.sterilizerstationForm.value.txt_doorshuttime).format(
+          "YYYY-MM-DD HH:mm"
+        )
+      );
+
+      if (+doorshuttime_current <= +doorshuttime_previous) {
+        this.doorshutdatevalidationflag = false;
+
+        this.doorshutdatevalidationnalert(doorshuttime_previous);
+
         return;
       }
+      // Validation for door shut time - End
 
-      if (
-        Date.parse(
-          moment(this.view_dooropentime, "DD-MM-YYYY HH:mm").format()
-        ) <=
-        Date.parse(moment(this.view_doorshuttime, "DD-MM-YYYY HH:mm").format())
-      ) {
-        this.commonservice.presentToast(
-          this.translate.instant(
-            "HOURLYSTERILIZATIONSTATIONSAVE.doorshutandopentimevalidation"
+      if (!this.dooropenlaterFlag) {
+        if (this.sterilizerstationForm.value.txt_dooropentime == "") {
+          this.commonservice.presentToast(
+            this.translate.instant(
+              "HOURLYSTERILIZATIONSTATIONSAVE.dooropentimemandatory"
+            )
+          );
+          return;
+        }
+
+        // Validation for door shut time should less than door open time - Start
+        let startdate = new Date(
+          moment(this.sterilizerstationForm.value.txt_doorshuttime).format(
+            "YYYY-MM-DD HH:mm"
           )
         );
-        return;
+
+        let endate = new Date(
+          moment(this.sterilizerstationForm.value.txt_dooropentime).format(
+            "YYYY-MM-DD HH:mm"
+          )
+        );
+
+        if (+endate <= +startdate) {
+          this.datevalidationnalert("");
+
+          return;
+        }
+        // Validation for door shut time should less than door open time - End
+
+        // Validation for door open time - Start
+        let dooropentime_previous = new Date(
+          moment(this.dooropentime_min).format("YYYY-MM-DD HH:mm")
+        );
+
+        let dooropentime_current = new Date(
+          moment(this.sterilizerstationForm.value.txt_dooropentime).format(
+            "YYYY-MM-DD HH:mm"
+          )
+        );
+
+        if (+dooropentime_current <= +dooropentime_previous) {
+          this.datevalidationflag = false;
+
+          this.datevalidationnalert(dooropentime_previous);
+
+          return;
+        }
+        // Validation for door open time - End
       }
 
       if (this.validationflag == 1) {
@@ -884,6 +973,70 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
     }
   }
 
+  async datevalidationnalert(getdooropentimeprevious) {
+    let alertmessage;
+
+    if (getdooropentimeprevious == "") {
+      alertmessage = this.translate.instant(
+        "HOURLYSTERILIZATIONSTATIONSAVE.doorshutandopentimevalidation"
+      );
+    } else {
+      alertmessage =
+        this.translate.instant(
+          "HOURLYSTERILIZATIONSTATIONSAVE.datevalidationalert"
+        ) + moment(getdooropentimeprevious).format("DD-MM-YYYY HH:mm");
+    }
+
+    const alert = await this.alertController.create({
+      mode: "md",
+      header: this.translate.instant(
+        "SUPERVISORDASHBOARD.alreadybreakdownalerttitle"
+      ),
+      cssClass: "customalertmessageonebuttons",
+      message: alertmessage,
+      buttons: [
+        {
+          text: "",
+          handler: () => {},
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async doorshutdatevalidationnalert(getdooropentimeprevious) {
+    let alertmessage;
+
+    if (getdooropentimeprevious == "") {
+      alertmessage = this.translate.instant(
+        "HOURLYSTERILIZATIONSTATIONSAVE.doorshutandopentimevalidation"
+      );
+    } else {
+      alertmessage =
+        this.translate.instant(
+          "HOURLYSTERILIZATIONSTATIONSAVE.doorshuttimealert"
+        ) + moment(getdooropentimeprevious).format("DD-MM-YYYY HH:mm");
+    }
+
+    const alert = await this.alertController.create({
+      mode: "md",
+      header: this.translate.instant(
+        "SUPERVISORDASHBOARD.alreadybreakdownalerttitle"
+      ),
+      cssClass: "customalertmessageonebuttons",
+      message: alertmessage,
+      buttons: [
+        {
+          text: "",
+          handler: () => {},
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
   async thresholdalert() {
     var alertmessage = "";
 
@@ -916,6 +1069,7 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
     }
 
     const alert = await this.alertController.create({
+      mode: "md",
       header: this.backpressurealerttitle,
       cssClass: "thresholdalertmessage",
       message: alertmessage,
@@ -937,21 +1091,35 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
   save() {
     if (this.sterilizerstationForm.valid) {
       this.view_cycleno = this.sterilizerstationForm.value.txt_cyclenumber;
-      this.view_doorshuttime = moment(
+      /*this.view_doorshuttime = moment(
         this.view_doorshuttime,
         "DD-MM-YYYY HH:mm"
       ).format("DD-MM-YYYY HH:mm");
       this.view_dooropentime = moment(
         this.view_dooropentime,
         "DD-MM-YYYY HH:mm"
+      ).format("DD-MM-YYYY HH:mm");*/
+
+      this.view_doorshuttime = moment(
+        this.sterilizerstationForm.value.txt_doorshuttime
       ).format("DD-MM-YYYY HH:mm");
+
+      if (!this.dooropenlaterFlag) {
+        this.view_dooropentime = moment(
+          this.sterilizerstationForm.value.txt_dooropentime
+        ).format("DD-MM-YYYY HH:mm");
+      } else {
+        this.view_dooropentime = this.translate.instant(
+          "HOURLYSTERILIZATIONSTATIONSAVE.dooropenlater"
+        );
+      }
 
       this.view_sterilizername = JSON.parse(
         this.sterilizerstationForm.value.select_sterilizer
       ).machine_name;
-      this.view_fruittype = JSON.parse(
+      /*this.view_fruittype = JSON.parse(
         this.sterilizerstationForm.value.select_fruittype
-      ).fruittype;
+      ).fruittype;*/
       this.view_backpressurereceiver =
         this.sterilizerstationForm.value.txt_backpressurereceiver;
       this.view_p1peak = this.sterilizerstationForm.value.txt_p1;
@@ -976,6 +1144,7 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
 
   async peakthresholdalert(alerttitle, alertmessage) {
     const alert = await this.alertController.create({
+      mode: "md",
       header: alerttitle,
       cssClass: "thresholdalertmessage",
       message: alertmessage,
@@ -1034,7 +1203,8 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
       var getcurrentdate = moment(new Date().toISOString()).format(
         "YYYY-MM-DD HH:mm:ss"
       );
-      var doorshuttime = moment(
+
+      /*var doorshuttime = moment(
         this.view_doorshuttime,
         "DD-MM-YYYY HH:mm"
       ).format("YYYY-MM-DD HH:mm:00");
@@ -1042,7 +1212,20 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
       var dooropentime = moment(
         this.view_dooropentime,
         "DD-MM-YYYY HH:mm"
+      ).format("YYYY-MM-DD HH:mm:00");*/
+
+      var doorshuttime = moment(
+        this.sterilizerstationForm.value.txt_doorshuttime
       ).format("YYYY-MM-DD HH:mm:00");
+
+      var dooropentime;
+      if (!this.dooropenlaterFlag) {
+        dooropentime = moment(
+          this.sterilizerstationForm.value.txt_dooropentime
+        ).format("YYYY-MM-DD HH:mm:00");
+      } else {
+        dooropentime = "";
+      }
 
       if (!Number.isInteger(this.sterilizerstationForm.value.txt_cyclenumber)) {
         this.commonservice.presentToast(
@@ -1068,8 +1251,7 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
         final_blow_down_time: "",
         cooking_start_time: "",
         cooking_stop_time: "",
-        fruittype: JSON.parse(this.sterilizerstationForm.value.select_fruittype)
-          .id,
+        fruittype: "",
         backPressureReceiver:
           this.sterilizerstationForm.value.txt_backpressurereceiver,
         p1: this.sterilizerstationForm.value.txt_p1,
@@ -1077,13 +1259,10 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
         p3: this.sterilizerstationForm.value.txt_p3,
         running_user_id: localStorage.getItem("runninghourid"),
         date: getcurrentdate,
-        fruittypeimages: this.fruittypeimagesArr.join("~"),
-        p1images: this.p1imagesArr.join("~"),
-        p3images: this.p3imagesArr.join("~"),
+        bpvimages: this.bpvimagesArr.join("~"),
+        p1images: this.peakimagesArr.join("~"),
         language: this.languageService.selected,
       };
-
-      //console.log(req);
 
       this.supervisorservice.saveHourlySterilizerStation(req).then((result) => {
         var resultdata: any;
@@ -1100,7 +1279,7 @@ export class ProductionHourlysterilizerstationPage implements OnInit {
             )
           );
 
-          this.router.navigate(["tabs/tabsupervisorhome"]);
+          this.router.navigate(["tabs/tabsupervisordashboard"]);
         } else {
           this.isDisabled = false;
 

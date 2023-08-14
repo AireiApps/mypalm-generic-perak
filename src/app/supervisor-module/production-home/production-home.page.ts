@@ -7,6 +7,7 @@ import {
 } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import { AIREIService } from "src/app/api/api.service";
 import {
   AlertController,
@@ -54,80 +55,117 @@ export class ProductionHomePage implements OnInit {
   mill_name = this.nl2br(this.userlist.millname);
 
   count = 0;
-
-  maintenanceArr = [
-    [
-      {
-        title: this.translate.instant("PRODUCTIONHOME.correctivemaintenance"),
-        subtitle: "",
-        name: "Corrective Maintenance",
-        path: "/production-notification-list",
-        imgpath: "../../assets/img/corrective.png",
-      },
-    ],
-    /*[
-      {
-        title: this.translate.instant("PRODUCTIONHOME.reports"),
-        name: "Reports",
-        path: "/production-report",
-        imgpath: "../../assets/img/ceoreport.png",
-      },
-    ],*/
-  ];
-
-  productionArr = [
-    [
-      {
-        title: this.translate.instant("PRODUCTIONHOME.pressingtitle"),
-        subtitle: this.translate.instant("PRODUCTIONHOME.pressingsubtitle"),
-        name: "Pressing Station",
-        path: "/production-hourlypressingstation",
-        imgpath: "../../assets/img/press.png",
-      },
-      {
-        title: this.translate.instant("PRODUCTIONHOME.sterilizationtitle"),
-        subtitle: this.translate.instant("PRODUCTIONHOME.subtitlestation"),
-        name: "Sterilization Station",
-        path: "/production-hourlysterilizerstation",
-        imgpath: "../../assets/img/sterilizer.png",
-      },
-    ],
-
-    /*[
-      {
-        title: this.translate.instant("PRODUCTIONHOME.reports"),
-        name: "Reports",
-        path: "/production-report",
-        imgpath: "../../assets/img/ceoreport.png",
-      },
-    ],*/
-  ];
+  pendingcount = 0;
+  pendingcountlength = 0;
+  getplatform: string;
 
   reportsArr = [
     [
+      {
+        title: this.translate.instant("PRODUCTIONHOME.gradingtitle"),
+        subtitle: this.nl2br("<br>"),
+        //subtitle: "",
+        path: "/grading-report",
+        imgpath: "../../assets/img/gradingreport.png",
+      },
       {
         title: this.translate.instant("PRODUCTIONHOME.sterilizationtitle"),
         subtitle: this.translate.instant("PRODUCTIONHOME.subtitlestation"),
         path: "/report-sterilizerhourlyperformance",
         imgpath: "../../assets/img/sterilizer_ report.png",
       },
+    ],
+    [
       {
         title: this.translate.instant("PRODUCTIONHOME.pressingtitle"),
         subtitle: this.translate.instant("PRODUCTIONHOME.pressingsubtitle"),
         path: "/report-pressstationhourlyperformance",
         imgpath: "../../assets/img/press_report.png",
       },
+      /*{
+        title: this.translate.instant("PRODUCTIONHOME.oillosses"),
+        subtitle: this.translate.instant("PRODUCTIONHOME.predictionsubtitle"),
+        name: "Oil Losses",
+        path: "/dashboard-oilloss-predictionanalysis",
+        imgpath: "../../assets/img/oil_loss.png",
+      },*/
+      {
+        title: "Oil Loss",
+        subtitle: "<br>",
+        name: "Oil Loss",
+        path: "/production-oilloss",
+        imgpath: "../../assets/img/palmoiltree.png",
+      },
     ],
     [
       {
-        title: this.translate.instant("PRODUCTIONHOME.predictiontitle"),
-        subtitle: this.translate.instant("PRODUCTIONHOME.predictionsubtitle"),
-        path: "/dashboard-oilloss-predictionanalysis",
-        imgpath: "../../assets/img/prediction.png",
+        title: "Oil Losses",
+        subtitle: "Summary",
+        name: "Oil Losses Summary",
+        path: "/oilloss-reports",
+        imgpath: "../../assets/img/oil_loss.png",
       },
       {
-        title: this.translate.instant("PRODUCTIONHOME.correctivemaintenance"),
-        subtitle: "",
+        title: this.translate.instant("PRODUCTIONHOME.correctivetitle"),
+        subtitle: this.translate.instant("PRODUCTIONHOME.correctivesubtitle"),
+        name: "Corrective Maintenance",
+        path: "/report-production-maintenance-notification",
+        imgpath: "../../assets/img/corrective_report.png",
+      },
+    ],
+    [
+      {
+        title: this.translate.instant("PRODUCTIONHOME.preventivetitle"),
+        subtitle: this.translate.instant("PRODUCTIONHOME.preventivesubtitle"),
+        name: "Preventive Maintenance",
+        path: "/report-pvrpv",
+        imgpath: "../../assets/img/preventive_report.png",
+      },
+    ],
+  ];
+
+  supervisorreportsArr = [
+    [
+      {
+        title: this.translate.instant("PRODUCTIONHOME.gradingtitle"),
+        subtitle: this.nl2br("<br>"),
+        //subtitle: "",
+        path: "/grading-report",
+        imgpath: "../../assets/img/gradingreport.png",
+      },
+      {
+        title: this.translate.instant("PRODUCTIONHOME.sterilizationtitle"),
+        subtitle: this.translate.instant("PRODUCTIONHOME.subtitlestation"),
+        path: "/report-sterilizerhourlyperformance",
+        imgpath: "../../assets/img/sterilizer_ report.png",
+      },
+    ],
+    [
+      {
+        title: this.translate.instant("PRODUCTIONHOME.pressingtitle"),
+        subtitle: this.translate.instant("PRODUCTIONHOME.pressingsubtitle"),
+        path: "/report-pressstationhourlyperformance",
+        imgpath: "../../assets/img/press_report.png",
+      },
+      // {
+      //   title: this.translate.instant("PRODUCTIONHOME.oillosses"),
+      //   subtitle: this.translate.instant("PRODUCTIONHOME.predictionsubtitle"),
+      //   name: "Oil Losses",
+      //   path: "/lab-oillossesreport",
+      //   imgpath: "../../assets/img/oil_loss.png",
+      // },
+      {
+        title: "Oil Losses",
+        subtitle: "Summary",
+        name: "Oil Losses Summary",
+        path: "/oilloss-reports",
+        imgpath: "../../assets/img/oil_loss.png",
+      },
+    ],
+    [
+      {
+        title: this.translate.instant("PRODUCTIONHOME.correctivetitle"),
+        subtitle: this.translate.instant("PRODUCTIONHOME.correctivesubtitle"),
         name: "Corrective Maintenance",
         path: "/report-production-maintenance-notification",
         imgpath: "../../assets/img/corrective_report.png",
@@ -151,11 +189,22 @@ export class ProductionHomePage implements OnInit {
     private platform: Platform,
     private appVersion: AppVersion,
     private market: Market,
-    private animationCtrl: AnimationController
+    private animationCtrl: AnimationController,
+    private screenOrientation: ScreenOrientation
   ) {
     this.currentlanguage = this.languageService.selected;
 
     this.activatedroute.params.subscribe((val) => {
+      if (this.platform.is("android")) {
+        this.getplatform = "android";
+      } else if (this.platform.is("ios")) {
+        this.getplatform = "ios";
+      }
+
+      this.screenOrientation.lock(
+        this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY
+      );
+
       PushNotifications.removeAllDeliveredNotifications();
 
       this.count = parseInt(localStorage.getItem("badge_count"));
@@ -275,11 +324,9 @@ export class ProductionHomePage implements OnInit {
             this.market
               .open(appId)
               .then((response) => {
+                /*this.notifi.logoutupdateNotification();
                 localStorage.clear();
-                this.notifi.logoutupdateNotification();
-                this.router.navigate(["/login"], { replaceUrl: true });
-
-                console.debug(response);
+                this.router.navigate(["/login"], { replaceUrl: true });*/
               })
               .catch((error) => {
                 console.warn(error);
@@ -299,6 +346,8 @@ export class ProductionHomePage implements OnInit {
   updateNotification() {
     this.zone.run(() => {
       this.count = parseInt(localStorage.getItem("badge_count"));
+
+      this.getProductionPendingCount();
     });
   }
 
@@ -323,6 +372,30 @@ export class ProductionHomePage implements OnInit {
     slides.startAutoplay();
   }
 
+  getProductionPendingCount() {
+    let req = {
+      userid: this.userlist.userId,
+      departmentid: this.userlist.dept_id,
+      design_id: this.userlist.desigId,
+      millcode: this.userlist.millcode,
+      language: this.languageService.selected,
+    };
+
+    console.log(req);
+
+    this.commonservice.getmaintenancependingcount(req).then((result) => {
+      var resultdata: any;
+      resultdata = result;
+      if (resultdata.httpcode == 200) {
+        this.pendingcount = resultdata.count;
+        this.pendingcountlength = this.pendingcount.toString().length;
+      } else {
+        this.pendingcount = 0;
+        this.pendingcountlength = this.pendingcount.toString().length;
+      }
+    });
+  }
+
   btn_Action(item) {
     if (item.name == "Add New Job") {
       this.callmodalcontroller(item.name);
@@ -332,7 +405,7 @@ export class ProductionHomePage implements OnInit {
   }
 
   btn_ReportAction(item) {
-    this.router.navigate([item.path, { reportdate: "" }]);
+    this.router.navigate([item.path]);
   }
 
   async callmodalcontroller(value) {

@@ -1,12 +1,14 @@
 import { Component, OnInit, ElementRef, ViewChild } from "@angular/core";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { AIREIService } from "src/app/api/api.service";
 import { MoreServiceService } from "src/app/services/more-service/more-service.service";
 import { HttpserviceService } from "../services/httpservice/httpservice.service";
 import { AuthGuardService } from "src/app/services/authguard/auth-guard.service";
 import { ImageUploadService } from "src/app/services/imageupload-service/imageupload";
 import { LanguageService } from "src/app/services/language-service/language.service";
+import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import {
+  Platform,
   PopoverController,
   Animation,
   AnimationController,
@@ -24,6 +26,7 @@ import { TranslateService } from "@ngx-translate/core";
 export class MorePage implements OnInit {
   @ViewChild("myElementRef", { static: false }) myElementRef: ElementRef;
   userlist = JSON.parse(localStorage.getItem("userlist"));
+  designationid = this.userlist.desigId;
 
   appPages = [
     /*Commented by Suresh Kumar K on 15.09.2020 as said by Mr.Veda
@@ -56,17 +59,18 @@ export class MorePage implements OnInit {
   mill_name = this.nl2br(this.userlist.millname);
 
   constructor(
+    private platform: Platform,
     private languageService: LanguageService,
     private popoverController: PopoverController,
     private translate: TranslateService,
-    private storage: Storage,
     private notifi: AuthGuardService,
     private router: Router,
+    private activatedroute: ActivatedRoute,
     private commonservice: AIREIService,
     private service: MoreServiceService,
-    private httpservice: HttpserviceService,
     private animationCtrl: AnimationController,
-    private imgUpload: ImageUploadService
+    private imgUpload: ImageUploadService,
+    private screenOrientation: ScreenOrientation
   ) {
     /*Commented by Suresh Kumar K on 15.09.2020 as said by Mr.Veda
     if (this.userlist.department == 'Ffbsupplier') {
@@ -83,6 +87,12 @@ export class MorePage implements OnInit {
       });
 
     }*/
+
+    this.activatedroute.params.subscribe((val) => {
+      this.screenOrientation.lock(
+        this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY
+      );
+    });
 
     this.designation = this.userlist.designation;
 
@@ -131,13 +141,20 @@ export class MorePage implements OnInit {
       }
     }
 
-    const animation: Animation = this.animationCtrl
-      .create()
-      .addElement(this.myElementRef.nativeElement)
-      .duration(1000)
-      .fromTo("opacity", "0", "1");
+    if (
+      this.designationid != 1 &&
+      this.designationid != 12 &&
+      this.designationid != 13 &&
+      this.designationid != 14
+    ) {
+      const animation: Animation = this.animationCtrl
+        .create()
+        .addElement(this.myElementRef.nativeElement)
+        .duration(1000)
+        .fromTo("opacity", "0", "1");
 
-    animation.play();
+      animation.play();
+    }
   }
 
   async openLanguagePopOver($event) {
@@ -192,31 +209,53 @@ export class MorePage implements OnInit {
 
   menu_action(info) {
     if (info == "logout") {
+      //this.logOut();
+
       this.notifi.logoutupdateNotification();
+
       localStorage.clear();
+
       this.router.navigate(["/login"], { replaceUrl: true });
     }
-
-    // if (info.name == "contacts" || info.name == "sms" || info.name == "image") {
-    //   this.router.navigate(["/contacts", { item: JSON.stringify(info) }]);
-    // }
 
     if (info == "changepassword") {
       this.router.navigate(["/forgotpassword"]);
     }
-
-    // if (info.name == 'sms') {
-    //   this.router.navigate(["/contacts", { item: JSON.stringify(info) }]);
-    // }
-
-    // if (info.name == 'image') {
-    //   this.router.navigate(["/contacts", { item: JSON.stringify(info) }]);
-    // }
   }
 
   // chatbot() {
   //   this.router.navigate(["/chatbot"]);
   // }
+
+  /*logOut() {
+    var req = {
+      login_id: this.userlist.userId,
+    };
+
+    if (this.platform.is("android")) {
+      req["google_token_android"] = "";
+    }
+
+    if (this.platform.is("ios")) {
+      req["google_token_ios"] = "";
+    }
+
+    this.commonservice.updatePushNotification(req).then((result) => {
+      var resultdata: any;
+      resultdata = result;
+
+      if (resultdata.httpcode == 200) {
+        this.commonservice.presentToast("Reset Successfully");
+
+        localStorage.clear();
+
+        this.router.navigate(["/login"], { replaceUrl: true });
+      } else {
+        this.commonservice.presentToast("Reset Failed");
+      }
+    });
+  }*/
+
   chatbot() {
     this.router.navigate(["/chatbot-screen"]);
   }

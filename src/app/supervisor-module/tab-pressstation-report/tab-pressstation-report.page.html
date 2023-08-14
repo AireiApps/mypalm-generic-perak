@@ -1,0 +1,303 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-avatar slot="start">
+      <ion-img
+        class="toolbarimage"
+        src="../../../assets/img/logo.png"
+      ></ion-img>
+    </ion-avatar>
+    <ion-title color="light" [innerHTML]="mill_name"></ion-title>
+
+    <ion-buttons slot="primary">
+      <!-- <ion-button class="bg-light-color" (click)="btn_notification()">
+        <ion-badge class="todaybadge" *ngIf="count && count != 0" color="accent"
+          >{{ count }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button> -->
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'android'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'twodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'ios'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'iostwodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="chartContainer8" style="margin: 10px">
+    <form [formGroup]="pressstationreportForm">
+      <ion-row class="form-row">
+        <ion-col size="2.35"> </ion-col>
+
+        <ion-col size="2">
+          <div class="h7 text-white" style="text-align: right">
+            <b>{{ 'REPORTPRESSSTATION.date' | translate}} </b>
+          </div>
+        </ion-col>
+
+        <ion-col size="3.30">
+          <input
+            type="text"
+            style="padding: 5px"
+            class="h7 form-control readonly"
+            formControlName="pickdate"
+            placeholder="DD-MM-YYYY"
+            (click)="openDateTimePicker()"
+            readonly
+          />
+        </ion-col>
+
+        <ion-col size="2">
+          <button
+            type="button"
+            class="h7 btn btn-general btn-sm margin-5px float-left"
+            (click)="getreport()"
+          >
+            {{ 'GENERALBUTTON.getrecords' | translate}}
+          </button>
+        </ion-col>
+
+        <ion-col size="2.35"> </ion-col>
+      </ion-row>
+
+      <hr />
+    </form>
+
+    <div
+      style="overflow-x: auto; margin-top: 20px"
+      *ngIf="norecordsflag==false"
+    >
+      <div *ngFor="let general of pressstationhourlyperformanceArr">
+        <table style="width: 100%; height: 100%" class="table table-bordered">
+          <tr>
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont" style="color: white"
+                >{{ 'REPORTPRESSSTATION.millstartdate' | translate}}</span
+              >
+            </th>
+
+            <td style="background-color: green; color: white">
+              {{general.start_date}}
+            </td>
+
+            <th
+              colspan="1"
+              scope="colgroup"
+              style="padding: 4px !important"
+              *ngIf="general.stop_date!=''"
+            >
+              <span class="mdfont" style="color: white"
+                >{{ 'REPORTPRESSSTATION.millstopdate' | translate}}</span
+              >
+            </th>
+
+            <td
+              style="background-color: red; color: white"
+              *ngIf="general.stop_date!=''"
+            >
+              {{general.stop_date}}
+            </td>
+          </tr>
+          <tr>
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont" style="color: white"
+                >{{ 'REPORTPRESSSTATION.millstarttime' | translate}}</span
+              >
+            </th>
+
+            <td style="background-color: green; color: white">
+              {{general.start_time}}
+            </td>
+
+            <th
+              colspan="1"
+              scope="colgroup"
+              style="padding: 4px !important"
+              *ngIf="general.stop_time!=''"
+            >
+              <span class="mdfont" style="color: white"
+                >{{ 'REPORTPRESSSTATION.millstoptime' | translate}}</span
+              >
+            </th>
+
+            <td
+              style="background-color: red; color: white"
+              *ngIf="general.stop_time!=''"
+            >
+              {{general.stop_time}}
+            </td>
+          </tr>
+        </table>
+
+        <div *ngFor="let pressname of general.data">
+          <table style="width: 100%; height: 100%" class="table table-bordered">
+            <tr class="table_head">
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont">{{pressname.pressname}}</span>
+              </th>
+
+              <th colspan="4" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTPRESSSTATION.digestor' | translate}}</span
+                >
+              </th>
+
+              <th colspan="3" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTPRESSSTATION.press' | translate}}</span
+                >
+              </th>
+
+              <th
+                rowspan="2"
+                scope="colgroup"
+                style="padding: 4px !important"
+                *ngIf="general.image==1"
+              >
+                <span class="mdfont"
+                  >{{ 'REPORTPRESSSTATION.image' | translate}}</span
+                >
+              </th>
+
+              <th rowspan="2" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTPRESSSTATION.doneby' | translate}}</span
+                >
+              </th>
+            </tr>
+
+            <tr class="table_head">
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTPRESSSTATION.time' | translate}}</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTPRESSSTATION.temperature' | translate}}
+                  <br />(<sup>O</sup>C)</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTPRESSSTATION.motor' | translate}}<br />(A)</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTPRESSSTATION.level' | translate}}<br />(%)</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTPRESSSTATION.digestor' | translate}}<br />{{
+                  'REPORTPRESSSTATION.drainage' | translate}}</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTPRESSSTATION.motor' | translate}}<br />(A)</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTPRESSSTATION.fibre' | translate}}<br />{{
+                  'REPORTPRESSSTATION.flow' | translate}}</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'REPORTPRESSSTATION.hydraulic' | translate}}<br />{{
+                  'REPORTPRESSSTATION.pressure' | translate}}<br />(Bar)</span
+                >
+              </th>
+            </tr>
+
+            <ng-container *ngFor="let value of pressname.pressdata">
+              <tr>
+                <td scope="row">{{value.time}}</td>
+                <td scope="row">{{value.temperature}}</td>
+                <td scope="row">{{value.digestormotoramp}}</td>
+                <td scope="row">{{value.level}}</td>
+                <!-- <td scope="row">{{value.predictedlevel}}</td> -->
+                <td scope="row">{{value.diegestordrainoillow}}</td>
+                <td scope="row">{{value.pressmotoramp}}</td>
+                <td scope="row">{{value.fiberflow}}</td>
+                <td scope="row">{{value.hydralicpressure}}</td>
+                <!-- <td scope="row">{{value.dilutiontemperature}}</td> -->
+                <td scope="row" *ngIf="general.image==1">
+                  <button
+                    type="button"
+                    class="h7 btn btn-imageview btn-sm"
+                    (click)="btn_ViewImages(value.temperatureimages, value.motorimages, value.levelimages, value.drainageimages, value.pressmotorimages, value.fibreflowimages, value.hydraulicpressureimages)"
+                    *ngIf="(value.temperatureimages!='' || value.motorimages!='' || value.levelimages!='' || value.drainageimages!='' || value.pressmotorimages!='' || value.fibreflowimages!='' || value.hydraulicpressureimages!='')"
+                  >
+                    <span class="icontext"
+                      >{{ 'GENERALBUTTON.viewbutton' | translate}}</span
+                    >
+                  </button>
+                  <span
+                    *ngIf="(value.temperatureimages =='' && value.motorimages =='' && value.levelimages =='' && value.drainageimages =='' && value.pressmotorimages =='' && value.fibreflowimages =='' && value.hydraulicpressureimages =='')"
+                    >-</span
+                  >
+                </td>
+                <td scope="row">{{value.rasiedby}}</td>
+              </tr>
+            </ng-container>
+          </table>
+        </div>
+
+        <div class="nopressstationrecords" *ngIf="general.data.length==0">
+          {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+        </div>
+
+        <hr />
+      </div>
+    </div>
+
+    <div class="norecords" *ngIf="norecordsflag==true">
+      {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+    </div>
+
+    <div class="pleasewait" *ngIf="pleasewaitflag">
+      <div style="width: 100%; text-align: center">
+        <img
+          style="width: 80px; height: 80px"
+          src="../../../assets/img/loading.gif"
+        />
+      </div>
+      {{ 'NORECORDSFOUND.loading' | translate}}
+    </div>
+  </div>
+</ion-content>

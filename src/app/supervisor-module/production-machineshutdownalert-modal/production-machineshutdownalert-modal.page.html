@@ -1,6 +1,12 @@
 <ion-header>
   <ion-toolbar class="bg-brown-color modaltoolbar">
-    <ion-title color="light">{{title}}</ion-title>
+    <ion-title mode="ios" color="light">{{title}}</ion-title>
+
+    <ion-buttons slot="start" *ngIf="correctivemaintenanceraiseFlag">
+      <ion-button color="whitefav" (click)="btn_back()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
 
     <ion-buttons slot="primary">
       <ion-button class="bg-light-color" (click)="btn_close()">
@@ -8,74 +14,409 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+
+  <ion-toolbar class="stepstoolbar" *ngIf="correctivemaintenanceraiseFlag">
+    <ion-row class="steps">
+      <ion-col class="circle" [style.backgroundColor]="getStatusColor('STEP1')">
+        <span><b> 1 </b></span>
+      </ion-col>
+
+      <ion-col>
+        <hr />
+      </ion-col>
+
+      <ion-col class="circle" [style.backgroundColor]="getStatusColor('STEP2')">
+        <span><b> 2 </b></span>
+      </ion-col>
+
+      <ion-col>
+        <hr />
+      </ion-col>
+
+      <ion-col class="circle" [style.backgroundColor]="getStatusColor('STEP3')">
+        <span><b> 3 </b></span>
+      </ion-col>
+
+      <ion-col>
+        <hr />
+      </ion-col>
+
+      <ion-col class="circle" [style.backgroundColor]="getStatusColor('STEP4')">
+        <span><b> 4 </b></span>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content #pageBottom>
   <div class="content">
-    <form [formGroup]="step1Form" class="step1form">
+    <form
+      [formGroup]="breakdownForm"
+      [ngClass]="{'' : correctivemaintenanceraiseFlag, 'breakdownform' : !correctivemaintenanceraiseFlag}"
+    >
       <div *ngIf="breakdownFlag">
         <ion-row
           class="form-row"
           *ngIf="getmachinename!=''"
-          style="margin-top: 15px"
+          [ngClass]="{'machinetitleaftercm' : correctivemaintenanceraiseFlag, 'machinetitlebeforecm' : !correctivemaintenanceraiseFlag}"
         >
           <ion-col>
             <div class="viewtitle">{{getmachinename}}</div>
           </ion-col>
         </ion-row>
 
-        <div>
-          <img
-            class="breakdownimg"
-            src="../../../assets/img/machineshutdownalert.png"
-          />
-        </div>
-
-        <ion-row class="form-row">
-          <ion-col size="4">
-            <div class="title">
-              <b>{{ 'SUPERVISORDASHBOARD.problem' | translate}} :</b>
+        <div style="margin: 0px 10px 0px 10px">
+          <div *ngIf="!correctivemaintenanceraiseFlag" style="margin-top: 20px">
+            <!-- <div class="problemheader">
+              <div class="col">
+                <div class="problemtitle">
+                  {{ 'SUPERVISORDASHBOARD.problem' | translate}}
+                </div>
+              </div>
             </div>
-          </ion-col>
 
-          <ion-col size="8">
-            <!-- <select
-              formControlName="select_breakdown"
-              class="selectdropdown"
-              (change)="onChangeBreakdown()"
-            >
-              <option value="" selected disabled hidden>Select</option>
-              <option
-                value="{{parseString(item)}}"
-                *ngFor="let item of breakdownArr"
-              >
-                {{ item.breakdownCoding }}
-              </option>
-            </select> -->
+            <div class="problemcard">
+              <div class="problem_radio">
+                <div *ngFor="let value of breakdownArr; let i = index">
+                  <div style="margin-top: 20px; margin-bottom: 20px">
+                    <input
+                      type="radio"
+                      id="option{{i}}"
+                      name="radiobreakdown"
+                      value="option{{i}}"
+                      [checked]="value.selected==1"
+                      (change)="onConditionOptionChange(value)"
+                    />
+                    <label for="option{{i}}" style="padding-right: 10px"
+                      >{{ value.breakdownCoding }}</label
+                    >
+                  </div>
+                </div>
+              </div>
+            </div> -->
 
-            <ion-select
-              [interfaceOptions]="breakdownOptions"
-              formControlName="select_breakdown"
-              multiple="false"
-              [okText]="'GENERALBUTTON.okay' | translate"
-              [cancelText]="'GENERALBUTTON.dismiss' | translate"
-              class="selectdropdown"
-              placeholder="{{ 'SUPERVISORDASHBOARD.select' | translate}}"
-              (ionChange)="breakdownhandleChange($event)"
-            >
-              <ion-select-option
-                value="{{parseString(value)}}"
-                *ngFor="let value of breakdownArr; let i = index"
-                >{{ value.breakdownCoding }}</ion-select-option
+            <div>
+              <div class="col">
+                <div
+                  class="problemtitle"
+                  style="text-align: left; color: #3cd2a5"
+                >
+                  {{ 'SUPERVISORDASHBOARD.problem' | translate}} :
+                </div>
+              </div>
+            </div>
+
+            <div class="problem_radio">
+              <div *ngFor="let value of breakdownArr; let i = index">
+                <div style="margin-top: 20px; margin-bottom: 20px">
+                  <input
+                    type="radio"
+                    id="option{{i}}"
+                    name="radiobreakdown"
+                    value="option{{i}}"
+                    [checked]="value.selected==1"
+                    (change)="onConditionOptionChange(value)"
+                  />
+                  <label for="option{{i}}" style="padding-right: 10px"
+                    >{{ value.breakdownCoding }}</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="correctivemaintenanceraiseFlag">
+            <!-- Problem -->
+            <ion-row class="form-row">
+              <ion-col size="5.5">
+                <div class="title">
+                  {{ 'SUPERVISORDASHBOARD.problem' | translate}}
+                </div>
+              </ion-col>
+
+              <ion-col size="0.5" style="text-align: center">
+                <div class="title">
+                  <b>:</b>
+                </div>
+              </ion-col>
+
+              <ion-col size="6">
+                <div class="title" style="text-align: center">
+                  <b>{{breakdownvalue}}</b>
+                </div>
+              </ion-col>
+            </ion-row>
+
+            <div class="hl4line"></div>
+
+            <!-- Maintenance Type -->
+            <div>
+              <ion-row class="form-row">
+                <ion-col size="5.5">
+                  <div class="title">
+                    {{ 'MAINTENANCEACKNOWLEDGEMODAL.maintenancetype' |
+                    translate}}
+                  </div>
+                </ion-col>
+
+                <ion-col size="0.5" style="text-align: center">
+                  <div class="title">
+                    <b>:</b>
+                  </div>
+                </ion-col>
+
+                <ion-col size="6">
+                  <ion-select
+                    mode="md"
+                    [interfaceOptions]="maintenancetypeOptions"
+                    formControlName="select_maintenancetype"
+                    multiple="false"
+                    [okText]="'GENERALBUTTON.okay' | translate"
+                    [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
+                    class="selectdropdown"
+                    placeholder="{{ 'MAINTENANCEACKNOWLEDGEMODAL.select' | translate}}"
+                    (ionChange)="maintenancetypehandleChange($event)"
+                  >
+                    <ion-select-option
+                      value="{{parseString(value)}}"
+                      *ngFor="let value of maintenancetypeArr; let i = index"
+                      >{{ value.maintanence_type }}</ion-select-option
+                    >
+                  </ion-select>
+                </ion-col>
+              </ion-row>
+
+              <div class="hl4line"></div>
+            </div>
+
+            <!-- Part Defect -->
+            <div>
+              <ion-row class="form-row">
+                <ion-col size="5.5">
+                  <div class="title" *ngIf="module == 'CM'">
+                    {{ 'MAINTENANCEACKNOWLEDGEMODAL.partdefect' | translate}}
+                  </div>
+                  <div class="title" *ngIf="module == 'RoPM'">
+                    {{ 'MAINTENANCEACKNOWLEDGEMODAL.partname' | translate}}
+                  </div>
+                  <div class="title" *ngIf="module == 'RePM'">
+                    {{ 'MAINTENANCEACKNOWLEDGEMODAL.partreplaced' | translate}}
+                  </div>
+                </ion-col>
+
+                <ion-col size="0.5" style="text-align: center">
+                  <div class="title">
+                    <b>:</b>
+                  </div>
+                </ion-col>
+
+                <ion-col size="6">
+                  <ion-button
+                    class="optionbutton"
+                    (click)="callmodalcontroller('PartDefect')"
+                    >{{ 'MAINTENANCEACKNOWLEDGEMODAL.select' | translate}}
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+
+              <!-- <div
+                class="title"
+                style="margin-top: 10px; color: #3cd2a5; text-align: left"
+                *ngIf="partvalue!=''"
               >
-            </ion-select>
-          </ion-col>
-        </ion-row>
+                <b *ngIf="module == 'CM'"
+                  >{{ 'MAINTENANCEACKNOWLEDGEMODAL.selectedpartdefect' |
+                  translate}}</b
+                >
+                <b *ngIf="module == 'RoPM'"
+                  >{{ 'MAINTENANCEACKNOWLEDGEMODAL.selectedpartname' |
+                  translate}}</b
+                >
+                <b *ngIf="module == 'RePM'"
+                  >{{ 'MAINTENANCEACKNOWLEDGEMODAL.selectedpartreceived' |
+                  translate}}</b
+                >
+              </div> -->
+
+              <div class="hl4line" *ngIf="partvalue=='' && !otherFlag"></div>
+
+              <div
+                class="selecteddata"
+                *ngIf="partvalue!=''"
+                [innerHTML]="partvalue"
+              ></div>
+
+              <div *ngIf="partvalue!=''">
+                <div
+                  style="font-size: 14px; color: #df4759; text-align: right"
+                  (click)="clear('Part')"
+                >
+                  <ion-icon
+                    class="icon"
+                    color="danger"
+                    name="backspace-outline"
+                  ></ion-icon>
+                  <span class="icontext"
+                    ><b>
+                      {{ 'MAINTENANCEACKNOWLEDGEMODAL.clear' | translate}}</b
+                    ></span
+                  >
+                </div>
+              </div>
+
+              <div class="hl4line" *ngIf="partvalue!='' && !otherFlag"></div>
+
+              <div *ngIf="otherFlag">
+                <div class="form-row" style="margin-top: 10px">
+                  <div class="col">
+                    <div style="font-size: 14px; color: #ffffff">
+                      <b
+                        >{{ 'MAINTENANCEACKNOWLEDGEMODAL.partname' | translate}}
+                        <sup>*</sup></b
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <ion-row class="form-row">
+                  <ion-col>
+                    <input
+                      type="text"
+                      class="form-control"
+                      style="font-size: 14px"
+                      formControlName="txt_partname"
+                      placeholder="{{ 'MAINTENANCEACKNOWLEDGEMODAL.enterpartname' | translate}}"
+                    />
+                  </ion-col>
+                </ion-row>
+
+                <ion-row class="form-row">
+                  <ion-col>
+                    <button
+                      type="submit"
+                      class="h7 btn btn-success"
+                      style="margin-top: 5px"
+                      (click)="btn_add('Part')"
+                    >
+                      {{ 'MAINTENANCEACKNOWLEDGEMODAL.add' | translate}}
+                    </button>
+                  </ion-col>
+                </ion-row>
+
+                <div class="hl4line" *ngIf="otherFlag"></div>
+              </div>
+            </div>
+
+            <!-- Breakdown Causes -->
+            <div>
+              <ion-row class="form-row">
+                <ion-col size="5.5">
+                  <div class="title">
+                    {{ 'MAINTENANCEACKNOWLEDGEMODAL.breakdowncauses' |
+                    translate}}
+                  </div>
+                </ion-col>
+
+                <ion-col size="0.5" style="text-align: center">
+                  <div class="title">
+                    <b>:</b>
+                  </div>
+                </ion-col>
+
+                <ion-col size="6">
+                  <ion-button
+                    class="optionbutton"
+                    (click)="openBreakdownCauses()"
+                    >{{ 'MAINTENANCEACKNOWLEDGEMODAL.select' | translate}}
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+
+              <div class="hl4line" *ngIf="breakdowncausesvalue==''"></div>
+
+              <!-- <div
+                class="title"
+                style="margin-top: 10px; color: #3cd2a5"
+                *ngIf="breakdowncausesvalue!=''"
+              >
+                <b
+                  >{{ 'MAINTENANCEACKNOWLEDGEMODAL.selectedbreakdowncauses' |
+                  translate}}</b
+                >
+              </div> -->
+
+              <div
+                class="selecteddata"
+                style="text-align: center"
+                *ngIf="breakdowncausesvalue!=''"
+                [innerHTML]="breakdowncausesvalue"
+              ></div>
+
+              <div class="hl4line" *ngIf="breakdowncausesvalue!=''"></div>
+
+              <ion-select
+                mode="md"
+                [interfaceOptions]="breakdowncausesOptions"
+                formControlName="select_breakdowncauses"
+                multiple="true"
+                [okText]="'GENERALBUTTON.okay' | translate"
+                [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
+                class="ionicselect"
+                (ionChange)="breakdowncauseshandleChange($event)"
+                #breakdowncausesSelect
+              >
+                <ion-select-option
+                  value="{{parseString(value)}}"
+                  *ngFor="let value of breakdowncausesArr; let i = index"
+                  >{{ value.BreakdownCause }}</ion-select-option
+                >
+              </ion-select>
+            </div>
+
+            <!-- Remarks -->
+            <div>
+              <ion-row class="form-row" id="taremarks">
+                <ion-col size="5.5">
+                  <div class="title">
+                    {{ 'SUPERVISORDASHBOARD.remarks' | translate}}
+                  </div>
+                </ion-col>
+
+                <ion-col size="0.5" style="text-align: center">
+                  <div class="title">
+                    <b>:</b>
+                  </div>
+                </ion-col>
+              </ion-row>
+              <ion-row class="form-row">
+                <ion-col>
+                  <div>
+                    <textarea
+                      class="h7 form-control"
+                      formControlName="ta_remarks"
+                      placeholder="{{ 'SUPERVISORDASHBOARD.typeremark' | translate}}"
+                      rows="4"
+                      autosize
+                      (focus)="scrollbottom()"
+                    ></textarea>
+                  </div>
+                </ion-col>
+              </ion-row>
+
+              <div class="hl4line"></div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <ion-row style="margin-top: 15px">
+      <ion-row>
         <ion-col no-padding>
-          <button type="submit" class="btn btn-next" (click)="save()">
+          <button
+            type="submit"
+            class="btn btn-next"
+            *ngIf="correctivemaintenanceraiseFlag"
+            (click)="save('')"
+          >
             <span class="icontext"
               >{{ 'SUPERVISORDASHBOARD.save' | translate}}</span
             >
@@ -83,40 +424,5 @@
         </ion-col>
       </ion-row>
     </form>
-
-    <div *ngIf="maintenancetypeFlag">
-      <!-- <div class="title">
-        <b>Select Maintenance Type</b>
-      </div>
-
-      <ng-container *ngFor="let item of maintenancetypeArr; let i = index">
-        <ion-button
-          [ngClass]="item.selected == 0 ? 'optionbutton': 'optionactivebutton'"
-          shape="round"
-          (click)="btn_maintenancetype(item, i)"
-        >
-          <ion-label class="text-wrap">{{item.maintanence_type}}</ion-label>
-        </ion-button>
-      </ng-container> -->
-    </div>
   </div>
 </ion-content>
-
-<!-- <ion-footer class="footer">
-  <ion-fab vertical="bottom" horizontal="start" *ngIf="!isDisabled">
-    <ion-fab-button color="danger" (click)="btn_back()">
-      <ion-icon name="chevron-back-outline"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-
-  <ion-fab vertical="bottom" horizontal="end" (click)="btn_next()">
-    <ion-fab-button color="success">
-      <ion-icon
-        name="chevron-forward-outline"
-        *ngIf="!maintenancetypeFlag"
-      ></ion-icon>
-
-      <ion-icon name="save-outline" *ngIf="maintenancetypeFlag"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-</ion-footer> -->

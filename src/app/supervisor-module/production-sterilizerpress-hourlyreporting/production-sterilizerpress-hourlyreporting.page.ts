@@ -124,19 +124,26 @@ export class ProductionSterilizerpressHourlyreportingPage implements OnInit {
         this.router.navigate([item.path]);
       }*/
     } else if (item.name == "Pressing Station" && this.designationId != 7) {
-      this.commonservice.presentToast(this.translate.instant("PRODUCTIONHOME.accessdenied"));
+      this.commonservice.presentToast(
+        this.translate.instant("PRODUCTIONHOME.accessdenied")
+      );
     } else if (
       item.name == "Sterilisation Station" &&
       this.designationId != 18
     ) {
-      this.commonservice.presentToast(this.translate.instant("PRODUCTIONHOME.accessdenied"));
+      this.commonservice.presentToast(
+        this.translate.instant("PRODUCTIONHOME.accessdenied")
+      );
     } else {
-      this.commonservice.presentToast(this.translate.instant("PRODUCTIONHOME.featuretobeupgraded"));
+      this.commonservice.presentToast(
+        this.translate.instant("PRODUCTIONHOME.featuretobeupgraded")
+      );
     }
   }
 
   async showalert(item) {
     const alert = await this.alertController.create({
+      mode: "md",
       header: "Nama",
       cssClass: "alertmessage",
       inputs: [
@@ -185,7 +192,9 @@ export class ProductionSterilizerpressHourlyreportingPage implements OnInit {
 
         this.router.navigate([item.path]);
       } else {
-        this.commonservice.presentToast(this.translate.instant("PRODUCTIONHOME.namesavedfailed"));
+        this.commonservice.presentToast(
+          this.translate.instant("PRODUCTIONHOME.namesavedfailed")
+        );
       }
     });
   }

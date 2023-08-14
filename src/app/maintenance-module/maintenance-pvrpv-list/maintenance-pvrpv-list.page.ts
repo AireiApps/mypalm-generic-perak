@@ -1047,7 +1047,11 @@ export class MaintenancePvrpvListPage implements OnInit {
     if (this.tabs_segment == "Routine") {
       this.router.navigate([
         "/maintenance-notification-view",
-        { item: JSON.stringify(value), from: "RoPM" },
+        {
+          item: JSON.stringify(value),
+          from: "RoPM",
+          reportdate: this.notificationdate,
+        },
       ]);
     }
 
@@ -1055,12 +1059,20 @@ export class MaintenancePvrpvListPage implements OnInit {
       if (value.statusId != 6) {
         this.router.navigate([
           "/maintenance-notification-view",
-          { item: JSON.stringify(value), from: "RePM" },
+          {
+            item: JSON.stringify(value),
+            from: "RePM",
+            reportdate: this.notificationdate,
+          },
         ]);
       } else {
         this.router.navigate([
           "/maintenance-notification-view",
-          { item: JSON.stringify(value), from: "RePMACK" },
+          {
+            item: JSON.stringify(value),
+            from: "RePMACK",
+            reportdate: this.notificationdate,
+          },
         ]);
       }
     }

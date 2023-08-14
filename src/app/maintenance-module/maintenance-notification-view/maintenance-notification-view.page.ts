@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import * as moment from "moment";
 import { TranslateService } from "@ngx-translate/core";
 import { LanguageService } from "src/app/services/language-service/language.service";
+
 @Component({
   selector: "app-maintenance-notification-view",
   templateUrl: "./maintenance-notification-view.page.html",
@@ -45,6 +46,7 @@ export class MaintenanceNotificationViewPage implements OnInit {
   equipmentid = "";
   reportedby = "";
   notificationtype = "";
+  breakdownremarks = "";
   breakdowncoding = "";
   maintenancetype = "";
   maintenancetypeid = "";
@@ -64,6 +66,7 @@ export class MaintenanceNotificationViewPage implements OnInit {
   authorizedby = "";
   authorizeddatetime = "";
   fromscreen = "";
+  getreportdate = "";
   statusid = "";
   conditionid = "";
 
@@ -98,7 +101,14 @@ export class MaintenanceNotificationViewPage implements OnInit {
       this.fromscreen = this.route.snapshot.paramMap.get("from");
     }
 
-    //console.log(this.fromscreen);
+    if (
+      this.route.snapshot.paramMap.get("reportdate") !== "undefined" &&
+      this.route.snapshot.paramMap.get("reportdate") !== null
+    ) {
+      this.getreportdate = this.route.snapshot.paramMap.get("reportdate");
+    }
+
+    //console.log(this.getreportdate);
 
     /*if (this.fromscreen == "PV" || this.fromscreen == "RPV") {
       this.screenOrientation.lock(
@@ -162,6 +172,7 @@ export class MaintenanceNotificationViewPage implements OnInit {
           this.notificationtype = this.generalArr[0].notificationtype;
         }
 
+        this.breakdownremarks = this.generalArr[0].breakdownremarks;
         this.breakdowncoding = this.generalArr[0].breakdowncoding;
         this.maintenancetype = this.generalArr[0].maintenancetype;
         this.maintenancetypeid = this.generalArr[0].maintenancetypeid;
@@ -400,7 +411,7 @@ export class MaintenanceNotificationViewPage implements OnInit {
 
             this.router.navigate([
               "/maintenance-pvrpv-list",
-              { reportdate: "" },
+              { reportdate: this.getreportdate },
             ]);
           } else {
             this.commonservice.presentToast(
@@ -409,7 +420,7 @@ export class MaintenanceNotificationViewPage implements OnInit {
 
             this.router.navigate([
               "/maintenance-notification-list",
-              { reportdate: "" },
+              { reportdate: this.getreportdate },
             ]);
           }
         } else {

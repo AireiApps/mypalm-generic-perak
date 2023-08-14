@@ -1,0 +1,147 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-buttons slot="start" mode="md">
+      <ion-back-button color="whitefav"></ion-back-button>
+    </ion-buttons>
+    <ion-title color="light" mode="ios">
+      {{ 'OWNERSTATISTICS.title' | translate}}</ion-title
+    >
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="pressstationreportForm">
+    <div id="chartContainer8" style="margin: 10px">
+      <div class="titletxt text-uppercase">
+        <b> {{ 'OWNERSTATISTICS.millbreakdownstatistics' | translate}}</b>
+      </div>
+      <div class="prediction-box">
+        <apx-chart
+          [series]="yearOptions.series"
+          [chart]="yearOptions.chart"
+          [yaxis]="yearOptions.yaxis"
+          [xaxis]="yearOptions.xaxis"
+          [labels]="yearOptions.labels"
+          [stroke]="yearOptions.stroke"
+          [markers]="yearOptions.markers"
+          [fill]="yearOptions.fill"
+          [tooltip]="yearOptions.tooltip"
+        ></apx-chart>
+      </div>
+      <hr />
+
+      <div class="titletxt text-uppercase">
+        <b>{{ 'OWNERSTATISTICS.routinemaintenancestatistics' | translate}}</b>
+      </div>
+      <div>
+        <ion-row class="form-row">
+          <ion-col size="2.35"></ion-col>
+          <ion-col size="2">
+            <div class="h7 text-white" style="text-align: right">
+              <b>{{ 'REPORTOILLOSSES.month' | translate}} </b>
+            </div>
+          </ion-col>
+          <ion-col size="3.30">
+            <ion-datetime
+              mode="ios"
+              class="h7 form-control"
+              formControlName="pickdate"
+              display-format="MM-YYYY"
+              [(ngModel)]="reportdate"
+              cancelText="{{ 'GENERALBUTTON.cancelbutton' | translate}}"
+              doneText="{{ 'GENERALBUTTON.okay' | translate}}"
+            ></ion-datetime>
+          </ion-col>
+          <ion-col size="2">
+            <button
+              type="button"
+              class="h7 btn btn-general btn-sm margin-5px float-left"
+              (click)="getRoutineReport()"
+              [disabled]="routineGetDisable"
+            >
+              {{ 'GENERALBUTTON.getrecords' | translate}}
+            </button>
+          </ion-col>
+          <ion-col size="2.35"> </ion-col>
+        </ion-row>
+      </div>
+      <div class="prediction-box">
+        <apx-chart
+          [chart]="routinechartOptions.chart"
+          [series]="routinechartOptions.series"
+          [dataLabels]="routinechartOptions.dataLabels"
+          [plotOptions]="routinechartOptions.plotOptions"
+          [yaxis]="routinechartOptions.yaxis"
+          [xaxis]="routinechartOptions.xaxis"
+          [tooltip]="routinechartOptions.tooltip"
+          [legend]="routinechartOptions.legend"
+        ></apx-chart>
+      </div>
+      <hr />
+
+      <div class="titletxt text-uppercase">
+        <b
+          >{{ 'OWNERSTATISTICS.replacementmaintenancestatistics' |
+          translate}}</b
+        >
+      </div>
+      <div>
+        <ion-row class="form-row">
+          <ion-col size="2"></ion-col>
+          <ion-col size="2.7">
+            <div class="h7 text-white" style="text-align: right">
+              <b>{{ 'REPORTOILLOSSES.month' | translate}} </b>
+            </div>
+          </ion-col>
+          <ion-col size="3.30">
+            <ion-datetime
+              mode="ios"
+              class="h7 form-control"
+              formControlName="pickdate1"
+              display-format="MM-YYYY"
+              [(ngModel)]="reportdate1"
+              cancelText="{{ 'GENERALBUTTON.cancelbutton' | translate}}"
+              doneText="{{ 'GENERALBUTTON.okay' | translate}}"
+            ></ion-datetime>
+          </ion-col>
+          <ion-col size="2">
+            <button
+              type="button"
+              class="h7 btn btn-general btn-sm margin-5px float-left"
+              (click)="getReplacementReport()"
+              [disabled]="replacementGetDisable"
+            >
+              {{ 'GENERALBUTTON.getrecords' | translate}}
+            </button>
+          </ion-col>
+          <ion-col size="2"> </ion-col>
+        </ion-row>
+      </div>
+      <div class="prediction-box">
+        <apx-chart
+          [chart]="multilineOptions.chart"
+          [series]="multilineOptions.series"
+          [dataLabels]="multilineOptions.dataLabels"
+          [plotOptions]="multilineOptions.plotOptions"
+          [yaxis]="multilineOptions.yaxis"
+          [xaxis]="multilineOptions.xaxis"
+          [tooltip]="multilineOptions.tooltip"
+          [legend]="multilineOptions.legend"
+        ></apx-chart>
+      </div>
+      <hr />
+      <div class="norecords" *ngIf="norecordsflag==true">
+        {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+      </div>
+      <div class="pleasewait" *ngIf="pleasewaitflag">
+        <div style="width: 100%; text-align: center">
+          <img
+            style="width: 80px; height: 80px"
+            src="../../../assets/img/loading.gif"
+          />
+        </div>
+        {{ 'NORECORDSFOUND.loading' | translate}}
+      </div>
+    </div>
+  </form>
+</ion-content>

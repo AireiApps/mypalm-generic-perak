@@ -1,0 +1,143 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-buttons slot="start" mode="md">
+      <ion-back-button color="whitefav"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title mode="ios" color="light"
+      >{{ 'MACHINERUNNINGHOURS.title' | translate}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="runninghoursForm">
+    <div>
+      <ion-row class="form-row">
+        <ion-col size="3">
+          <div class="title">
+            {{ 'MACHINERUNNINGHOURS.station' | translate}}
+          </div>
+        </ion-col>
+
+        <ion-col size="0.5" style="text-align: center">
+          <div class="title">
+            <b>:</b>
+          </div>
+        </ion-col>
+
+        <ion-col size="8.5">
+          <ion-select
+            mode="md"
+            [interfaceOptions]="stationOptions"
+            formControlName="select_station"
+            multiple="false"
+            [okText]="'GENERALBUTTON.okay' | translate"
+            [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
+            class="selectdropdown"
+            placeholder="{{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.select' | translate}}"
+            (ionChange)="stationhandleChange($event)"
+            [(ngModel)]="defaultstation"
+          >
+            <ion-select-option
+              *ngFor="let value of stationArr; let i = index"
+              value="{{value.station_id+'~'+value.station_name}}"
+              >{{ value.station_name }}</ion-select-option
+            >
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <div class="hl4line"></div>
+    </div>
+
+    <div *ngIf="enablemachineFlag">
+      <ion-row class="form-row">
+        <ion-col size="3">
+          <div class="title">
+            {{ 'MACHINERUNNINGHOURS.machine' | translate}}
+          </div>
+        </ion-col>
+
+        <ion-col size="0.5" style="text-align: center">
+          <div class="title">
+            <b>:</b>
+          </div>
+        </ion-col>
+
+        <ion-col size="8.5">
+          <ion-select
+            mode="md"
+            [interfaceOptions]="machineOptions"
+            formControlName="select_machine"
+            multiple="false"
+            [okText]="'GENERALBUTTON.okay' | translate"
+            [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
+            class="selectdropdown"
+            placeholder="{{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.select' | translate}}"
+            (ionChange)="machinehandleChange($event)"
+            [(ngModel)]="defaultmachine"
+          >
+            <ion-select-option
+              *ngFor="let value of machineArr; let i = index"
+              value="{{value.location_id+'~'+value.location_name}}"
+              >{{ value.location_name }}</ion-select-option
+            >
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <div class="hl4line"></div>
+
+      <div *ngIf="runninghoursArr.length>0">
+        <table
+          style="width: 100%; height: 100%; margin-top: 20px"
+          class="table table-bordered"
+        >
+          <tr class="table_head">
+            <th style="padding: 4px !important; width: 10%">
+              <span>S.No</span>
+            </th>
+
+            <th style="padding: 4px !important; width: 60%">
+              <span>{{ 'MACHINERUNNINGHOURS.parts' | translate}}</span>
+            </th>
+
+            <th style="padding: 4px !important; width: 30%">
+              <span>{{ 'MACHINERUNNINGHOURS.runninghours' | translate}}</span>
+            </th>
+          </tr>
+
+          <tr *ngFor="let data of runninghoursArr; let i = index">
+            <td scope="row" style="overflow: auto" width="10%">({{i+1}})</td>
+
+            <td
+              scope="row"
+              style="overflow: auto; text-align: left"
+              width="60%"
+            >
+              {{data.partname}}
+            </td>
+            <td scope="row" style="overflow: auto" width="30%">
+              {{data.runninghours}}
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="norecords" *ngIf="norecordsflag">
+        {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+      </div>
+
+      <div class="pleasewait" *ngIf="pleasewaitflag">
+        <div style="width: 100%; text-align: center">
+          <img
+            style="width: 80px; height: 80px"
+            src="../../../assets/img/loading.gif"
+          />
+        </div>
+        {{ 'NORECORDSFOUND.loading' | translate}}
+      </div>
+    </div>
+  </form>
+</ion-content>

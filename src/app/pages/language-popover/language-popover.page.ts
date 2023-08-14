@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { PopoverController } from "@ionic/angular";
 import { LanguageService } from "src/app/services/language-service/language.service";
 import { AIREIService } from "src/app/api/api.service";
+import { AuthGuardService } from "src/app/services/authguard/auth-guard.service";
 import { Router } from "@angular/router";
 
 @Component({
@@ -19,6 +20,7 @@ export class LanguagePopoverPage implements OnInit {
     private router: Router,
     private popoverController: PopoverController,
     private languageService: LanguageService,
+    private notifi: AuthGuardService,
     private service: AIREIService
   ) {}
 
@@ -47,14 +49,13 @@ export class LanguagePopoverPage implements OnInit {
 
       if (lng == "Malay") {
         languageid = "2";
-      }     
+      }
 
       const req = {
         user_id: this.userlist.userId,
         millcode: this.userlist.millcode,
         departmentid: this.userlist.dept_id,
         language_id: languageid,
-        
       };
 
       this.service.updateLanguage(req).then((result) => {
@@ -64,7 +65,10 @@ export class LanguagePopoverPage implements OnInit {
           this.languageService.setLanguage(lng);
           this.popoverController.dismiss();
 
+          this.notifi.logoutupdateNotification();
+
           localStorage.clear();
+
           this.router.navigateByUrl("/login");
         }
       });

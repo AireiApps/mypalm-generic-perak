@@ -1,3 +1,10 @@
+ion-content{
+  background-image: url(../../../assets/img/machinebg.png);
+  background-position: center center fixed;
+  background-repeat: repeat;
+  background-size: cover;
+}
+
 .content {
   text-align: center;
   /*position: absolute;
@@ -13,7 +20,36 @@ ion-header {
   }
 }
 
-.step1form {
+.problemheader {
+  //border-radius: 10px 10px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
+  border: 1px solid #ffffff;
+  text-align: center;
+  background-color: #000000;
+  margin: 0px 5px 0px 5px;
+  padding: 5px 0px 5px 0px;
+}
+
+.problemtitle {
+  border-radius: 5px 5px 0px 0px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #ff9f0c;
+}
+
+.problemcard {
+  box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  border-radius: 0px 0px 5px 5px;
+  background-color: #f7f7f7;
+  margin: 0px 5px 0px 5px;
+  padding: 5px;
+  background-image: url(../../../assets/img/palmbg.png);
+  background-size: cover;
+}
+
+.breakdownform {
   position: absolute;
   left: 0;
   right: 0;
@@ -27,7 +63,7 @@ ion-header {
 }
 
 form {
-  padding: 5px;
+  padding: 0px !important;
 }
 
 .form-row {
@@ -45,10 +81,26 @@ form {
   height: 45%;
 }
 
+.machinetitlebeforecm {
+  margin-top: 10px;
+}
+
+.machinetitleaftercm {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.selecteddata {
+  margin-top: 20px;
+  color: #3cd2a5;
+  text-align: center;
+  font-size: 14px;
+}
+
 .title {
   color: white;
   font-size: 14px;
-  text-align: right;
+  text-align: left;
 }
 
 .viewtitle {
@@ -86,7 +138,7 @@ select {
 
 .selectdropdown {
   background-color: transparent;
-  width: 90%;
+  width: 100%;
   height: 40px;
   font-size: 14px;
   border: 0.5px solid #ff9f0c;
@@ -103,6 +155,14 @@ select {
 ion-select::part(icon) {
   width: 15px;
   visibility: hidden;
+}
+
+.ionicselect {
+  color: transparent;
+  font-size: 1px;
+  content-visibility: hidden;
+  margin: 0px;
+  padding: 0px;
 }
 
 .optionbutton {
@@ -207,16 +267,48 @@ hr {
   margin: 20px;
 }
 
-/*.float {
-  width: 60px;
-  height: 60px;
-  bottom: 40px;
-  right: 40px;
-  margin-top: 20px;
-  background-color: #3cd2a5;
+.problem_radio{
+  margin: 20px 0px 10px 20%; 
+  text-align: left
+}
+
+label {
+  margin-left: 15px;
+  font-size: 14px;
+  //color: #000000;
   color: #ffffff;
-  border-radius: 50px;
-  text-align: center;
-  box-shadow: 1px 1px 2px #999;
-  float: right;
-}*/
+  margin-bottom: 0px;
+}
+
+input[type="radio"] {
+  margin-top: -1px;
+  vertical-align: middle;
+}
+
+input[type="radio"]:after {
+  width: 18px;
+  height: 18px;
+  border-radius: 18px;
+  top: -2px;
+  left: -1px;
+  position: relative;
+  background-color: #d1d3d1;
+  content: "";
+  display: inline-block;
+  visibility: visible;
+  border: 1px solid white;
+}
+
+input[type="radio"]:checked:after {
+  width: 18px;
+  height: 18px;
+  border-radius: 18px;
+  top: -2px;
+  left: -1px;
+  position: relative;
+  background-color: #08ff08;
+  content: "";
+  display: inline-block;
+  visibility: visible;
+  border: 1px solid white;
+}

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar class="bg-brown-color">
-    <ion-buttons slot="start">
-      <ion-back-button
+    <ion-buttons slot="start" mode="md">
+      <!-- <ion-back-button
         color="whitefav"
         defaultHref="/tabs/tabmaintenancedashboard"
         *ngIf="((departmentid==25 && designationid==1) || (departmentid==7 && designationid==2) || (departmentid==7 && designationid==4) || (departmentid==7 && designationid==6))"
@@ -17,7 +17,11 @@
         color="whitefav"
         defaultHref="/tabs/tabsupervisordashboard"
         *ngIf="departmentid==4"
-      ></ion-back-button>
+      ></ion-back-button> -->
+
+      <ion-buttons slot="start">
+        <ion-back-button color="whitefav"></ion-back-button>
+      </ion-buttons>
     </ion-buttons>
 
     <ion-title color="light" mode="ios"
@@ -27,30 +31,231 @@
 </ion-header>
 
 <ion-content>
-  <ion-tabs
-    *ngIf="designationid!=3 && designationid!=5 && designationid!=7 && designationid!=8 && designationid!=9 && designationid!=11"
+  <div
+    *ngIf="designationid!=1 && designationid!=3 && designationid!=4 && designationid!=5 && designationid!=6 && designationid!=7 && designationid!=8 && designationid!=9 && designationid!=11"
   >
-    <ion-tab-bar slot="top" style="height: 10%">
-      <ion-tab-button tab="tabmillstatus">
-        <ion-icon name="calendar-outline"></ion-icon>
-        <ion-label>{{ 'NOTIFICATION.millstatus' | translate}}</ion-label>
-      </ion-tab-button>
+    <ion-tabs>
+      <ion-tab-bar slot="top">
+        <ion-tab-button tab="tabmillstatus" *ngIf="designationid!=2">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <ion-label>{{ 'NOTIFICATION.millstatus' | translate}}</ion-label>
+        </ion-tab-button>
 
-      <ion-tab-button tab="tabmaintenancenotification">
-        <ion-icon name="build-outline"></ion-icon>
-        <ion-label>{{ 'NOTIFICATION.maintenance' | translate}}</ion-label>
-      </ion-tab-button>
+        <!-- Maintenance Engineer only if oil loss flag is enabled -->
+        <ion-tab-button tab="tabalerts" *ngIf="designationid==2 ">
+          <ion-icon name="notifications-outline"></ion-icon>
+          <ion-label>{{ 'NOTIFICATION.alerts' | translate}}</ion-label>
+        </ion-tab-button>
 
-      <!-- <ion-tab-button tab="tabalerts" >
-        <ion-icon name="settings-outline"></ion-icon>
-        <ion-label>{{ 'NOTIFICATION.alerts' | translate}}</ion-label>
-      </ion-tab-button> -->
-    </ion-tab-bar>
-  </ion-tabs>
+        <ion-tab-button tab="tabmaintenancenotification">
+          <ion-icon name="build-outline"></ion-icon>
+          <ion-label>{{ 'NOTIFICATION.maintenance' | translate}}</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </div>
+
+  <div class="home-box" *ngIf="designationid==3">
+    <ion-buttons *ngIf="todaysnotificationArr.length > 0">
+      <button
+        type="submit"
+        class="btn alertcheckcard"
+        (click)="gettodaysnotification()"
+      >
+        {{ 'SEGREGATENOTIFICATION.current' | translate}} - {{currentdate}}
+        <ion-badge class="todaybadge" *ngIf="todaysnotificationcount != 0"
+          >{{todaysnotificationcount}}</ion-badge
+        >
+      </button>
+    </ion-buttons>
+
+    <div *ngIf="todaysnotificationflag">
+      <ion-card
+        class="alertcard"
+        *ngFor="let value of todaysnotificationArr"
+        [style.backgroundColor]="getBackgroundColor(value.type)"
+        [style.borderColor]="geBorderColor(value.type)"
+      >
+        <ion-card-header
+          [style.backgroundColor]="geBorderColor(value.type)"
+          [style.color]="getTextColor(value.type)"
+        >
+          <div class="form-row">
+            <div class="col">
+              <div class="h6" style="float: left">
+                <b>{{value.title}}</b>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="h6" style="float: right">
+                <b>{{value.notification_date}}</b>
+              </div>
+            </div>
+          </div>
+        </ion-card-header>
+
+        <ion-card-content>
+          <ion-row class="marigin-10px row-reverse">
+            <ion-col>
+              <div
+                class="h7 text-dark"
+                [innerHTML]="value.notification_text"
+              ></div>
+
+              <div
+                *ngIf="designationid==3"
+                style="text-align: right; margin-top: 10px"
+              >
+                <!-- <button
+                type="button"
+                class="h7 btn btn-acknowledge btn-sm float-right"
+                (click)="callmodalcontroller(value)"
+              >
+                {{ 'SEGREGATENOTIFICATION.acknowledge' | translate}}
+              </button> -->
+
+                <div *ngIf="value.rectify_status!=0">
+                  <button
+                    type="button"
+                    class="h7 btn btn-read btn-sm float-right"
+                    (click)="updateNotification(value)"
+                  >
+                    {{ 'SEGREGATENOTIFICATION.read' | translate}}
+                  </button>
+                </div>
+
+                <div *ngIf="value.rectify_status==0">
+                  <button
+                    type="submit"
+                    [disabled]="isDisable"
+                    class="btn btn-attendrectify"
+                    (click)="btn_rectify(value)"
+                  >
+                    {{ 'ALERTACKNOWLEDGE.attendandrectify' | translate}}
+                  </button>
+
+                  <button
+                    type="submit"
+                    [disabled]="isDisable"
+                    class="btn btn-unabletorectify"
+                    (click)="btn_notrectify(value)"
+                  >
+                    {{ 'ALERTACKNOWLEDGE.unabletorectify' | translate}}
+                  </button>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <hr *ngIf="todaysnotificationArr.length > 0" />
+
+    <ion-buttons *ngIf="oldernotificationArr.length > 0">
+      <button
+        type="submit"
+        class="btn alertcheckcard"
+        (click)="getoldernotification()"
+      >
+        {{ 'SEGREGATENOTIFICATION.previous' | translate}}
+        <ion-badge class="olderbadge" *ngIf="oldernotificationcount != 0"
+          >{{oldernotificationcount}}</ion-badge
+        >
+      </button>
+    </ion-buttons>
+
+    <div *ngIf="oldernotificationflag">
+      <ion-card
+        class="alertcard"
+        *ngFor="let value of oldernotificationArr"
+        [style.backgroundColor]="getBackgroundColor(value.type)"
+        [style.borderColor]="geBorderColor(value.type)"
+      >
+        <ion-card-header
+          [style.backgroundColor]="geBorderColor(value.type)"
+          [style.color]="getTextColor(value.type)"
+        >
+          <div class="form-row">
+            <div class="col">
+              <div class="h6" style="float: left">
+                <b>{{value.title}}</b>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="h6" style="float: right">
+                <b>{{value.notification_date}}</b>
+              </div>
+            </div>
+          </div>
+        </ion-card-header>
+
+        <ion-card-content>
+          <ion-row class="marigin-10px row-reverse">
+            <ion-col>
+              <div
+                class="h7 text-dark"
+                [innerHTML]="value.notification_text"
+              ></div>
+
+              <div
+                *ngIf="designationid==3"
+                style="text-align: right; margin-top: 10px"
+              >
+                <!-- <button
+                type="button"
+                class="h7 btn btn-acknowledge btn-sm float-right"
+                (click)="callmodalcontroller(value)"
+              >
+                {{ 'SEGREGATENOTIFICATION.acknowledge' | translate}}
+              </button> -->
+
+                <div *ngIf="value.rectify_status!=0">
+                  <button
+                    type="button"
+                    class="h7 btn btn-read btn-sm float-right"
+                    (click)="updateNotification(value)"
+                  >
+                    {{ 'SEGREGATENOTIFICATION.read' | translate}}
+                  </button>
+                </div>
+
+                <div *ngIf="value.rectify_status==0">
+                  <button
+                    type="submit"
+                    [disabled]="isDisable"
+                    class="btn btn-attendrectify"
+                    (click)="btn_rectify(value)"
+                  >
+                    {{ 'ALERTACKNOWLEDGE.attendandrectify' | translate}}
+                  </button>
+
+                  <button
+                    type="submit"
+                    [disabled]="isDisable"
+                    class="btn btn-unabletorectify"
+                    (click)="btn_notrectify(value)"
+                  >
+                    {{ 'ALERTACKNOWLEDGE.unabletorectify' | translate}}
+                  </button>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div class="norecords" *ngIf="enableflag==true">
+      {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+    </div>
+  </div>
 
   <div
     class="home-box"
-    *ngIf="designationid==3 || designationid==5 || designationid==7 || designationid==8 || designationid==9 || designationid==11"
+    *ngIf="designationid==1 || designationid==4 || designationid==5 || designationid==6 || designationid==7 || designationid==8 || designationid==9 || designationid==11"
   >
     <ion-buttons *ngIf="todaysnotificationArr.length > 0">
       <button
@@ -90,6 +295,8 @@
         </ion-row>
       </div>
     </div>
+
+    <hr *ngIf="todaysnotificationArr.length > 0" />
 
     <ion-buttons *ngIf="oldernotificationArr.length > 0">
       <button

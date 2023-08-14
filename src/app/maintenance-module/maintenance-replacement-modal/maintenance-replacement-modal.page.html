@@ -133,11 +133,12 @@
 
           <ion-col size="7">
             <ion-select
+              mode="md"
               [interfaceOptions]="assignedtoOptions"
               formControlName="select_assignedto"
               multiple="false"
               [okText]="'GENERALBUTTON.okay' | translate"
-              [cancelText]="'GENERALBUTTON.dismiss' | translate"
+              [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
               class="selectdropdown"
               placeholder="{{ 'PREVENTIVEMAINTENANCEASSIGNMODAL.select' | translate}}"
               (ionChange)="assignedtohandleChange($event)"

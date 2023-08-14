@@ -1,0 +1,212 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-avatar slot="start">
+      <ion-img
+        class="toolbarimage"
+        src="../../../assets/img/logo.png"
+      ></ion-img>
+    </ion-avatar>
+    <ion-title color="light" [innerHTML]="mill_name"></ion-title>
+
+    <ion-buttons slot="primary">
+      <!-- <ion-button class="bg-light-color" (click)="btn_notification()">
+        <ion-badge *ngIf="count && count != 0" color="accent">
+          {{ count }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button> -->
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'android'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'twodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'ios'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'iostwodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content mode="md">
+  <div class="myCard">
+    <img class="backgroundimage" src="../../../assets/img/header_myPalm.png" />
+    <div class="myOverlay">
+      <div class="usermessagecard">
+        <ion-row>
+          <ion-col size="12">
+            <p
+              style="
+                font-size: 16px;
+                font-weight: bold;
+                margin: 0px;
+                color: #ffffff;
+              "
+            >
+              {{ 'GRADINGHOME.welcome' | translate}} {{userlist.name}}
+            </p>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div>
+
+  <div #myElementRef>
+    <form [formGroup]="oillossesForm">
+      <div class="form-row" style="margin-top: 10px">
+        <div class="col">
+          <div class="h7 text-white">
+            <b>{{ 'OILLOSSESSREPORT.date' | translate}}</b>
+          </div>
+        </div>
+
+        <div class="col">
+          <!-- <input
+            type="text"
+            class="h7 form-control readonly"
+            formControlName="txt_date"
+            placeholder="DD-MM-YYYY"
+            (click)="openDatePicker('LED')"
+            readonly
+          /> -->
+
+          <ion-datetime
+            mode="ios"
+            class="h7 form-control"
+            formControlName="txt_date"
+            display-format="DD-MM-YYYY"
+            placeholder="DD-MM-YYYY"
+            cancelText="{{ 'GENERALBUTTON.cancelbutton' | translate}}"
+            doneText="{{ 'GENERALBUTTON.okay' | translate}}"
+          ></ion-datetime>
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top: 20px">
+        <div class="col">
+          <div class="h7 text-white">
+            <b>{{ 'OILLOSSESSREPORT.samplecollectiontime' | translate}}</b>
+          </div>
+        </div>
+
+        <div class="col">
+          <!-- <input
+            type="text"
+            class="h7 form-control readonly"
+            formControlName="txt_fromtime"
+            placeholder="HH:mm"
+            (click)="openTimePicker('SCFT')"
+            readonly
+          /> -->
+
+          <ion-datetime
+            mode="ios"
+            class="h7 form-control"
+            formControlName="txt_fromtime"
+            display-format="HH:mm"
+            placeholder="HH:mm"
+            cancelText="{{ 'GENERALBUTTON.cancelbutton' | translate}}"
+            doneText="{{ 'GENERALBUTTON.okay' | translate}}"
+          ></ion-datetime>
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top: 20px">
+        <div class="col">
+          <div class="h7 text-white">
+            <b>{{ 'OILLOSSESSREPORT.oer' | translate}} (%)</b>
+          </div>
+        </div>
+
+        <div class="col">
+          <input
+            type="number"
+            class="h7 form-control text-dark"
+            placeholder="{{ 'OILLOSSESSREPORT.enter' | translate}}"
+            (keypress)="decimalFilter($event)"
+            formControlName="txt_oer"
+          />
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top: 20px" *ngIf="oermtdflag==1">
+        <div class="col">
+          <div class="h7 text-white">
+            <b>{{ 'OILLOSSESSREPORT.mtd' | translate}}</b>
+          </div>
+        </div>
+
+        <div class="col">
+          <input
+            type="number"
+            class="h7 form-control text-dark"
+            placeholder="{{ 'OILLOSSESSREPORT.enter' | translate}}"
+            (keypress)="decimalFilter($event)"
+            formControlName="txt_mtd"
+          />
+        </div>
+      </div>
+
+      <div formArrayName="pressRows" *ngIf="showFlag">
+        <div
+          class="form-row"
+          style="margin-top: 20px"
+          *ngFor="let itemrow of oillossesForm.get('pressRows').controls; let i=index"
+        >
+          <div class="col">
+            <div class="h7 text-white">
+              <b>{{pressArr[i]}} (%)</b>
+            </div>
+          </div>
+
+          <div class="col">
+            <input
+              type="number"
+              class="h7 form-control text-dark"
+              placeholder="{{ 'OILLOSSESSREPORT.enter' | translate}}"
+              (keypress)="decimalFilter($event)"
+              [formControlName]="i"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="norecords" *ngIf="!showFlag">
+        {{ 'OILLOSSESSREPORT.nopressmachinefound' | translate}}
+      </div>
+
+      <div
+        style="text-align: center; margin: 20px 0px 10px 0px"
+        *ngIf="showFlag"
+      >
+        <button
+          type="submit"
+          [disabled]="isDisabled"
+          class="h6 btn btn-save"
+          (click)="showalert()"
+        >
+          {{ 'GENERALBUTTON.savebutton' | translate}}
+        </button>
+      </div>
+    </form>
+  </div>
+</ion-content>

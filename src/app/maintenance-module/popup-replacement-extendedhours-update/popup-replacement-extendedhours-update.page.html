@@ -1,0 +1,151 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color modaltoolbar">
+    <ion-title mode="ios" color="light">{{title}}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button class="bg-light-color" (click)="btn_close()">
+        <ion-icon color="light" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="assignForm">
+    <ion-row class="form-row" *ngIf="getstationname!=''">
+      <ion-col size="4.5">
+        <div class="title">
+          {{'PREVENTIVEMAINTENANCEASSIGN.station' | translate}}
+        </div>
+      </ion-col>
+
+      <ion-col size="0.5" style="text-align: right">
+        <div class="title">
+          <b>:</b>
+        </div>
+      </ion-col>
+      <ion-col size="7" style="text-align: left">
+        <div class="viewtitle"><b>{{getstationname}}</b></div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="form-row" *ngIf="getmachinename!=''">
+      <ion-col size="4.5">
+        <div class="title">
+          {{'PREVENTIVEMAINTENANCEASSIGN.machine' | translate}}
+        </div>
+      </ion-col>
+
+      <ion-col size="0.5" style="text-align: right">
+        <div class="title">
+          <b>:</b>
+        </div>
+      </ion-col>
+
+      <ion-col size="7" style="text-align: left">
+        <div class="viewtitle"><b>{{getmachinename}}</b></div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="form-row" *ngIf="getpartname!=''">
+      <ion-col size="4.5">
+        <div class="title">
+          {{'PREVENTIVEMAINTENANCEASSIGN.partname' | translate}}
+        </div>
+      </ion-col>
+
+      <ion-col size="0.5" style="text-align: right">
+        <div class="title">
+          <b>:</b>
+        </div>
+      </ion-col>
+
+      <ion-col size="7" style="text-align: left">
+        <div class="viewtitle"><b>{{getpartname}}</b></div>
+      </ion-col>
+    </ion-row>
+
+    <!-- RePM - Start -->
+    <div style="margin-bottom: 20px">
+      <div class="hl4line"></div>
+      <!-- Life Time Hours -->
+      <ion-row class="form-row">
+        <ion-col size="4.5">
+          <div class="title">
+            {{'PREVENTIVEMAINTENANCEASSIGN.lifetimehours' | translate}}
+          </div>
+        </ion-col>
+
+        <ion-col size="0.5" style="text-align: right">
+          <div class="title">
+            <b>:</b>
+          </div>
+        </ion-col>
+
+        <ion-col size="7" style="text-align: left">
+          <div class="viewtitle"><b>{{getlifetimerunninghours}}</b></div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Current Running Hours -->
+      <ion-row class="form-row">
+        <ion-col size="4.5">
+          <div class="title">
+            {{'PREVENTIVEMAINTENANCEASSIGN.currentrunninghours' | translate}}
+          </div>
+        </ion-col>
+
+        <ion-col size="0.5" style="text-align: right">
+          <div class="title">
+            <b>:</b>
+          </div>
+        </ion-col>
+
+        <ion-col size="7" style="text-align: left">
+          <div class="viewtitle"><b>{{getcurrentrunninghours}}</b></div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Extend Life Time Hours -->
+      <ion-row class="form-row">
+        <ion-col size="4.5">
+          <div class="title">
+            {{'PREVENTIVEMAINTENANCEASSIGN.extendhours' | translate}}
+          </div>
+        </ion-col>
+
+        <ion-col size="0.5" style="text-align: right">
+          <div class="title">
+            <b>:</b>
+          </div>
+        </ion-col>
+
+        <ion-col size="7" style="text-align: left">
+          <input
+            type="number"
+            class="h7 form-control"
+            formControlName="txt_extendlifetimehours"
+            placeholder="{{ 'PREVENTIVEMAINTENANCEASSIGN.extendhoursenter' | translate}}"
+            (keypress)="numberFilter($event)"
+          />
+        </ion-col>
+      </ion-row>
+    </div>
+    <!-- RePM - Stop -->
+
+    <ion-row style="margin-top: 10px">
+      <ion-col style="text-align: center !important" no-padding>
+        <button
+          type="submit"
+          class="btn btn-next"
+          [disabled]="confirmDisable"
+          (click)="btn_save()"
+        >
+          <span class="icontext" style="color: #ffffff"
+            >{{'PREVENTIVEMAINTENANCEASSIGN.save' | translate}}</span
+          >
+        </button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>

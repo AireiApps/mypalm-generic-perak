@@ -1,8 +1,18 @@
 <ion-header>
   <ion-toolbar class="bg-brown-color">
-    <ion-buttons slot="start">
-      <ion-back-button color="whitefav"></ion-back-button>
+    <ion-buttons slot="start" mode="md">
+      <ion-back-button color="whitefav" *ngIf="!retrieveflag"></ion-back-button>
+
+      <ion-button
+        color="whitefav"
+        *ngIf="retrieveflag"
+        (click)="goBack();"
+        style="font-size: 17px"
+      >
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
     </ion-buttons>
+
     <ion-title color="light" mode="ios"
       >{{ 'REPORTOILLOSSES.title' | translate}}</ion-title
     >
@@ -10,9 +20,20 @@
 </ion-header>
 <ion-content>
   <div id="chartContainer8" style="margin: 10px">
-    <form [formGroup]="oillossesForm">
+    <form [formGroup]="oillossesForm" *ngIf="retrieveflag">
       <ion-row class="form-row">
-        <ion-col size="2.5"> </ion-col>
+        <ion-col size="3">
+          <!-- <button
+            type="button"
+            class="h7 btn btn-back btn-sm margin-5px float-left"
+            (click)="btn_back()"
+          >
+            <ion-icon class="icon" name="chevron-back-outline"></ion-icon>
+            <span class="icontext"
+              ><b> {{ 'MAINTENANCENOTIFICATIONVIEW.back' | translate}}</b></span
+            >
+          </button> -->
+        </ion-col>
 
         <ion-col size="2">
           <div class="h7 text-white" style="text-align: right">
@@ -24,9 +45,12 @@
           <ion-datetime
             mode="ios"
             class="h7 form-control"
+            style="padding: 5px"
             formControlName="pickdate"
             display-format="MM-YYYY"
             [(ngModel)]="reportdate"
+            cancelText="{{ 'GENERALBUTTON.cancelbutton' | translate}}"
+            doneText="{{ 'GENERALBUTTON.okay' | translate}}"
           ></ion-datetime>
         </ion-col>
 
@@ -40,32 +64,76 @@
           </button>
         </ion-col>
 
-        <ion-col size="2.5"> </ion-col>
+        <ion-col size="2"> </ion-col>
       </ion-row>
 
       <hr />
     </form>
 
     <div *ngIf="!norecordsflag">
-      <ion-row style="margin: 10px 0px 10px 0px" *ngIf="monthlyaverage!=''">
-        <ion-col size="2"></ion-col>
-        <ion-col size="8">
-          <table style="width: 100%; height: 100%" class="table table-bordered">
-            <tr class="table_head2">
-              <td scope="row" style="overflow: auto">
-                {{ 'REPORTOILLOSSES.monthlyaverage' | translate}}
-              </td>
-              <td scope="row" style="overflow: auto; color: #ff9f0c">
-                {{monthlyaverage}}
-              </td>
-            </tr>
-          </table>
-        </ion-col>
-        <ion-col size="2"></ion-col>
-      </ion-row>
+      <div *ngIf="monthlyaverage!=''">
+        <ion-row style="margin: 10px 0px 10px 0px" *ngIf="!retrieveflag">
+          <ion-col size="1"></ion-col>
+          <ion-col size="8">
+            <table
+              style="width: 100%; height: 100%"
+              class="table table-bordered"
+            >
+              <tr class="table_head2">
+                <td scope="row" style="overflow: auto">
+                  {{ 'REPORTOILLOSSES.monthlyaverage' | translate}}
+                </td>
+                <td scope="row" style="overflow: auto; color: #ff9f0c">
+                  {{monthlyaverage}}
+                </td>
+              </tr>
+            </table>
+          </ion-col>
+          <ion-col size="2" style="align-self: center">
+            <button
+              type="button"
+              class="h7 btn btn-retrieve btn-sm"
+              (click)="btn_retrieve()"
+            >
+              {{ 'GENERALBUTTON.retrievebutton' | translate}}
+            </button>
+          </ion-col>
+
+          <ion-col size="1"></ion-col>
+        </ion-row>
+
+        <ion-row style="margin: 10px 0px 10px 0px" *ngIf="retrieveflag">
+          <ion-col size="2"></ion-col>
+          <ion-col size="8">
+            <table
+              style="width: 100%; height: 100%"
+              class="table table-bordered"
+            >
+              <tr class="table_head2">
+                <td scope="row" style="overflow: auto">
+                  {{ 'REPORTOILLOSSES.monthlyaverage' | translate}}
+                </td>
+                <td scope="row" style="overflow: auto; color: #ff9f0c">
+                  {{monthlyaverage}}
+                </td>
+              </tr>
+
+              <tr class="table_head2" *ngIf="mtd!=''">
+                <td scope="row" style="overflow: auto">
+                  {{ 'REPORTOILLOSSES.mtd' | translate}}
+                </td>
+                <td scope="row" style="overflow: auto; color: #ff9f0c">
+                  {{mtd}}
+                </td>
+              </tr>
+            </table>
+          </ion-col>
+          <ion-col size="2"></ion-col>
+        </ion-row>
+      </div>
 
       <div *ngFor="let general of oillossesArr">
-        <table style="width: 100%; height: 100%" class="table table-bordered">
+        <!-- <table style="width: 100%; height: 100%" class="table table-bordered">
           <tr>
             <th colspan="1" scope="colgroup" style="padding: 4px !important">
               <span class="mdfont" style="color: white"
@@ -124,45 +192,49 @@
               {{general.stop_time}}
             </td>
           </tr>
-        </table>
+        </table> -->
 
-        <table
-          style="width: 100%; height: 100%"
-          class="table table-bordered"
-          *ngIf="general.presses.length > 0"
-        >
-          <tr class="table_head">
-            <th
-              colspan="1"
-              scope="colgroup"
-              style="padding: 4px !important"
-              *ngFor="let value of general.header"
-            >
-              <span class="mdfont">{{value.title}}</span>
-            </th>
-          </tr>
+        <div style="overflow-x: auto">
+          <table
+            style="width: 100%; height: 100%"
+            class="table table-bordered"
+            *ngIf="general.presses.length > 0"
+          >
+            <tr class="table_head">
+              <th
+                colspan="1"
+                scope="colgroup"
+                style="padding: 4px !important"
+                *ngFor="let value of general.header"
+              >
+                <span class="mdfont">{{value.title}}</span>
+              </th>
+            </tr>
 
-          <tr *ngFor="let timevalue of general.presses">
-            <td scope="row" style="overflow: auto">{{timevalue.time}}</td>
-            <td
-              scope="row"
-              style="overflow: auto"
-              *ngFor="let logs of timevalue.logs"
-            >
-              {{logs.value}}
-            </td>
-          </tr>
+            <tr *ngFor="let timevalue of general.presses">
+              <td scope="row" style="overflow: auto">{{timevalue.date}}</td>
+              <td scope="row" style="overflow: auto">{{timevalue.time}}</td>
+              <td scope="row" style="overflow: auto">{{timevalue.oer}}</td>
+              <td
+                scope="row"
+                style="overflow: auto"
+                *ngFor="let logs of timevalue.logs"
+              >
+                {{logs.value}}
+              </td>
+            </tr>
 
-          <tr class="table_head1">
-            <td
-              scope="row"
-              style="overflow: auto"
-              *ngFor="let averagevalue of general.average"
-            >
-              {{averagevalue.value}}
-            </td>
-          </tr>
-        </table>
+            <tr class="table_head1">
+              <td
+                scope="row"
+                style="overflow: auto"
+                *ngFor="let averagevalue of general.average"
+              >
+                {{averagevalue.value}}
+              </td>
+            </tr>
+          </table>
+        </div>
 
         <div class="nooillossrecords" *ngIf="general.presses.length==0">
           {{ 'NORECORDSFOUND.norecordsfound' | translate}}

@@ -1,9 +1,11 @@
 <ion-header>
   <ion-toolbar class="bg-brown-color">
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" mode="md">
       <ion-back-button color="whitefav"></ion-back-button>
     </ion-buttons>
-    <ion-title color="light">{{ 'REPORTS.maintenancereport' | translate}}</ion-title>
+    <ion-title color="light"
+      >{{ 'REPORTS.maintenancereport' | translate}}</ion-title
+    >
     <ion-buttons slot="primary">
       <ion-button class="bg-light-color" (click)="btn_notification()">
         <ion-badge *ngIf="count && count != 0" color="accent"

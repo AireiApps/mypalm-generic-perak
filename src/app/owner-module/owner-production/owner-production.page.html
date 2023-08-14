@@ -1,0 +1,315 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-avatar slot="start">
+      <ion-img
+        class="toolbarimage"
+        src="../../../assets/img/logo.png"
+      ></ion-img>
+    </ion-avatar>
+    <ion-title color="light" mode="ios" [innerHTML]="mill_name"></ion-title>
+
+    <ion-buttons slot="primary">
+      <!-- Production and Maintenance Count for Android - Start -->
+      <ion-button class="bg-light-color" *ngIf="getplatform == 'android'">
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : productioncountlength == 1, 'twodigitbadgecount' : productioncountlength >= 2}"
+          *ngIf="productioncount && productioncount != 0"
+          >{{ productioncount }}</ion-badge
+        >
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        *ngIf="getplatform == 'android'"
+        (click)="btn_notification('Maintenance')"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : maintenancecountlength == 1, 'twodigitbadgecount' : maintenancecountlength >= 2}"
+          *ngIf="maintenancecount && maintenancecount != 0"
+          >{{ maintenancecount }}</ion-badge
+        >
+        <ion-icon name="construct-outline"></ion-icon>
+      </ion-button>
+      <!-- Production and Maintenance Count for Android - End -->
+
+      <!-- Production and Maintenance Count for IOS - Start -->
+      <ion-button class="bg-light-color" *ngIf="getplatform == 'ios'">
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : productioncountlength == 1, 'iostwodigitbadgecount' : productioncountlength >= 2}"
+          *ngIf="productioncount && productioncount != 0"
+          >{{ productioncount }}</ion-badge
+        >
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        *ngIf="getplatform == 'ios'"
+        (click)="btn_notification('Maintenance')"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : maintenancecountlength == 1, 'iostwodigitbadgecount' : maintenancecountlength >= 2}"
+          *ngIf="maintenancecount && maintenancecount != 0"
+          >{{ maintenancecount }}</ion-badge
+        >
+        <ion-icon name="construct-outline"></ion-icon>
+      </ion-button>
+      <!-- Production and Maintenance Count for IOS - End -->
+
+      <!-- <ion-button class="bg-light-color" (click)="btn_notification()">
+        <ion-icon name="person-outline"></ion-icon>
+      </ion-button> -->
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="home-box">
+    <div
+      style="
+        text-align: center;
+        text-transform: uppercase;
+        margin-top: 5px;
+        color: #ff9f0c;
+        font-size: 14px;
+      "
+    >
+      <b>{{ 'OWNERPRODUCTION.productionalerts' | translate}}</b>
+    </div>
+
+    <form [formGroup]="productionForm">
+      <ion-row
+        style="margin-top: 10px"
+        *ngIf="(getscreenorientation == 'portrait' || getscreenorientation == 'portrait-primary' || getscreenorientation == 'portrait-secondary')"
+      >
+        <ion-col size="4" style="align-self: center" no-padding>
+          <div class="h7 text-white">
+            <b>{{ 'OWNERPRODUCTION.fromdate' | translate}}</b>
+          </div>
+
+          <input
+            type="text"
+            class="h7 form-control readonly"
+            formControlName="from_date"
+            placeholder="DD-MM-YYYY"
+            (click)="openFromDateTimePicker()"
+            readonly
+          />
+        </ion-col>
+
+        <ion-col size="4" style="align-self: center" no-padding>
+          <div class="h7 text-white">
+            <b>{{ 'OWNERPRODUCTION.todate' | translate}}</b>
+          </div>
+
+          <input
+            type="text"
+            class="h7 form-control readonly"
+            formControlName="to_date"
+            placeholder="DD-MM-YYYY"
+            (click)="openToDateTimePicker()"
+            readonly
+          />
+        </ion-col>
+
+        <ion-col size="4">
+          <div class="h7">&nbsp;</div>
+          <button
+            type="button"
+            class="h7 btn btn-general btn-sm float-right"
+            style="height: 31px; width: 100%"
+            (click)="getreport()"
+          >
+            {{ 'OWNERPRODUCTION.getoldrecords' | translate}}
+          </button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row
+        style="margin-top: 10px"
+        *ngIf="(getscreenorientation == 'landscape' || getscreenorientation == 'landscape-primary' || getscreenorientation == 'landscape-secondary')"
+      >
+        <ion-col size="1.6" style="align-self: center" no-padding>
+          <div class="h7 text-white">
+            <b>{{ 'OWNERPRODUCTION.fromdate' | translate}}</b>
+          </div>
+        </ion-col>
+
+        <ion-col size="3.45">
+          <input
+            type="text"
+            class="h7 form-control readonly"
+            formControlName="from_date"
+            placeholder="DD-MM-YYYY"
+            (click)="openFromDateTimePicker()"
+            readonly
+          />
+        </ion-col>
+
+        <ion-col size="1" style="align-self: center" no-padding>
+          <div class="h7 text-white">
+            <b>{{ 'OWNERPRODUCTION.todate' | translate}}</b>
+          </div>
+        </ion-col>
+
+        <ion-col size="3.45">
+          <input
+            type="text"
+            class="h7 form-control readonly"
+            formControlName="to_date"
+            placeholder="DD-MM-YYYY"
+            (click)="openToDateTimePicker()"
+            readonly
+          />
+        </ion-col>
+
+        <ion-col size="2.5">
+          <button
+            type="button"
+            class="h7 btn btn-general btn-sm float-right"
+            style="height: 31px; width: 100%"
+            (click)="getreport()"
+          >
+            {{ 'OWNERPRODUCTION.getoldrecords' | translate}}
+          </button>
+        </ion-col>
+      </ion-row>
+
+      <!-- <hr /> -->
+    </form>
+
+    <div *ngIf="!norecordsflag">
+      <div *ngFor="let general of productionArr">
+        <table
+          style="width: 100%; height: 100%; margin-top: 10px"
+          class="table table-bordered"
+        >
+          <tr>
+            <td scope="row" width="35%">
+              <b>{{ 'OWNERPRODUCTION.millstartdate' | translate}}</b> :
+              {{general.start_date}}
+            </td>
+            <td scope="row" width="35%">
+              <b>{{ 'OWNERPRODUCTION.millstopdate' | translate}}</b> :
+              {{general.stop_date}}
+            </td>
+            <td scope="row" width="30%">
+              <b>{{ 'OWNERPRODUCTION.startedby' | translate}}</b> :
+              {{general.startedby}}
+            </td>
+          </tr>
+        </table>
+
+        <div style="overflow-x: auto">
+          <table style="width: 100%; height: 100%" class="table table-bordered">
+            <tr class="table_head">
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'OWNERPRODUCTION.alerttime' | translate}}</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'OWNERPRODUCTION.station' | translate}}</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'OWNERPRODUCTION.parameters' | translate}}</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'OWNERPRODUCTION.attendedby' | translate}}</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'OWNERPRODUCTION.attendedtime' | translate}}</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont"
+                  >{{ 'OWNERPRODUCTION.image' | translate}}</span
+                >
+              </th>
+            </tr>
+
+            <tr *ngFor="let productiondata of general.alertdata">
+              <td scope="row">{{productiondata.alerttime}}</td>
+
+              <td scope="row">{{productiondata.station}}</td>
+
+              <td
+                scope="row"
+                [innerHTML]="productiondata.parameters"
+                style="text-align: left"
+              ></td>
+
+              <td scope="row" *ngIf="productiondata.attendedby!=''">
+                {{productiondata.attendedby}}
+              </td>
+              <td scope="row" *ngIf="productiondata.attendedby==''">-</td>
+
+              <td scope="row" *ngIf="productiondata.attendedstatus==1">
+                <div class="attended">{{productiondata.attendedtime}}</div>
+              </td>
+
+              <td scope="row" *ngIf="productiondata.attendedstatus==2">
+                <div class="unabletorectify">
+                  {{productiondata.attendedtime}}
+                </div>
+              </td>
+
+              <td
+                scope="row"
+                class="badgeblink"
+                *ngIf="productiondata.attendedstatus==0"
+              >
+                <div class="unattended">{{productiondata.attendedtime}}</div>
+              </td>
+
+              <td scope="row">
+                <button
+                  type="button"
+                  class="h7 btn btn-imageview btn-sm"
+                  (click)="btn_ViewImages(productiondata.images)"
+                  *ngIf="(productiondata.images!='')"
+                >
+                  <span class="icontext"
+                    >{{ 'GENERALBUTTON.viewbutton' | translate}}</span
+                  >
+                </button>
+                <span *ngIf="(productiondata.images =='')">-</span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="norecords" *ngIf="norecordsflag==true">
+      {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+    </div>
+
+    <div class="pleasewait" *ngIf="pleasewaitflag">
+      <div style="width: 100%; text-align: center">
+        <img
+          style="width: 80px; height: 80px"
+          src="../../../assets/img/loading.gif"
+        />
+      </div>
+      {{ 'NORECORDSFOUND.loading' | translate}}
+    </div>
+  </div>
+</ion-content>

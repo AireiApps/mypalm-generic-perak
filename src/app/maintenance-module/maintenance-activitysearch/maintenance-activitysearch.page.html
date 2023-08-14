@@ -5,7 +5,9 @@
         <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title color="light">{{ 'SEARCHACTIVITY.searchactivity' | translate}}</ion-title>
+    <ion-title mode="ios" color="light"
+      >{{ 'SEARCHACTIVITY.searchactivity' | translate}}</ion-title
+    >
   </ion-toolbar>
 
   <ion-toolbar class="bg-search-color">
@@ -34,5 +36,7 @@
     </ion-item>
   </ion-list>
 
-  <div class="norecords" *ngIf="norecordsflag">{{ 'SEARCHACTIVITY.nosearchrecords' | translate}}</div>
+  <div class="norecords" *ngIf="norecordsflag">
+    {{ 'SEARCHACTIVITY.nosearchrecords' | translate}}
+  </div>
 </ion-content>

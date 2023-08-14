@@ -28,43 +28,69 @@ export class ForgotpasswordPage implements OnInit {
     private service: MoreServiceService,
     private commonservice: AIREIService,
     private router: Router,
-    private languageService: LanguageService,
+    private languageService: LanguageService
   ) {
     this.changepasswordForm = this.fb.group({
       newpassword: new FormControl("", Validators.required),
+      confirmpassword: new FormControl("", Validators.required),
     });
   }
 
   ngOnInit() {}
 
   btn_save() {
-    if (this.changepasswordForm.valid) {
-      const req = {
-        user_id: this.userlist.userId,
-        millcode: this.userlist.millcode,
-        password: this.changepasswordForm.value.newpassword,
-        language: this.languageService.selected,
-      };
-
-      console.log(req);
-
-      this.service.saveForgotPassword(req).then((result) => {
-        var resultdata: any;
-        resultdata = result;
-
-        console.log(resultdata);
-
-        if (resultdata.httpcode == 200) {
-          this.commonservice.presentToast(this.translate.instant("CHANGEPASSWORD.updatedsuccessfully"));
-
-          localStorage.clear();
-          this.router.navigateByUrl("/login");
-        } else {
-          this.commonservice.presentToast(this.translate.instant("CHANGEPASSWORD.updatefailed"));
-        }
-      });
-    } else {
-      this.commonservice.presentToast(this.translate.instant("CHANGEPASSWORD.warning"));
+    if (this.changepasswordForm.value.newpassword == "") {
+      this.commonservice.presentToast(
+        this.translate.instant("CHANGEPASSWORD.newpasswordwarning")
+      );
+      return false;
     }
+
+    if (this.changepasswordForm.value.confirmpassword == "") {
+      this.commonservice.presentToast(
+        this.translate.instant("CHANGEPASSWORD.confirmpasswordwarning")
+      );
+      return false;
+    }
+
+    if (
+      this.changepasswordForm.value.newpassword !=
+      this.changepasswordForm.value.confirmpassword
+    ) {
+      this.commonservice.presentToast(
+        this.translate.instant("CHANGEPASSWORD.error")
+      );
+      return false;
+    }
+
+    const req = {
+      user_id: this.userlist.userId,
+      millcode: this.userlist.millcode,
+      password: this.changepasswordForm.value.newpassword,
+      confirmpassword: this.changepasswordForm.value.confirmpassword,
+      language: this.languageService.selected,
+    };
+
+    console.log(req);
+
+    this.service.saveForgotPassword(req).then((result) => {
+      var resultdata: any;
+      resultdata = result;
+
+      console.log(resultdata);
+
+      if (resultdata.httpcode == 200) {
+        this.commonservice.presentToast(
+          this.translate.instant("CHANGEPASSWORD.updatedsuccessfully")
+        );
+
+        localStorage.clear();
+        this.router.navigateByUrl("/login");
+      } else {
+        this.commonservice.presentToast(
+          this.translate.instant("CHANGEPASSWORD.updatefailed")
+        );
+      }
+    });
   }
 }

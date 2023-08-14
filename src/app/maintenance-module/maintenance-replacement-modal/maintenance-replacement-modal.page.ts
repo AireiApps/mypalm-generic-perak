@@ -118,7 +118,7 @@ export class MaintenanceReplacementModalPage implements OnInit {
     cssClass: "singleselect",
   };
 
-  public assignedtoOptions: any = {
+  /*public assignedtoOptions: any = {
     header:
       this.userlist.desigId == 4
         ? this.translate.instant(
@@ -128,6 +128,13 @@ export class MaintenanceReplacementModalPage implements OnInit {
             "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.wiremanlist"
           ),
     cssClass: "singleselect",
+  };*/
+
+  public assignedtoOptions: any = {
+    header: this.translate.instant(
+      "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.assignto"
+    ),
+    cssClass: "multiselect",
   };
 
   constructor(
@@ -471,6 +478,12 @@ export class MaintenanceReplacementModalPage implements OnInit {
           this.activityvalue = this.params.activity_name;
 
           if (this.activityid == "0") {
+              if (modeldata.data.searchtext != "") {
+              this.step1Form.controls.txt_activityname.setValue(
+                modeldata.data.searchtext
+              );
+            }
+
             this.otheractivityFlag = true;
           } else {
             let activity_validate = false;
@@ -601,6 +614,7 @@ export class MaintenanceReplacementModalPage implements OnInit {
     }
 
     const alert = await this.alertController.create({
+      mode: "md",
       header: this.translate.instant("PREVENTIVEMAINTENANCEASSIGNMODAL.alert"),
       cssClass: "alertmessage",
       message: this.translate.instant(

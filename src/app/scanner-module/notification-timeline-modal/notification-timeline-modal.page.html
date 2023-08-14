@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-buttons slot="start">
+      <ion-button color="whitefav" (click)="btn_close()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title color="light" mode="ios"
+      >{{ 'TIMELINEHISTORY.title' | translate}}</ion-title
+    >
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="titleforno">ID : {{mainenance_notification_no}}</div>
+  <div>
+    <ion-row
+      *ngFor="let value of historyList;let i = index"
+      style="flex-direction: row-reverse"
+    >
+      <ion-col size="8">
+        <div class="card">
+          <ion-row>
+            <ion-col
+              size="4"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              "
+            >
+              <div class="profile-userpic">
+                <img src="{{value.userimage}}" class="img-responsive" alt="" />
+              </div>
+            </ion-col>
+            <ion-col size="8" style="align-self: center">
+              <div class="usertext"><b>{{value.insertuser}}</b></div>
+              <div class="text">{{value.content}} {{value.assigned}}</div>
+              <!-- <ion-row class="row-reverse">
+                <div class="text">{{value.content}}</div>
+                <div class="text" style="font-weight: bold;">{{value.assigned}}</div>
+              </ion-row> -->
+              <div class="text">
+                {{value.frequencylabel}} {{value.frequency}}
+              </div>
+              <div class="text">
+                {{value.runninghourslabel}} {{value.runninghours}}
+              </div>
+              <div class="text">
+                {{value.Notificationlabel}} {{value.NotificationNo}}
+              </div>
+              <div class="text" style="text-align: right; color: #e30414">
+                {{value.date}}
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+      </ion-col>
+      <ion-col size="4" style="display: flex; align-items: center">
+        <div style="display: table-cell; vertical-align: middle">
+          <div class="diamond-shape">
+            <div class="title">{{value.heading}}<br />{{value.time}}</div>
+          </div>
+          <!-- <div class="verticalline" *ngIf="i!=historyList.length-1"></div> -->
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+  <div class="norecords" *ngIf="enableflag==true">
+    {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+  </div>
+</ion-content>

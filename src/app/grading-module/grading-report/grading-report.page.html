@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar class="bg-brown-color">
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" mode="md">
       <ion-back-button color="whitefav"></ion-back-button>
     </ion-buttons>
 
@@ -64,57 +64,91 @@
     </form>
 
     <div *ngIf="!norecordFlag">
-      <ion-card class="bg-card" *ngFor="let value of gradinglistArr">
-        <ion-card-content class="cardcontent">
-          <ion-row *ngIf="(value.vehicleno!='' || value.insDate!='')">
-            <ion-col>
-              <p class="title-content">
-                {{value.vehicle_no}} - {{value.insdt}}
-              </p>
-            </ion-col>
-          </ion-row>
+      <div style="overflow-x: auto">
+        <table style="width: 100%; height: 100%" class="table table-bordered">
+          <tr class="table_head">
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'GRADINGREPORT.datetime' | translate}}</span
+              >
+            </th>
 
-          <ion-row *ngIf="value.hardbunches!=''">
-            <ion-col size="7"
-              >{{ 'GRADINGREPORT.hardbunches' | translate}}</ion-col
-            >
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'GRADINGREPORT.vehiclenumber' | translate}}</span
+              >
+            </th>
 
-            <ion-col size="5">
-              <p class="data">: {{value.hard_bunch_percent}}%</p>
-            </ion-col>
-          </ion-row>
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'GRADINGREPORT.hardbunches' | translate}}<br />(Unit)</span
+              >
+            </th>
 
-          <ion-row *ngIf="value.underripebunches!=''">
-            <ion-col size="7"
-              >{{ 'GRADINGREPORT.underripebunches' | translate}}</ion-col
-            >
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'GRADINGREPORT.underripe' | translate}}<br />{{
+                'GRADINGREPORT.bunches' | translate}} (%)</span
+              >
+            </th>
 
-            <ion-col size="5">
-              <p class="data">: {{value.under_ripe_bunch_percent}}%</p>
-            </ion-col>
-          </ion-row>
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'GRADINGREPORT.ripeness' | translate}}<br />(%)</span
+              >
+            </th>
 
-          <ion-row *ngIf="value.ripeness!=''">
-            <ion-col size="7"
-              >{{ 'GRADINGREPORT.ripeness' | translate}}</ion-col
-            >
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'GRADINGREPORT.overdue' | translate}}<br />(%)</span
+              >
+            </th>
 
-            <ion-col size="5">
-              <p class="data">: {{value.ripeness_percent}}%</p>
-            </ion-col>
-          </ion-row>
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'GRADINGREPORT.loosefruits' | translate}}<br />(%)</span
+              >
+            </th>
 
-          <ion-row *ngIf="value.loosefruits!=''">
-            <ion-col size="7"
-              >{{ 'GRADINGREPORT.loosefruits' | translate}}</ion-col
-            >
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont">{{ 'GRADINGREPORT.image' | translate}}</span>
+            </th>
 
-            <ion-col size="5">
-              <p class="data">: {{value.loose_fruit_percent}}%</p>
-            </ion-col>
-          </ion-row>
-        </ion-card-content>
-      </ion-card>
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'GRADINGREPORT.doneby' | translate}}</span
+              >
+            </th>
+          </tr>
+
+          <ng-container *ngFor="let value of gradinglistArr">
+            <tr>
+              <td scope="row">{{value.insdt}}</td>
+              <td scope="row">{{value.vehicle_no}}</td>
+              <td scope="row">{{value.hard_bunch_percent}}</td>
+              <td scope="row">{{value.under_ripe_bunch_percent}}</td>
+              <td scope="row">{{value.ripeness_percent}}</td>
+              <td scope="row">{{value.overdue_percent}}</td>
+              <td scope="row">{{value.loose_fruit_percent}}</td>
+              <td scope="row">
+                <button
+                  type="button"
+                  class="h7 btn btn-imageview btn-sm"
+                  (click)="btn_ViewImages(value.hard_bunches_image)"
+                  *ngIf="(value.hard_bunches_image!='')"
+                >
+                  <span class="icontext"
+                    >{{ 'GENERALBUTTON.viewbutton' | translate}}</span
+                  >
+                </button>
+                <span *ngIf="(value.hard_bunches_image =='')">-</span>
+              </td>
+              <td scope="row" *ngIf="value.insby!=''">{{value.insby}}</td>
+              <td scope="row" *ngIf="value.insby==''">-</td>
+            </tr>
+          </ng-container>
+        </table>
+      </div>
     </div>
 
     <div class="norecords" *ngIf="norecordFlag">

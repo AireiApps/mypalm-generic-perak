@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { App, AppState } from "@capacitor/core";
 import { AIREIService } from "src/app/api/api.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as moment from "moment";
@@ -47,6 +48,14 @@ export class SegregatenotificationmillstatusPage implements OnInit {
   }
 
   ngOnInit() {
+    App.addListener("appStateChange", (state: AppState) => {
+      if (state.isActive == true) {
+        //this.getNotification();
+        //this.router.navigate(["/segregatenotification"]);
+
+        this.reloadCurrentPage();
+      }
+    });
     this.getNotification();
   }
 
@@ -56,6 +65,14 @@ export class SegregatenotificationmillstatusPage implements OnInit {
 
   ionViewDidEnter() {
     this.getNotification();
+  }
+
+  reloadCurrentPage() {
+    let currentUrl = this.router.url;
+
+    this.router.navigateByUrl("/", { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentUrl]);
+    });
   }
 
   gettodaysnotification() {
@@ -98,6 +115,7 @@ export class SegregatenotificationmillstatusPage implements OnInit {
     const req = {
       userid: this.userlist.userId,
       departmentid: this.userlist.dept_id,
+      designationid: this.userlist.desigId,
       millcode: this.userlist.millcode,
       filter: this.filterstatus,
       language: this.languageService.selected,

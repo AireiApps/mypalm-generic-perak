@@ -203,11 +203,12 @@
 
           <ion-col size="7">
             <ion-select
+              mode="md"
               [interfaceOptions]="reasonOptions"
               formControlName="select_reason"
               multiple="false"
               [okText]="'GENERALBUTTON.okay' | translate"
-              [cancelText]="'GENERALBUTTON.dismiss' | translate"
+              [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
               class="selectdropdown"
               placeholder="{{ 'MAINTENANCEACCEPTMODAL.select' | translate}}"
               (ionChange)="reasonhandleChange($event)"
@@ -292,11 +293,12 @@
           <div class="hl4line" *ngIf="damagetypevalue!=''"></div>
 
           <ion-select
+            mode="md"
             [interfaceOptions]="damagetypeOptions"
             formControlName="select_damagetype"
             multiple="true"
             [okText]="'GENERALBUTTON.okay' | translate"
-            [cancelText]="'GENERALBUTTON.dismiss' | translate"
+            [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
             class="ionicselect"
             (ionChange)="damagehandleChange($event)"
             #damagetypeSelect
@@ -326,11 +328,12 @@
 
             <ion-col size="6.5">
               <ion-select
+                mode="md"
                 [interfaceOptions]="maintenancetypeOptions"
                 formControlName="select_maintenancetype"
                 multiple="false"
                 [okText]="'GENERALBUTTON.okay' | translate"
-                [cancelText]="'GENERALBUTTON.dismiss' | translate"
+                [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
                 class="selectdropdown"
                 placeholder="{{ 'MAINTENANCEACKNOWLEDGEMODAL.select' | translate}}"
                 (ionChange)="maintenancetypehandleChange($event)"
@@ -516,11 +519,12 @@
             <div class="hl4line" *ngIf="damagetypevalue!=''"></div>
 
             <ion-select
+              mode="md"
               [interfaceOptions]="damagetypeOptions"
               formControlName="select_damagetype"
               multiple="true"
               [okText]="'GENERALBUTTON.okay' | translate"
-              [cancelText]="'GENERALBUTTON.dismiss' | translate"
+              [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
               class="ionicselect"
               (ionChange)="damagehandleChange($event)"
               #damagetypeSelect
@@ -575,11 +579,12 @@
             <div class="hl4line" *ngIf="getdamageid!=''"></div>
 
             <ion-select
+              mode="md"
               [interfaceOptions]="damagetypeOptions"
               formControlName="select_damagetype"
               multiple="true"
               [okText]="'GENERALBUTTON.okay' | translate"
-              [cancelText]="'GENERALBUTTON.dismiss' | translate"
+              [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
               class="ionicselect"
               (ionChange)="damagehandleChange($event)"
               #damagetypeSelect
@@ -638,11 +643,12 @@
           <div class="hl4line" *ngIf="breakdowncausesvalue!=''"></div>
 
           <ion-select
+            mode="md"
             [interfaceOptions]="breakdowncausesOptions"
             formControlName="select_breakdowncauses"
             multiple="true"
             [okText]="'GENERALBUTTON.okay' | translate"
-            [cancelText]="'GENERALBUTTON.dismiss' | translate"
+            [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
             class="ionicselect"
             (ionChange)="breakdowncauseshandleChange($event)"
             #breakdowncausesSelect

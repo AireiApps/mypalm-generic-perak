@@ -1,0 +1,239 @@
+<ion-content>
+  <div class="summarytitleheader summarytitle">{{ title }}</div>
+
+  <div
+    class="home"
+    [ngClass]="{'home' : (getplatform=='android'), 'ioshome' : (getplatform=='ios')}"
+  >
+    <div *ngIf="summaryArr!=null || summaryArr.length > 0">
+      <div *ngFor="let general of summaryArr">
+        <table style="width: 100%; height: 100%" class="table table-bordered">
+          <tr *ngIf="general.millstartdatetime!=''">
+            <th colspan="1" scope="colgroup">
+              <span class="mdfont"
+                >{{ 'SUMMARYPOPUP.millstartdatetime' | translate}}</span
+              >
+            </th>
+            <td
+              width="50%"
+              style="background-color: green; color: white; font-weight: bold"
+            >
+              {{general.millstartdatetime}}
+            </td>
+          </tr>
+
+          <tr *ngIf="general.millstopdatetime!=''">
+            <th colspan="1" scope="colgroup">
+              <span class="mdfont"
+                >{{ 'SUMMARYPOPUP.millstopdatetime' | translate}}</span
+              >
+            </th>
+
+            <td
+              width="50%"
+              style="background-color: red; color: white; font-weight: bold"
+            >
+              {{general.millstopdatetime}}
+            </td>
+          </tr>
+        </table>
+
+        <!-- <hr *ngIf="general.grading.length > 0" /> -->
+
+        <div class="titleheader subtitle" *ngIf="general.grading.length > 0">
+          {{ 'SUMMARYPOPUP.gradingdata' | translate}}
+        </div>
+
+        <div *ngFor="let loaddata of general.grading">
+          <table
+            style="width: 100%; height: 100%"
+            class="table table-bordered"
+            *ngFor="let loaddata of general.grading"
+          >
+            <tr>
+              <td style="text-align: center" width="75%">
+                {{loaddata.loadreceivedtitle}}
+              </td>
+              <td
+                style="text-align: center; color: white; font-weight: bold"
+                width="25%"
+              >
+                {{loaddata.loadreceiveddata}}
+              </td>
+            </tr>
+          </table>
+
+          <table
+            style="width: 100%; height: 100%; margin-top: -10px"
+            class="table table-bordered"
+          >
+            <tr>
+              <th
+                colspan="1"
+                scope="colgroup"
+                style="padding: 4px !important; font-weight: bold"
+              >
+                <span> {{ 'SUMMARYPOPUP.data' | translate}}</span>
+              </th>
+              <th
+                colspan="1"
+                scope="colgroup"
+                style="padding: 4px !important; font-weight: bold"
+              >
+                <span>{{ 'SUMMARYPOPUP.average' | translate}}</span>
+              </th>
+            </tr>
+
+            <tr *ngFor="let value of loaddata.parameters">
+              <td style="text-align: center" width="50%">{{value.title}}</td>
+              <td style="text-align: center" width="50%">{{value.average}}</td>
+            </tr>
+
+            <tr *ngIf="loaddata.parameters.length <= 0">
+              <td style="text-align: center" colspan="2">
+                {{ 'SUMMARYPOPUP.nodatafound' | translate}}
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- <hr *ngIf="general.production.length > 0" /> -->
+
+        <div class="titleheader subtitle" *ngIf="general.production.length > 0">
+          {{ 'SUMMARYPOPUP.sterilizerdata' | translate}}
+        </div>
+
+        <div *ngFor="let loaddata of general.production">
+          <table style="width: 100%; height: 100%" class="table table-bordered">
+            <!-- <tr>
+              <th
+                colspan="2"
+                scope="colgroup"
+                style="padding: 4px !important; font-weight: bold"
+              >
+                <span>{{ 'SUMMARYPOPUP.sterilizer' | translate}}</span>
+              </th>
+            </tr> -->
+
+            <tr *ngFor="let value of loaddata.sterilizerdata">
+              <td style="text-align: center" width="50%">{{value.title}}</td>
+              <td style="text-align: center" width="50%">{{value.data}}</td>
+            </tr>
+
+            <tr *ngIf="loaddata.sterilizerdata.length <= 0">
+              <td style="text-align: center" colspan="2">
+                {{ 'SUMMARYPOPUP.nodatafound' | translate}}
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="titleheader subtitle" *ngIf="general.production.length > 0">
+          {{ 'SUMMARYPOPUP.pressoillossesdata' | translate}}
+        </div>
+
+        <div *ngFor="let loaddata of general.production">
+          <table style="width: 100%; height: 100%" class="table table-bordered">
+            <!-- <tr>
+              <th
+                colspan="2"
+                scope="colgroup"
+                style="padding: 4px !important; font-weight: bold"
+              >
+                <span>{{ 'SUMMARYPOPUP.pressoillosses' | translate}}</span>
+              </th>
+            </tr> -->
+
+            <tr *ngFor="let value of loaddata.pressoillosses">
+              <td style="text-align: center" width="50%">{{value.title}}</td>
+              <td style="text-align: center" width="50%">{{value.data}}</td>
+            </tr>
+
+            <tr *ngIf="loaddata.pressoillosses.length <= 0">
+              <td style="text-align: center" colspan="2">
+                {{ 'SUMMARYPOPUP.nodatafound' | translate}}
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- <hr *ngIf="general.maintenance.length > 0" /> -->
+
+        <div
+          class="titleheader subtitle"
+          *ngIf="general.maintenance.length > 0"
+        >
+          {{ 'SUMMARYPOPUP.maintenancedata' | translate}}
+        </div>
+
+        <table
+          style="width: 100%; height: 100%"
+          class="table table-bordered"
+          *ngIf="general.maintenance.length > 0"
+        >
+          <tr>
+            <th
+              colspan="1"
+              scope="colgroup"
+              style="padding: 4px !important; font-weight: bold"
+            >
+              <span>{{ 'SUMMARYPOPUP.data' | translate}}</span>
+            </th>
+            <th
+              colspan="1"
+              scope="colgroup"
+              style="padding: 4px !important; font-weight: bold"
+            >
+              <span>{{ 'SUMMARYPOPUP.created' | translate}}</span>
+            </th>
+            <th
+              colspan="1"
+              scope="colgroup"
+              style="padding: 4px !important; font-weight: bold"
+            >
+              <span>{{ 'SUMMARYPOPUP.completed' | translate}}</span>
+            </th>
+          </tr>
+
+          <tr *ngFor="let item of general.maintenance">
+            <td style="text-align: left" width="50%">{{item.title}}</td>
+            <td
+              style="
+                text-align: center;
+                background-color: red;
+                color: #ffffff;
+                font-weight: bold;
+              "
+              width="25%"
+            >
+              {{item.created}}
+            </td>
+            <td
+              style="
+                text-align: center;
+                background-color: green;
+                color: #ffffff;
+                font-weight: bold;
+              "
+              width="25%"
+            >
+              {{item.completed}}
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <ion-row class="form-row">
+        <ion-col style="text-align: center !important">
+          <button
+            type="submit"
+            class="btn btn-acknowledge"
+            (click)="btn_close()"
+          >
+            {{buttonname}}
+          </button>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-content>

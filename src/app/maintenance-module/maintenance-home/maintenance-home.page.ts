@@ -8,6 +8,7 @@ import {
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AIREIService } from "src/app/api/api.service";
+import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import {
   ModalController,
   AlertController,
@@ -55,6 +56,7 @@ export class MaintenanceHomePage implements OnInit {
   userdepartment = this.userlist.department;
   userdepartmentid = this.userlist.dept_id;
   userdesignation = this.userlist.desigId;
+  oillossnotificationflag = this.userlist.oilloss_notification_flag;
 
   //mill_name = appsettings.MILL_NAME;
 
@@ -318,7 +320,8 @@ export class MaintenanceHomePage implements OnInit {
     private appVersion: AppVersion,
     private market: Market,
     private animationCtrl: AnimationController,
-    private service: MaintenanceServiceService
+    private service: MaintenanceServiceService,
+    private screenOrientation: ScreenOrientation
   ) {
     this.currentlanguage = this.languageService.selected;
 
@@ -336,17 +339,25 @@ export class MaintenanceHomePage implements OnInit {
       (this.userdesignation == 5 || this.userdesignation == 11)
     ) {
       this.activatedroute.params.subscribe((val) => {
-        if (localStorage.getItem("notificationdata") != "") {
-          this.notificationdata = JSON.parse(
-            localStorage.getItem("notificationdata")
+        if (
+          this.screenOrientation.type == "landscape" ||
+          this.screenOrientation.type == "landscape-primary" ||
+          this.screenOrientation.type == "landscape-secondary"
+        ) {
+          this.screenOrientation.lock(
+            this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY
           );
+        }
+
+        if (localStorage.getItem("notificationdata") != "") {
+          this.notificationdata = localStorage.getItem("notificationdata");
 
           if (
-            this.notificationdata.redirect !== "undefined" &&
-            this.notificationdata.redirect !== null
+            this.notificationdata !== "undefined" &&
+            this.notificationdata !== null
           ) {
             if (
-              this.notificationdata.redirect ==
+              this.notificationdata ==
               "ROUTINE PREVENTIVE MAINTENANCE NOTIFICATION"
             ) {
               if (
@@ -370,7 +381,7 @@ export class MaintenanceHomePage implements OnInit {
 
               this.getDCList();
             } else if (
-              this.notificationdata.redirect ==
+              this.notificationdata ==
               "REPLACEMENT PREVENTIVE MAINTENANCE NOTIFICATION"
             ) {
               if (
@@ -394,8 +405,7 @@ export class MaintenanceHomePage implements OnInit {
 
               this.getPVList();
             } else if (
-              this.notificationdata.redirect ==
-              "CORRECTIVE MAINTENANCE NOTIFICATION"
+              this.notificationdata == "CORRECTIVE MAINTENANCE NOTIFICATION"
             ) {
               if (
                 typeof this.notificationdata.fromdate !== "undefined" &&
@@ -564,11 +574,9 @@ export class MaintenanceHomePage implements OnInit {
             this.market
               .open(appId)
               .then((response) => {
+                /*this.notifi.logoutupdateNotification();
                 localStorage.clear();
-                this.notifi.logoutupdateNotification();
-                this.router.navigate(["/login"], { replaceUrl: true });
-
-                console.debug(response);
+                this.router.navigate(["/login"], { replaceUrl: true });*/
               })
               .catch((error) => {
                 console.warn(error);

@@ -1,12 +1,13 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { IonicModule } from '@ionic/angular';
+import { IonicModule } from "@ionic/angular";
 
-import { ReportSterilizerhourlyperformancePageRoutingModule } from './report-sterilizerhourlyperformance-routing.module';
+import { ReportSterilizerhourlyperformancePageRoutingModule } from "./report-sterilizerhourlyperformance-routing.module";
 
-import { ReportSterilizerhourlyperformancePage } from './report-sterilizerhourlyperformance.page';
+import { ReportSterilizerhourlyperformancePage } from "./report-sterilizerhourlyperformance.page";
+
 import { TranslateModule } from "@ngx-translate/core";
 
 @NgModule({
@@ -16,8 +17,8 @@ import { TranslateModule } from "@ngx-translate/core";
     IonicModule,
     TranslateModule,
     ReactiveFormsModule,
-    ReportSterilizerhourlyperformancePageRoutingModule
+    ReportSterilizerhourlyperformancePageRoutingModule,
   ],
-  declarations: [ReportSterilizerhourlyperformancePage]
+  declarations: [ReportSterilizerhourlyperformancePage],
 })
 export class ReportSterilizerhourlyperformancePageModule {}

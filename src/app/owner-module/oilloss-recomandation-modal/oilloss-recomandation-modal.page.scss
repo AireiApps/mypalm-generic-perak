@@ -1,0 +1,145 @@
+ion-content{
+  background-image: url(../../../assets/img/palmbg.png);
+  background-position: center center fixed;
+  background-repeat: repeat;
+  background-size: cover;
+  background-color: #f7f7f7 !important;
+}
+
+
+ion-header {
+  background-color: #cb4335 !important;
+  .modaltoolbar {
+    border-bottom: 1px solid #ffffff71;
+  }
+}
+  .content{
+    margin: 10px;
+    text-align: start;
+  }
+  .mdfont {
+    font-size: 11px;
+    text-align: left;
+    font-weight: normal !important;
+  }
+
+.checkcard {
+  border-radius: 5px;
+  //border: 1px solid #ffffff;
+  text-align: center;
+  //margin: 10px 5px 0px 5px;
+}
+.btn-primary {
+  width: 150px;
+  font-size: 12px;
+}
+
+.btn-success {
+  width: 150px;
+  height: 40px;
+  font-size: 14px;
+  background-color: transparent !important;
+  border-radius: 40px;
+  border: 0.5px solid #008000;
+}
+
+.btn-success:active,
+.btn-success:hover,
+.btn-success:focus {
+  width: 150px;
+  height: 40px;
+  font-size: 14px;
+  background-color: transparent !important;
+  border-radius: 40px;
+  border: 0.5px solid #3cd2a5 !important;
+}
+
+.btn-warning {
+  width: 150px;
+  font-size: 12px;
+}
+
+.btn-upload {
+  margin-top: -5px;
+  display: block;
+  border-radius: 0px;
+  box-shadow: 0px 4px 6px 2px rgba(0, 0, 0, 0.2);
+}
+.reasonbtn-primary {
+  width: 150px;
+  font-size: 12px;
+}
+
+.reasonbtn-success {
+  width: 150px;
+  height: 40px;
+  font-size: 14px;
+  background-color: transparent !important;
+  border-radius: 40px;
+  border: 0.5px solid #cb4335;
+}
+
+.reasonbtn-success:active,
+.reasonbtn-success:hover,
+.reasonbtn-success:focus {
+  width: 150px;
+  height: 40px;
+  font-size: 14px;
+  background-color: transparent !important;
+  border-radius: 40px;
+  border: 0.5px solid #3cd2a5 !important;
+}
+
+.actionheader {
+ 
+  text-align: center;
+  background-color: transparent;
+  //margin: 0px 5px 0px 5px;
+  padding: 5px 5px 5px 5px;
+}
+.actiontitle{
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+}
+ion-col{
+  padding: 0px;
+  margin: 0px;
+}
+.titleheader {
+  //border-radius: 10px 10px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
+  border: 1px solid #ffffff;
+  text-align: center;
+  background-color: #008000;
+  //margin: 0px 5px 0px 5px;
+  padding: 10px 10px 10px 10px;
+}
+.reasontitleheader {
+  //border-radius: 10px 10px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
+  border: 1px solid #ffffff;
+  text-align: center;
+  background-color: #cb4335;
+  //margin: 0px 5px 0px 5px;
+  padding: 10px 10px 10px 10px;
+}
+.home-box {
+  padding: 0px 10px 0px 10px;
+}
+.title {
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  //color: #ffffff;
+}
+.footer{
+  position : absolute;
+  bottom : 0;
+ 
+  margin-top : 40px;
+}
+
+  

@@ -5,7 +5,7 @@ import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
 import { DatePicker } from "@ionic-native/date-picker/ngx";
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { BarcodeScanner } from "@ionic-native/barcode-scanner/ngx";
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
@@ -40,8 +40,8 @@ import { AutosizeModule } from "ngx-autosize";
 import { Market } from "@ionic-native/market/ngx";
 import { AppVersion } from "@ionic-native/app-version/ngx";
 import { GeneralserviceService } from "src/app/services/generalservice/generalservice.service";
-import { Badge } from '@ionic-native/badge/ngx';
-import {DatePipe} from '@angular/common';
+import { Badge } from "@ionic-native/badge/ngx";
+import { DatePipe } from "@angular/common";
 
 /*Translate Language --- Starts*/
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
@@ -76,7 +76,7 @@ const environment = {
   entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot({navAnimation: enterAnimation}),
+    IonicModule.forRoot({ navAnimation: enterAnimation }),
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,

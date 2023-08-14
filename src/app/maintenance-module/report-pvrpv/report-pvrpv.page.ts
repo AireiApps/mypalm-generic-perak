@@ -3,6 +3,8 @@ import { FormControl, FormBuilder, Validators } from "@angular/forms";
 import { AIREIService } from "src/app/api/api.service";
 import { Router } from "@angular/router";
 import { MaintenanceServiceService } from "src/app/services/maintenance-serivce/maintenance-service.service";
+import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
+import { ModalController } from "@ionic/angular";
 import * as moment from "moment";
 import { LanguageService } from "src/app/services/language-service/language.service";
 import {
@@ -17,6 +19,10 @@ import { TranslateService } from "@ngx-translate/core";
 
 import { DatePickerPluginInterface } from "@capacitor-community/date-picker";
 const DatePicker: DatePickerPluginInterface = Plugins.DatePickerPlugin as any;
+
+// Modal Pages - Start
+import { PopupNotificationViewPage } from "src/app/supervisor-module/popup-notification-view/popup-notification-view.page";
+// Modal Pages - End
 
 @Component({
   selector: "app-report-pvrpv",
@@ -41,27 +47,23 @@ export class ReportPvrpvPage implements OnInit {
 
   currentdate = moment(new Date().toISOString()).format("DD-MM-YYYY");
 
-  //routinefromdate = moment(new Date().toISOString()).format("DD-MM-YYYY");
-  //routinetodate = moment(new Date().toISOString()).format("DD-MM-YYYY");
-
   routinefromdate = "";
   routinetodate = "";
-
-  //replacementfromdate = moment(new Date().toISOString()).format("DD-MM-YYYY");
-  //replacementtodate = moment(new Date().toISOString()).format("DD-MM-YYYY");
 
   replacementfromdate = "";
   replacementtodate = "";
 
-  tabs_segment;
+  isReplacementFlag = false;
+  tabs_segment = "";
 
   constructor(
     private languageService: LanguageService,
     private translate: TranslateService,
+    public modalController: ModalController,
     private zone: NgZone,
     private fb: FormBuilder,
     private router: Router,
-    private notifi: AuthGuardService,
+    private screenOrientation: ScreenOrientation,
     private commonservice: AIREIService,
     private service: MaintenanceServiceService
   ) {
@@ -76,6 +78,8 @@ export class ReportPvrpvPage implements OnInit {
     });
 
     this.tabs_segment = "Routine";
+
+    this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
   }
 
   ngOnInit() {}
@@ -95,39 +99,10 @@ export class ReportPvrpvPage implements OnInit {
     }
   }
 
-  ionViewDidEnter() {
-    /*PushNotifications.removeAllDeliveredNotifications();
-
-    this.count = parseInt(localStorage.getItem("badge_count"));
-    this.notifi.updateNotification();
-    this.updateNotification();
-    this.getLiveNotification();*/
-
-    if (this.tabs_segment == "Routine") {
-      this.getRoutineNotification();
-    } else {
-      this.getReplacementNotification();
-    }
-  }
-
-  btn_notification() {
-    localStorage.setItem("badge_count", "0");
-    this.router.navigate(["/segregatenotification"]);
-  }
-
-  updateNotification() {
-    this.zone.run(() => {
-      this.count = parseInt(localStorage.getItem("badge_count"));
-    });
-  }
-
-  getLiveNotification() {
-    PushNotifications.addListener(
-      "pushNotificationReceived",
-      (notification: PushNotification) => {
-        // alert('Push received: ' + JSON.stringify(notification));
-        this.updateNotification();
-      }
+  ngOnDestroy() {
+    this.screenOrientation.unlock();
+    this.screenOrientation.lock(
+      this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY
     );
   }
 
@@ -172,6 +147,10 @@ export class ReportPvrpvPage implements OnInit {
 
     if (status == "10") {
       color = "#01b800";
+    }
+
+    if (status == "12") {
+      color = "#f36311";
     }
 
     return color;
@@ -295,13 +274,13 @@ export class ReportPvrpvPage implements OnInit {
       dept_id: this.userlist.dept_id,
       Fromdate: getfromdate,
       Todate: gettodate,
-      pvflag: 1,
+      type: 2,
       language: this.languageService.selected,
     };
 
     //this.commonservice.presentToast(req);
 
-    this.service.getPVRPVReport(req).then((result) => {
+    this.service.getNotificationListReport(req).then((result) => {
       var resultdata: any;
       resultdata = result;
 
@@ -361,13 +340,13 @@ export class ReportPvrpvPage implements OnInit {
       dept_id: this.userlist.dept_id,
       Fromdate: getfromdate,
       Todate: gettodate,
-      pvflag: 2,
+      type: 3,
       language: this.languageService.selected,
     };
 
     //this.commonservice.presentToast(req);
 
-    this.service.getPVRPVReport(req).then((result) => {
+    this.service.getNotificationListReport(req).then((result) => {
       var resultdata: any;
       resultdata = result;
 
@@ -407,31 +386,48 @@ export class ReportPvrpvPage implements OnInit {
   }
 
   segmentChanged(ev: any) {
-    //console.log("Segment changed", ev.detail.value);
     if (ev.detail.value == "Routine") {
-      this.routinenotificationlistArr = [];
-
       this.getRoutineNotification();
-    }
-
-    if (ev.detail.value == "Replacement") {
-      this.replacementnotificationlistArr = [];
-
+    } else {
       this.getReplacementNotification();
     }
   }
 
-  btn_PVNotificationView(value) {
+  btn_replacement() {
+    this.getReplacementNotification();
+
+    this.isReplacementFlag = true;
+  }
+
+  async callmodalcontroller(value) {
+    //console.log(JSON.stringify(value));
+
+    var sendmodule = "";
     if (this.tabs_segment == "Routine") {
-      this.router.navigate([
-        "/maintenance-notification-view",
-        { item: JSON.stringify(value), from: "RoPMReport" },
-      ]);
+      sendmodule = "RoPMVIEW";
     } else {
-      this.router.navigate([
-        "/maintenance-notification-view",
-        { item: JSON.stringify(value), from: "RePMReport" },
-      ]);
+      sendmodule = "RePMVIEW";
     }
+
+    const modal = await this.modalController.create({
+      component: PopupNotificationViewPage,
+      componentProps: {
+        item: JSON.stringify(value),
+        module: sendmodule,
+      },
+      showBackdrop: true,
+      backdropDismiss: false,
+      cssClass: ["acknowledgement-modal"],
+    });
+
+    modal.onDidDismiss().then((data) => {});
+
+    return await modal.present();
+  }
+
+  goBack() {
+    this.getRoutineNotification();
+
+    this.isReplacementFlag = false;
   }
 }

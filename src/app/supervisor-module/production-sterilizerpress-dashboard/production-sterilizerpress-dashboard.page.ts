@@ -8,6 +8,7 @@ import {
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { AIREIService } from "src/app/api/api.service";
 import { ActivatedRoute, Router } from "@angular/router";
+import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import {
   ModalController,
   AlertController,
@@ -34,6 +35,8 @@ import { SchedulePage } from "src/app/maintenance-module/schedule/schedule.page"
 import { TranslateService } from "@ngx-translate/core";
 import { LanguageService } from "src/app/services/language-service/language.service";
 
+import { DooropenlaterUpdateModalPage } from "src/app/supervisor-module/dooropenlater-update-modal/dooropenlater-update-modal.page";
+
 @Component({
   selector: "app-production-sterilizerpress-dashboard",
   templateUrl: "./production-sterilizerpress-dashboard.page.html",
@@ -52,22 +55,19 @@ export class ProductionSterilizerpressDashboardPage implements OnInit {
   mill_name = this.nl2br(this.userlist.millname);
 
   count = 0;
-  productionflag = "0";
-  breakdownflag = 0;
-  txt_millproductionstatus = "";
-  txt_millstartstop = "";
-  millstartdatetime = "";
-  millstopdatetime = "";
+  pendingcount = 0;
+  pendingcountlength = 0;
+
+  pressstationalertArr = [];
+  sterilizerlistArr = [];
+  sterilizerstationalertArr = [];
 
   uienable = false;
   pleasewaitflag = false;
   nomachinesfound = false;
+  enableflag = false;
+  uinorecordFlag = true;
 
-  stationlistArr = [];
-  filterstationsArr = [];
-  stationsArr = [];
-
-  filterTerm: string;
   getplatform: string;
 
   constructor(
@@ -85,26 +85,43 @@ export class ProductionSterilizerpressDashboardPage implements OnInit {
     private appVersion: AppVersion,
     private market: Market,
     private animationCtrl: AnimationController,
+    private screenOrientation: ScreenOrientation,
     private translate: TranslateService
   ) {
-    if (this.platform.is("android")) {
-      this.getplatform = "android";
-    } else if (this.platform.is("ios")) {
-      this.getplatform = "ios";
-    }
-
-    this.dashboardForm = this.fb.group({
-      select_station: new FormControl(""),
-    });
+    this.dashboardForm = this.fb.group({});
 
     this.activatedroute.params.subscribe((val) => {
-      this.ionViewDidEnter();
+      if (this.platform.is("android")) {
+        this.getplatform = "android";
+      } else if (this.platform.is("ios")) {
+        this.getplatform = "ios";
+      }
+
+      this.screenOrientation.lock(
+        this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY
+      );
+
+      this.getProductionPendingCount();
+
+      if (this.userdesignation == 7) {
+        this.getPressStationAlertData();
+      } else {
+        this.getDoorOpenData();
+      }
     });
   }
 
   ngOnInit() {}
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+    const animation: Animation = this.animationCtrl
+      .create()
+      .addElement(this.myElementRef.nativeElement)
+      .duration(1000)
+      .fromTo("opacity", "0", "1");
+
+    animation.play();
+  }
 
   ionViewDidEnter() {
     PushNotifications.removeAllDeliveredNotifications();
@@ -116,9 +133,11 @@ export class ProductionSterilizerpressDashboardPage implements OnInit {
 
     this.forceUpdated();
 
-    this.dashboardForm.controls.select_station.setValue("");
-
-    this.getStation();
+    /*if (this.userdesignation == 7) {
+      this.getPressStationAlertData();
+    } else {
+      this.getSterilizerStationAlertData();
+    }*/
   }
 
   updateNotification() {
@@ -132,6 +151,7 @@ export class ProductionSterilizerpressDashboardPage implements OnInit {
       "pushNotificationReceived",
       (notification: PushNotification) => {
         this.updateNotification();
+        this.getProductionPendingCount();
       }
     );
   }
@@ -204,11 +224,9 @@ export class ProductionSterilizerpressDashboardPage implements OnInit {
             this.market
               .open(appId)
               .then((response) => {
+                /*this.notifi.logoutupdateNotification();
                 localStorage.clear();
-                this.notifi.logoutupdateNotification();
-                this.router.navigate(["/login"], { replaceUrl: true });
-
-                console.debug(response);
+                this.router.navigate(["/login"], { replaceUrl: true });*/
               })
               .catch((error) => {
                 console.warn(error);
@@ -220,201 +238,127 @@ export class ProductionSterilizerpressDashboardPage implements OnInit {
     alert.present();
   }
 
-  getProductionStatusBackGroundColor(status) {
-    let color;
-
-    if (status == "1") {
-      //color = "#4cbb17";
-      color = "#008000";
-    } else if (status == "0") {
-      color = "#CB4335";
-    } else {
-      color = "#F4F4F4";
-    }
-
-    return color;
-  }
-
-  getBackGroundColor(status) {
-    let color;
-
-    if (status == "1") {
-      color = "#008000";
-      //color ="linear-gradient(to right top, #74d217, #8bd847, #a0dd69, #b4e388, #c6e8a5, #c8e8a8, #cae9ac, #cce9af, #bfe599, #b1e183, #a2dd6c, #93d954)";
-    } else if (status == "0") {
-      color = "#CB4335";
-      //color ="linear-gradient(to right top, #ea2c2c, #ef4444, #f3585a, #f56b6f, #f67d83, #f68086, #f5838a, #f5868d, #f57c81, #f57175, #f46769, #f35c5c)";
-    } else {
-      color = "#ff9f0c";
-    }
-
-    return color;
-  }
-
-  getStatusTextColor(status) {
-    let color;
-
-    if (status == "1") {
-      color = "#ffffff";
-    } else if (status == "0") {
-      color = "#ffffff";
-    } else {
-      color = "#000000";
-    }
-
-    return color;
-  }
-
-  refreshRecords() {
-    this.dashboardForm.controls.select_station.setValue("");
-
-    this.getProductionStatus();
-  }
-
-  onChangeStation() {
-    var searchedstationid = this.dashboardForm.value.select_station;
-
-    var item = this.filterstationsArr.filter(
-      (item) => item.stationid === parseInt(searchedstationid)
-    );
-
-    if (searchedstationid == "") {
-      this.stationsArr = this.filterstationsArr;
-    } else {
-      this.stationsArr = item;
-    }
-  }
-
-  getStation() {
-    const req = {
-      user_id: this.userlist.userId,
-      millcode: this.userlist.millcode,
-      dept_id: this.userlist.dept_id,
-      language: this.languageService.selected,
-    };
-
-    this.service.getStationList(req).then((result) => {
-      let resultdata: any;
-      resultdata = result;
-      if (resultdata.httpcode == 200) {
-        this.stationlistArr = resultdata.data;
-
-        this.nomachinesfound = false;
-
-        this.getProductionStatus();
-      } else {
-        this.stationlistArr = [];
-
-        this.nomachinesfound = true;
-
-        //this.getProductionStatus();
-      }
-    });
-  }
-
-  getProductionStatus() {
-    this.pleasewaitflag = true;
-
+  getProductionPendingCount() {
     let req = {
       userid: this.userlist.userId,
       departmentid: this.userlist.dept_id,
-      designationid: this.userlist.desigId,
-      millcode: this.userlist.millcode,
-      language: this.languageService.selected,
-    };
-
-    this.service.getProductionStartStopStatus(req).then((result) => {
-      var resultdata: any;
-      resultdata = result;
-      if (resultdata.httpcode == 200) {
-        this.productionflag = resultdata.data[0].status;
-        this.breakdownflag = resultdata.data[0].breakdownflag;
-
-        this.millstartdatetime = resultdata.data[0].mill_start_date;
-        this.millstopdatetime = resultdata.data[0].mill_stop_date;
-
-        if (this.productionflag == "1") {
-          this.txt_millproductionstatus = this.translate.instant(
-            "MAINTENANCEDASHBOARD.inoperation"
-          );
-
-          this.txt_millstartstop = this.translate.instant(
-            "SUPERVISORDASHBOARD.millstartdatetime"
-          );
-        } else if (this.productionflag == "0") {
-          if (this.breakdownflag == 1) {
-            this.txt_millproductionstatus = this.translate.instant(
-              "SUPERVISORDASHBOARD.stoppedoperation"
-            );
-            this.txt_millstartstop = this.translate.instant(
-              "SUPERVISORDASHBOARD.stoppedbreakdownoperation"
-            );
-          } else {
-            this.txt_millproductionstatus = this.translate.instant(
-              "SUPERVISORDASHBOARD.stoppedoperation"
-            );
-            this.txt_millstartstop = this.translate.instant(
-              "SUPERVISORDASHBOARD.millstopdatetime"
-            );
-          }
-        }
-
-        this.getStations();
-      } else {
-        this.productionflag = "0";
-
-        this.millstartdatetime = "";
-        this.millstopdatetime = "";
-
-        this.getStations();
-      }
-    });
-  }
-
-  getStations() {
-    let req = {
-      userid: this.userlist.userId,
-      departmentid: this.userlist.dept_id,
-      designationid: this.userlist.desigId,
+      design_id: this.userlist.desigId,
       millcode: this.userlist.millcode,
       language: this.languageService.selected,
     };
 
     console.log(req);
 
-    this.service.getProductionStaions(req).then((result) => {
+    this.commonservice.getmaintenancependingcount(req).then((result) => {
       var resultdata: any;
       resultdata = result;
       if (resultdata.httpcode == 200) {
-        this.stationsArr = resultdata.data;
-
-        this.filterstationsArr = this.stationsArr;
-
-        if (this.productionflag == "1") {
-          this.uienable = true;
-        } else {
-          this.uienable = true;
-        }
-
-        this.pleasewaitflag = false;
+        this.pendingcount = resultdata.count;
+        this.pendingcountlength = this.pendingcount.toString().length;
       } else {
-        this.stationsArr = [];
-
-        this.filterstationsArr = this.stationsArr;
-
-        this.uienable = false;
-
-        this.pleasewaitflag = false;
+        this.pendingcount = 0;
+        this.pendingcountlength = this.pendingcount.toString().length;
       }
     });
   }
 
-  async callmodalcontroller() {
+  getPressStationAlertData() {
+    const req = {
+      userid: this.userlist.userId,
+      millcode: this.userlist.millcode,
+      dept_id: this.userlist.dept_id,
+      design_id: this.userlist.desigId,
+      language: this.languageService.selected,
+    };
+
+    console.log(req);
+
+    this.service.getPressStationAlertData(req).then((result) => {
+      let resultdata: any;
+      resultdata = result;
+      if (resultdata.httpcode == 200) {
+        this.pressstationalertArr = resultdata.data;
+        this.enableflag = false;
+      } else {
+        this.pressstationalertArr = [];
+        this.enableflag = true;
+      }
+    });
+  }
+
+  getDoorOpenData() {
+    const req = {
+      userid: this.userlist.userId,
+      millcode: this.userlist.millcode,
+      dept_id: this.userlist.dept_id,
+      design_id: this.userlist.desigId,
+      language: this.languageService.selected,
+    };
+
+    this.service.getDoorOpenLaterData(req).then((result) => {
+      let resultdata: any;
+      resultdata = result;
+      if (resultdata.httpcode == 200) {
+        this.sterilizerlistArr = resultdata.data;
+        this.uinorecordFlag = true;
+      } else {
+        this.sterilizerlistArr = [];
+        this.uinorecordFlag = false;
+
+        this.getSterilizerStationAlertData();
+      }
+    });
+  }
+
+  getSterilizerStationAlertData() {
+    const req = {
+      userid: this.userlist.userId,
+      millcode: this.userlist.millcode,
+      dept_id: this.userlist.dept_id,
+      language: this.languageService.selected,
+    };
+
+    console.log(req);
+
+    this.service.getSterilizerStationAlertData(req).then((result) => {
+      let resultdata: any;
+      resultdata = result;
+      if (resultdata.httpcode == 200) {
+        this.sterilizerstationalertArr = resultdata.data;
+        this.enableflag = false;
+      } else {
+        this.sterilizerstationalertArr = [];
+        this.enableflag = true;
+      }
+    });
+  }
+
+  btn_pressstation() {
+    this.router.navigate(["/production-hourlypressingstation"]);
+  }
+
+  btn_sterilizerstation() {
+    this.router.navigate(["/production-hourlysterilizerstation"]);
+  }
+
+  async callmodalcontroller(value) {
     const modal = await this.modalController.create({
-      component: SchedulePage,
+      component: DooropenlaterUpdateModalPage,
+      componentProps: {
+        item: JSON.stringify(value),
+      },
+      showBackdrop: true,
+      backdropDismiss: false,
+      cssClass: ["notification-modal"],
     });
 
-    modal.onDidDismiss().then((data) => {});
+    modal.onDidDismiss().then((modaldata) => {
+      let getdata = modaldata["data"]["item"];
+
+      if (getdata != "") {
+        this.getDoorOpenData();
+      }
+    });
 
     return await modal.present();
   }

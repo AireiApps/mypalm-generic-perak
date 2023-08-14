@@ -6,9 +6,10 @@ import {
   ElementRef,
   Renderer2,
 } from "@angular/core";
+import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import { FormBuilder, FormControl } from "@angular/forms";
 import { AIREIService } from "src/app/api/api.service";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ModalController, AlertController, IonList } from "@ionic/angular";
 import { SupervisorService } from "src/app/services/supervisor-service/supervisor.service";
 import * as moment from "moment";
@@ -20,6 +21,10 @@ import { Plugins } from "@capacitor/core";
 
 import { DatePickerPluginInterface } from "@capacitor-community/date-picker";
 const DatePicker: DatePickerPluginInterface = Plugins.DatePickerPlugin as any;
+
+// Modal Pages - Start
+import { PopupNotificationViewPage } from "src/app/supervisor-module/popup-notification-view/popup-notification-view.page";
+// Modal Pages - End
 
 @Component({
   selector: "app-report-production-maintenance-notification",
@@ -51,6 +56,7 @@ export class ReportProductionMaintenanceNotificationPage implements OnInit {
     private translate: TranslateService,
     public modalController: ModalController,
     private router: Router,
+    private screenOrientation: ScreenOrientation,
     private fb: FormBuilder,
     private service: SupervisorService
   ) {
@@ -58,12 +64,21 @@ export class ReportProductionMaintenanceNotificationPage implements OnInit {
       from_date: new FormControl(this.currentdate),
       to_date: new FormControl(this.currentdate),
     });
+
+    this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
   }
 
   ngOnInit() {}
 
   ngAfterViewInit(): void {
     this.getNotification();
+  }
+
+  ngOnDestroy() {
+    this.screenOrientation.unlock();
+    this.screenOrientation.lock(
+      this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY
+    );
   }
 
   getStatusTextColor(status) {
@@ -107,6 +122,24 @@ export class ReportProductionMaintenanceNotificationPage implements OnInit {
 
     if (status == "10") {
       color = "#01b800";
+    }
+
+    if (status == "12") {
+      color = "#f36311";
+    }
+
+    return color;
+  }
+
+  getBreakdownTextColor(status) {
+    let color;
+
+    if (status == "1") {
+      color = "#cb4335";
+    }
+
+    if (status == "2") {
+      color = "#f49402";
     }
 
     return color;
@@ -177,9 +210,10 @@ export class ReportProductionMaintenanceNotificationPage implements OnInit {
       Fromdate: getfromdate,
       Todate: gettodate,
       language: this.languageService.selected,
+      type: 1,
     };
 
-    console.log(req);
+    //console.log(req);
 
     this.service.getNotificationListReport(req).then((result) => {
       var resultdata: any;
@@ -209,10 +243,20 @@ export class ReportProductionMaintenanceNotificationPage implements OnInit {
     });
   }
 
-  btn_NotificationView(value) {
-    this.router.navigate([
-      "/production-notification-view",
-      { item: JSON.stringify(value) },
-    ]);
+  async callmodalcontroller(value) {
+    const modal = await this.modalController.create({
+      component: PopupNotificationViewPage,
+      componentProps: {
+        item: JSON.stringify(value),
+        module: "CM",
+      },
+      showBackdrop: true,
+      backdropDismiss: false,
+      cssClass: ["acknowledgement-modal"],
+    });
+
+    modal.onDidDismiss().then((data) => {});
+
+    return await modal.present();
   }
 }

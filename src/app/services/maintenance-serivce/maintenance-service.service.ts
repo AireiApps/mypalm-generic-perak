@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { appsettings } from "src/app/appsettings";
+import { timeout } from "rxjs/operators";
 import { AIREIService } from "src/app/api/api.service";
 
 @Injectable({
@@ -214,17 +215,23 @@ export class MaintenanceServiceService {
 
     var api =
       localStorage.getItem("endpoint") +
-      appsettings.getmaintenancenotificationlist;
+      appsettings.getmaintenancenotificationlistnew;
     return new Promise((resolve, reject) => {
-      this.httpClient.post(api, reqOpts).subscribe(
-        (data) => {
-          console.log(data);
-          resolve(data);
-        },
-        (error) => {
-          reject(error);
-        }
-      );
+      this.httpClient
+        .post(api, reqOpts)
+        .pipe(timeout(15000))
+        .subscribe(
+          (data) => {
+            console.log(data);
+            resolve(data);
+          },
+          (error) => {
+            if (error.name == "TimeoutError" || error.status == 500) {
+              this.commonservice.presentToast("Something went wrong...!");
+            }
+            reject(error);
+          }
+        );
     });
   }
 
@@ -266,6 +273,70 @@ export class MaintenanceServiceService {
     });
   }
 
+  /*getPartsDetails(params) {
+    var reqOpts: any;
+    reqOpts = this.formParams(params);
+
+    var api = localStorage.getItem("endpoint") + appsettings.getpartsdetails;
+    return new Promise((resolve, reject) => {
+      this.httpClient.post(api, reqOpts).subscribe(
+        (data) => {
+          console.log(data);
+          resolve(data);
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        }
+      );
+    });
+  }*/
+
+  getPartsDetails(params) {
+    var newurl =
+      localStorage.getItem("endpoint") +
+      appsettings.getpartsdetails +
+      "?" +
+      "userid=" +
+      params.userid +
+      "&" +
+      "departmentid=" +
+      params.departmentid +
+      "&" +
+      "designationid=" +
+      params.designationid +
+      "&" +
+      "millcode=" +
+      params.millcode +
+      "&" +
+      "stationid=" +
+      params.stationid +
+      "&" +
+      "equipment=" +
+      params.equipment +
+      "&" +
+      "part_id=" +
+      params.part_id +
+      "&" +
+      "language=" +
+      params.language;
+
+    //console.log(newurl);
+
+    return new Promise((resolve, reject) => {
+      this.httpClient.get(newurl).subscribe(
+        (data) => {
+          console.log(data);
+          resolve(data);
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        }
+      );
+    });
+  }
+
   getAssignedToList(params) {
     var reqOpts: any;
     reqOpts = this.formParams(params);
@@ -285,7 +356,7 @@ export class MaintenanceServiceService {
     });
   }
 
-  getNotificationView(params) {
+  /*getNotificationView(params) {
     var reqOpts: any;
     reqOpts = this.formParams(params);
 
@@ -302,6 +373,47 @@ export class MaintenanceServiceService {
           reject(error);
         }
       );
+    });
+  }*/
+
+  getNotificationView(params) {
+    var newurl =
+      localStorage.getItem("endpoint") +
+      appsettings.getmaintenancenotificationview +
+      "?" +
+      "user_id=" +
+      params.user_id +
+      "&" +
+      "dept_id=" +
+      params.dept_id +
+      "&" +
+      "millcode=" +
+      params.millcode +
+      "&" +
+      "id=" +
+      params.id +
+      "&" +
+      "language=" +
+      params.language;
+
+    //console.log(newurl);
+
+    return new Promise((resolve, reject) => {
+      this.httpClient
+        .get(newurl)
+        .pipe(timeout(15000))
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            console.log(error);
+            if (error.name == "TimeoutError" || error.status == 500) {
+              this.commonservice.presentToast("Something went wrong...!");
+            }
+            reject(error);
+          }
+        );
     });
   }
 
@@ -491,16 +603,22 @@ export class MaintenanceServiceService {
 
     var api = localStorage.getItem("endpoint") + appsettings.saveoillosses;
     return new Promise((resolve, reject) => {
-      this.httpClient.post(api, reqOpts).subscribe(
-        (data) => {
-          console.log(data);
-          resolve(data);
-        },
-        (error) => {
-          console.log(error);
-          reject(error);
-        }
-      );
+      this.httpClient
+        .post(api, reqOpts)
+        .pipe(timeout(15000))
+        .subscribe(
+          (data) => {
+            console.log(data);
+            resolve(data);
+          },
+          (error) => {
+            console.log(error);
+            if (error.name == "TimeoutError" || error.status == 500) {
+              this.commonservice.presentToast("Something went wrong...!");
+            }
+            reject(error);
+          }
+        );
     });
   }
 
@@ -860,6 +978,34 @@ export class MaintenanceServiceService {
       );
     });
   }
+
+  getoillossesreport(params) {
+    //this.commonservice.presentLoading();
+
+    var reqOpts: any;
+    reqOpts = this.formParams(params);
+
+    var api = localStorage.getItem("endpoint") + appsettings.oillossereport;
+    //console.log(api, reqOpts);
+    return new Promise((resolve, reject) => {
+      this.httpClient.post(api, reqOpts).subscribe(
+        (data) => {
+          //this.commonservice.dimmissLoading();
+
+          console.log(data);
+          resolve(data);
+        },
+        (error) => {
+          //this.commonservice.dimmissLoading();
+
+          console.log(error);
+
+          reject(error);
+        }
+      );
+    });
+  }
+
   getChatResponse(params) {
     //var newurl = appsettings.chatapi + "?" + "msg=" + params;
     var newurl = appsettings.chatresponse + "?" + "msg=" + params;
@@ -868,6 +1014,126 @@ export class MaintenanceServiceService {
     return new Promise((resolve, reject) => {
       this.httpClient.get(newurl).subscribe(
         (data) => {
+          resolve(data);
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  getMultiPartDefectList(params) {
+    //var newurl = appsettings.chatapi + "?" + "msg=" + params;
+    var newurl =
+      localStorage.getItem("endpoint") +
+      appsettings.getmultipartdefectlist +
+      "?" +
+      "userid=" +
+      params.userid +
+      "&" +
+      "departmentid=" +
+      params.departmentid +
+      "&" +
+      "designationid=" +
+      params.designationid +
+      "&" +
+      "millcode=" +
+      params.millcode +
+      "&" +
+      "id=" +
+      params.id +
+      "&" +
+      "partdefectid=" +
+      params.partdefectid +
+      "&" +
+      "language=" +
+      params.language;
+
+    //console.log(newurl);
+
+    return new Promise((resolve, reject) => {
+      this.httpClient.get(newurl).subscribe(
+        (data) => {
+          resolve(data);
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        }
+      );
+    });
+  }
+
+  getMultiPartDefectViewList(params) {
+    //var newurl = appsettings.chatapi + "?" + "msg=" + params;
+    var newurl =
+      localStorage.getItem("endpoint") +
+      appsettings.getmultipartdefectviewlist +
+      "?" +
+      "userid=" +
+      params.userid +
+      "&" +
+      "departmentid=" +
+      params.departmentid +
+      "&" +
+      "designationid=" +
+      params.designationid +
+      "&" +
+      "millcode=" +
+      params.millcode +
+      "&" +
+      "id=" +
+      params.id +
+      "&" +
+      "stationid=" +
+      params.stationid +
+      "&" +
+      "equipment=" +
+      params.equipment +
+      "&" +
+      "partdefectid=" +
+      params.partdefectid +
+      "&" +
+      "pvflag=" +
+      params.pvflag +
+      "&" +
+      "language=" +
+      params.language;
+
+    //console.log(newurl);
+
+    return new Promise((resolve, reject) => {
+      this.httpClient
+        .get(newurl)
+        .pipe(timeout(15000))
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            console.log(error);
+            if (error.name == "TimeoutError" || error.status == 500) {
+              this.commonservice.presentToast("Something went wrong...!");
+            }
+            reject(error);
+          }
+        );
+    });
+  }
+
+  saveMultiplePartMaintenanceNotification(params) {
+    var reqOpts: any;
+    reqOpts = this.formParams(params);
+
+    var api =
+      localStorage.getItem("endpoint") +
+      appsettings.savemultiplemaintenancenotification;
+    return new Promise((resolve, reject) => {
+      this.httpClient.post(api, reqOpts).subscribe(
+        (data) => {
+          console.log(data);
           resolve(data);
         },
         (error) => {

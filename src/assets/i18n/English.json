@@ -16,7 +16,8 @@
     "loginfailed":"Login Failed!",
     "invalidmillcode":"Invalid Mill Code",
     "millcodeauthontication":"Mill Code Authentication Failed",
-    "language":"Language"
+    "language":"Language",
+    "version":"Version"
   },
 
   "MORE": {
@@ -34,25 +35,36 @@
   "CHANGEPASSWORD": {
     "title": "Change Password",
     "newpassword": "New Password",
+    "confirmpassword": "Confirm Password",
     "buttonchangepassword": "Change Password",
     "placeholder":"Enter your New Password",
-    "updatedsuccessfully":"Updated Successfully!",
-    "updatefailed":"Updated Failed!",
-    "warning":"Please Provide New Password"
+    "confirmplaceholder":"Confirm your New Password",
+    "updatedsuccessfully":"Password Updated Successfully",
+    "updatefailed":"Password Updation Failed!",
+    "newpasswordwarning":"Please Provide New Password",
+    "confirmpasswordwarning":"Please Provide Confirm Password",
+    "error":"Password and Confirm Password does not match"
   },
 
   "TABSSUPERVISOR": {
     "dashboard": "Dashboard",
-    "home": "Home",    
+    "alert": "Alert",
+    "oilloss": "Oil Loss",
+    "home": "Home",
     "scanner": "Scanner",
-    "more": "Profile"
+    "more": "Profile",
+    "reports":"Reports"
   },
 
   "TABSMAINTENANCE": {
     "dashboard": "Dashboard",
     "maintenance": "Maintenance",
+    "job": "Job",
     "monitoring": "Monitoring",
     "home": "Home",
+    "calendar": "Calendar",
+    "correctivemaintenance": "CM",
+    "preventivemaintenance": "PM",
     "scanner": "Scanner",
     "more": "Profile",
     "reports":"Reports"
@@ -78,6 +90,15 @@
     "more": "Profile"
   },
 
+  "TABSOWNER": {
+    "dashboard": "Dashboard",
+    "oilloss":"Oil Loss",   
+    "production": "Production",
+    "maintenance": "Maintenance",
+    "reports": "Reports",
+    "more": "Profile"
+  },
+
   "SCHEDULING":{
     "title": "Maintenance Calendar"
   },
@@ -97,6 +118,8 @@
     "totalrunninghours": "Total Running Hours",
     "breakdownmachines": "Breakdown Machines",
     "reason": "Reason",
+    "reasonmandatory": "Reason is Mandatory",
+    "remarks":"Remarks",
     "runninghour": "Running Hour",
     "stoppedby": "Stopped By",
     "edit": "Edit",
@@ -126,6 +149,7 @@
     "turnonmachine":"Do you want to turn on the ",
     "turnoffmachine":"Do you want to turn off the ",
     "header":"ALERT",
+    "reportsubmitted":"REPORT SUBMITTED",
     "problem":"Problem",
     "select":"Select",
     "maintenancetype":"Maintenance Type",
@@ -141,13 +165,18 @@
     "alreadybreakdownalerttitle": "ALERT",
     "alreadybreakdownalertmessage": " is turned off due to Breakdown. Unable to turn on at this moment.",
     "problemalertmessage":"Problem Created Successfully for",
-    "correctivemaintenancecreated":"Corrective Maintenance is successfully created for ",
-    "successfullyturnoff":" is successfully turned off"
+    "correctivemaintenancecreated":"Corrective Maintenance is reported for ",
+    "successfullyturnoff":"Turn off ",
+    "enterremarks":"Please enter your remarks",
+    "remarksmandatory":"Remarks is Mandatory",
+    "machineisunderbreakdown":"Breakdown has been reported for this machine",
+    "optional": "Optional",
+    "typeremark":"Please enter the remarks (optional)"
   },
 
   "FORCEUPDATE": {
     "header": "New Version Available",
-    "message": "A new version of MyPalm is available, Please update the version",
+    "message": "A new version of MyPalm is available, Please update the version ",
   	"button": "Update"
   },
 
@@ -169,9 +198,9 @@
     "pressingstation":"Pressing Station",
     "sterilizationstation":"Sterilization Station",
     "machineryrunninghours":"Machineries Running Hours",
-    "oillosses":"Oil Losses",
+    "oillosses":"Oil Loss",
     "oil":"Oil",
-    "losses":"Losses",
+    "losses":"Loss",
     "machineries":"Machineries",
     "pressing":"Pressing",
     "sterilization":"Sterilization",
@@ -192,7 +221,8 @@
     "correctivetitle":"Corrective",
     "correctivesubtitle":"Maintenance",
     "preventivetitle":"Preventive",
-    "preventivesubtitle":"Maintenance"
+    "preventivesubtitle":"Maintenance",
+    "gradingtitle": "Grading"
   },
 
   "TIPPING": {
@@ -225,7 +255,7 @@
   	"digestor": "Digestor",
     "motor": "Motor (A)",
     "level": "Level",
-    "digestordrainage": "Digestor Drainage",
+    "digestordrainage": "Drainage Flow",
     "press": "Press",
     "presscakedrainage": "Fibre Flow",
     "hydraulicpressure": "Hydraulic Pressure (Bar)",
@@ -240,7 +270,7 @@
     "motor": "Motor (A)",
     "oilflow": "Oil Flow",
     "level": "Level",
-    "digestordrainage": "Digestor Drainage",
+    "digestordrainage": "Drainage Flow",
     "press": "Press",
     "presscakedrainage": "Fibre Flow",
     "hydraulicpressure": "Hydraulic Pressure (Bar)",
@@ -266,12 +296,12 @@
     "temperature" : "Temperature",
     "motor": "Motor",
     "level": "Level",
-    "digestordrainage": "Digestor Drainage",
+    "digestordrainage": "Drainage Flow",
     "presscakedrainage": "Fibre Flow",
     "hydraulicpressure": "Hydraulic Pressure",
     "dilutiontemperature": "Dilution Temperature",
     "levelimages": "Level Images",
-    "drainageimages": "Digestor Drainage Images",
+    "drainageimages": "Drainage Flow Images",
     "temperatureimages": "Temperature Images",
     "alert": "Please confirm the data before saving",
     "uploded": "Uploaded (",
@@ -290,7 +320,10 @@
     "confirmbutton":"Confirm",
     "motorimages": "Motor Images",
     "fibreflowimages": "Fibre Flow Images",
-    "hydraulicpressureimages": "Hydraulic Pressure Images"
+    "hydraulicpressureimages": "Hydraulic Pressure Images",
+    "pressmotorimagemandatory": "Press Motor Image is Mandatory",
+    "fibreflowimagemandatory": "Fibre Flow Image is Mandatory",
+    "digestorimagemandatory": "Digestor Motor Image is Mandatory"
   },
 
   "STERILIZATIONSTATIONPOPUP": {
@@ -308,10 +341,14 @@
     "p1peak" : "P1 (1st Peak)",
     "p2peak" : "P2 (2nd Peak)",
     "p3peak" : "P3 (3rd Peak)",
-    "lastupdatedrecord":"Last Updated Record"
+    "lastupdatedrecord":"Last Updated Record",
+    "dooropentimeupdaterecord": "Door Open Time Update Record",
+    "doorshutdatetime": "Door Shut Date & Time",
+    "dooropendatetime": "Door Open Date & Time"
   },
 
   "HOURLYSTERILIZATIONSTATIONSAVE": {
+    "addimages" : "Add Image",
     "title": "Sterilization Station",
     "images" : "Images",
     "cycleno": "Cycle No",
@@ -319,20 +356,21 @@
     "fruittype": "Ripeness",
     "doorshuttime": "Door Shut Time",
     "dooropentime": "Door Open Time",
+    "dooropenlater": "Door Open Later",
+    "dooropenlateroption": "Yes",
     "initialsteamadmissiontime": "Initial Steam Admission Time",
     "finalblowdowntime": "Final Blowdown Time",
     "cookingstarttime": "Cooking Start Time",
     "cookingstoptime": "Cooking Stop Time",
-    "backpressureterm":"(BPV)",  
+    "backpressureterm":"BPV",  
     "backpressure": "Back Pressure",
     "receiver": "Receiver (BPV)",
     "backpressurereceiver": "Back Pressure Receiver (BPV)",
     "p1peak" : "P1 (1st Peak)",
     "p2peak" : "P2 (2nd Peak)",
     "p3peak" : "P3 (3rd Peak)",
-    "fruittypeimages": "Fruit Type Images",
-    "p1images": "P1 Images",
-    "p3images": "P3 Images",
+    "bpvimages": "Back Pressure Receiver (BPV) Images",
+    "peakimages": "Peak (P1, P2, P3) Images",
     "nosertilizationstationinonline": "Sterilization Station Offline",
     "alert": "Please confirm the data before saving",
     "uploded": "Uploaded (",
@@ -362,9 +400,13 @@
     "alertmessage": "Are you sure, you want to save this Sterilization Station?",
     "savedsuccess": "Sterilization Station Inserted Successfully",
     "savedfail": "Sterilization Station Insertion Failed",
+    "success":"Updated Successfully",
+    "failed":"Updation Failed",
     "uploadbuttonmessage": "Use Upload button to Upload images",
     "select":"Select",
-    "confirmbutton":"Confirm"
+    "confirmbutton":"Confirm",
+    "datevalidationalert": "The Door Open Date & Time entered should be greater than ",
+    "doorshuttimealert": "The Door Shut Date & Time entered should be greater than "
   },
 
   "CORRECTIVEMAINTENACE":{
@@ -402,7 +444,9 @@
     "no":"No",
     "alertmessage":"Are you sure, you want to acknowledge this completed Corrective Maintenance Notification",
     "authorizationupdation":"Authroization Updation Failed",
-    "searchrecords":"Search Records"
+    "searchrecords":"Search Records",
+    "new":"New",
+    "pending":"Pending"
   },
   "NEWCORRECTIVEMAINTENACE":{
     "maintenancenotification": "Maintenance Notification",
@@ -421,7 +465,7 @@
     "selectbreakdowncoding": "Select Breakdown Coding",
     "maintenancetype": "Maintenance Type ",
     "selectmaintenancetype": "Select Maintenance Type",
-    "partdefect": "Part Defect ",
+    "partdefect": "Affected Parts ",
     "searchpartdefect": "Search Part Defect",
     "or": "(Or)",
     "otherpartdefect": "Other Part Defect",
@@ -432,13 +476,13 @@
     "selectdamages": "Select Damages",
     "okay": "Okay",
     "dismiss": "Dismiss",
-    "breakdowncauses": "Breakdown Causes ",
-    "selectbreakdowncauses": "Select Breakdown Causes",
+    "breakdowncauses": "Problem Causes ",
+    "selectbreakdowncauses": "Select Problem Causes",
     "alertheader": "Alert",
     "alertmessage": "Are you sure, you want to save this Corrective Maintenance?",
     "makesurestationmachineselected": "Make Sure Station and Machine are Selected",
     "otherpartdefectmandatory": "Other Part Defect is Mandatory",
-    "partdefectmandatory": "Part Defect is Mandatory",
+    "partdefectmandatory": "Affected Parts is Mandatory",
     "partnamemandatory": "Part Name is Mandatory",
     "maintenancenotificationsavedsuccess": "Maintenance Notification Inserted Successfully",
     "correctivemaintenancesavedsuccess": "Corrective Maintenance Inserted Successfully",
@@ -453,17 +497,19 @@
     "notificationtype":"Notification Type",
     "breakdowncoding":"Breakdown Coding",
     "maintenancetype":"Maintenance Type",
-    "partdefect":"Part Defect",
+    "partdefect":"Affected Parts",
     "damages":"Damages",
-    "breakdowncauses":"Breakdown Causes",
+    "breakdowncauses":"Problem Causes",
     "part2":"PART 2: REPAIR ACTIVITY (WORK ORDER)",
-    "activity":"Activity",
+    "activity":"Activity?",
     "assignedto":"Assigned To",
     "startdatetime":"Start Date & Time",
     "stopdatetime":"Stop Date & Time",
     "save":"Save",
     "selectassignedto":"Select Assigned To",
     "partname":"Part Name",
+    "partsname":"Parts Name",
+    "partnamemandatory":"Part Name Selection is Mandatory",
     "assignto":"Assign To",
     "select":"Select",
     "selectedfitter":"Selected Fitter/Wireman",
@@ -472,11 +518,24 @@
     "fitterlist":"Fitter List",
     "wiremanlist":"Wireman List",
     "activitymandatory":"Activity Selection is Mandatory",
+    "assigntomandatory":"Assign To is Mandatory",
     "alert":"Alert",
     "alertmessage":"Are you sure, you want to assign this Routine Preventive Maintenance?",
-    "routinesuccess":"Routine Preventive Maintenance Assigned Successfully",
-    "routinefailed":"Routine Preventive Maintenance Assigning Failed",
-    "machine":"Machine"
+    "routinesuccess":"Routine Preventive Maintenance Updated Successfully",
+    "routinefailed":"Routine Preventive Maintenance Updation Failed",
+    "replacementsuccess":"Replacement Preventive Maintenance Updated Successfully",
+    "replacementfailed":"Replacement Preventive Maintenance Updation Failed",
+    "machine":"Machine",
+    "currentrunninghours":"Current Running Hours",
+    "lifetimehours":"Maximum Running Hours",
+    "extendhours":"Extend Running Hours By",
+    "extendhoursenter":"Enter",
+    "extendhoursmandatory":"Extend Running Hours By is Mandatory",
+    "current":"Current",
+    "extendmaximum":"Extend Maximum",
+    "runninghours":"Running Hours",
+    "onepartmaximumabnormal": "Select only one part for Abnormal",
+    "onepartmaximumserviced": "Select only one part for Serviced"
   },
 
   "REPORTS": {
@@ -486,6 +545,7 @@
     "hourlypressstation":"Hourly Press Station",
     "hourlysterilizer":"Hourly Sterilizer",
     "oillosses":"Oil Losses",
+    "oilloss":"Oil Loss",
     "correctivemaintenance":"Corrective Maintenance",
     "pressingstation":"Pressing Station",
     "sterilizationstation":"Sterilization Station",
@@ -496,9 +556,12 @@
   "GENERALBUTTON": {
     "savebutton": "Save",
     "cancelbutton": "Cancel",
-    "uploadbutton": "Upload",
+    "uploadbutton": "Take Photo",
     "updatebutton": "Update",
+    "acceptbutton":"Accept",
+    "closebutton":"Close",
     "additem": "Add Item",
+    "updateactivity": "Update Activity",
     "resetbutton": "Reset",
     "receivedbutton": "Received",
     "detailsbutton": "Details",
@@ -520,12 +583,19 @@
     "sure":"Sure",
     "dismiss":"Dismiss",
     "yes":"Yes",
-    "verifybutton": "Verify"
+    "verifybutton": "Verify",
+    "addnewdatabutton": "Add New Data",
+    "retrievebutton": "Retrieve",
+    "uploadimages": "Upload Images",
+    "enter":"Enter",
+    "removebutton": "Remove"
   },
   
   "NORECORDSFOUND": {
     "norecordsfound": "No Records Found",
-    "loading":"Loading..."
+    "loading":"Loading...",
+    "pleasewait": "Please Wait...",
+    "loadingmoredata":"Loading more data..."
   },
 
   "NOMACHINESFOUND": {
@@ -578,7 +648,8 @@
     "millstopdatetime":"Mill Stop Date & Time",
     "inoperation":"In Operation",
     "stoppedoperation":"Stopped Operation",
-    "stoppedbreakdownoperation":"Mill Stop (Breakdown) Date & Time"
+    "stoppedbreakdownoperation":"Mill Stop (Breakdown) Date & Time",
+    "breakdownreason":"Breakdown Reason"
   },
   "WEEKLYREPORT":{
     "title":"Weekly Report"
@@ -588,16 +659,17 @@
     "all":"All",
     "millstatus":"Status",
     "maintenance":"Maintenance",
-    "alerts":"Production"
+    "alerts":"Alert"
   },
   "SEGREGATENOTIFICATION":{
     "today":"Today",
     "yesterday":"Yesterday",
     "older":"Older",
     "message":"Notification Update Failed",
-    "read":"Read",
-    "current":"Current",
-    "previous":"Previous"
+    "read":"Update",
+    "acknowledge":"Acknowledge",
+    "current":"Today",
+    "previous":"History"
   },
   "MAINTENANCEHOME":{
     "welcome":"Welcome",
@@ -651,6 +723,7 @@
     "oil":"Oil",
     "losses":"Losses"
   },
+
   "MAINTENANCENOTIFICATIONVIEW":{
     "correctivemaintenanceackview":"Corrective Maintenance Acknowledgment",
     "correctivemaintenanceview":"Corrective Maintenance",
@@ -669,9 +742,10 @@
     "stationname":"Station Name",
     "machineryname":"Machinery Name",
     "partname":"Part Name",
+    "partsname":"Parts Name",
     "currentrunninghours":"Current Running Hours",
     "damage":"Damage",
-    "breakdowncauses":"Breakdown Causes",
+    "breakdowncauses":"Problem Causes",
     "dateandtime":"Date & Time",
     "activity":"ACTIVITY",
     "smallactivity":"Activity",
@@ -679,7 +753,7 @@
     "activitycompletion":"Activity Completion",
     "activitycompletiondatetime":"Date & Time",
     "carriedoutby":"Carried Out By",
-    "verifiedby":"Verified By",
+    "verifiedby":"Closed By",
     "jobacknowledgement":"JOB ACKNOWLEDGEMENT",
     "acknowlegedby":"Acknowleged By",
     "acknowledged":"Acknowledged",
@@ -693,24 +767,40 @@
     "authorize":"Authorized By",
     "alert":"Do you want to create a Corrective Maintenance Notification?",
     "header":"ALERT",
-    "alertroutine":"Are you sure, you want to acknowledge this completed Routine Preventive Maintenance Notification",
-    "alertreplacement":"Are you sure, you want to acknowledge this completed Replacement Corrective Maintenance Notification",
-    "alertcorrective":"Are you sure, you want to acknowledge this completed Corrective Maintenance Notification",
+    "alertroutine":"Are you sure, you want to acknowledge this completed Routine Preventive Maintenance Notification?",
+    "alertreplacement":"Are you sure, you want to acknowledge this completed Replacement Preventive Maintenance Notification?",
+    "alertcorrective":"Are you sure, you want to acknowledge this completed Corrective Maintenance Notification?",
     "updatefailed":"Authroization Updation Failed",
     "id":"ID",
     "maintenancetype":"Maintenance Type",
-    "partdefect":"Part Defect",
+    "partdefect":"Affected Parts",
     "damagetype":"Damage Type",
     "authorizedby":"Authorized By",
     "remarks": "Remarks",
-    "back":"Back"
+    "back":"Back",
+    "initialcomplaint": "Remarks",
+    "lifetimehours":"Maximum Running Hours",
+    "extendhours":"Extend Running Hours By",
+    "affectedpart":"Affected Part",
+    "condition":"Condition",
+    "runninghours":"Running Hours",
+    "current":"Current",
+    "runninghourscurrent":"Running Hours",
+    "maximum":"Maximum",
+    "submaximum":"Running Hours",
+    "extentedmaximum":"Extended Maximum",
+    "subextented":"Running Hours",
+    "extendhoursmandatory":"Extend Maximum Running Hours Updation is Mandatory"
   },
+  
   "PREVENTIVEMAINTENANCE":{
     "title":"Preventive Maintenance",
+    "replacementpreventivemaintenance":"Replacement Preventive Maintenance",
     "routine":"Routine",
     "replacement":"Replacement",
     "fromdate":"From",
     "todate":"To",
+    "notificationid": "ID",
     "station":"Station",
     "machine":"Machine",
     "partname":"Part Name",
@@ -733,36 +823,69 @@
     "assigned":"Assigned",
     "inprogress":"In Progress",
     "completed":"Completed",
-    "searchrecords":"Search Records"
+    "searchrecords":"Search Records",
+    "new":"New",
+    "pending":"Pending",
+    "datetime": "Date & Time",
+    "detail":"Detail",
+    "assignedto":"Assigned To"
   },
+
   "REPORTCORRECTIVEMAINTENANCE":{
     "title":"Corrective Maintenance",
     "fromdate":"From",
     "todate":"To",
+    "notificationid": "ID",
     "station":"Station",
     "machine":"Machine",
-    "partname":"Part Name",
     "problem":"Problem",
+    "maintenancetype": "Maintenance Type",
+    "partdefect":"Affected Parts",
+    "partname":"Part Name",
+    "breakdowncauses": "Problem Causes",
+    "activity":"Activity",
+    "damagetype":"Damage Type",
     "reportedby":"Reported By",
+    "reporteddatetime": "Reported Date & Time",
+    "activitycompletiondatetime":"Activity Completion Date & Time",
+    "carriedoutby":"Carried Out By",
+    "acknowlegedby":"Acknowleged By",
+    "acknowledgeddatetime":"Acknowleged Date & Time",
     "status":"Status",
     "remarks":"Remarks",
     "view":"View",
-    "reason":"Reason"
+    "reason":"Reason",
+    "datetime": "Date & Time",
+    "detail":"Detail",
+    "assignedto":"Assigned To"
   },
+  
   "REPORTMAINTENANCENOTIFICATION":{
     "title":"Corrective Maintenance",
     "fromdate":"From",
     "todate":"To",
+    "notificationid": "ID",
     "station":"Station",
     "machine":"Machine",
-    "partname":"Part Name",
     "problem":"Problem",
+    "maintenancetype": "Maintenance Type",
+    "partdefect":"Affected Parts",
+    "partname":"Part Name",
+    "breakdowncauses": "Problem Causes",
+    "activity":"Activity",
+    "damagetype":"Damage Type",
     "reportedby":"Reported By",
+    "reporteddatetime": "Reported Date & Time",
+    "activitycompletiondatetime":"Activity Completion Date & Time",
+    "carriedoutby":"Carried Out By",
+    "acknowlegedby":"Acknowleged By",
+    "acknowledgeddatetime":"Acknowleged Date & Time",
     "status":"Status",
     "reason":"Reason",
     "remarks":"Remarks",
     "view":"View"
   },
+
   "REPORTMACHINERYRUUNINGHOUR":{
     "title":"Machineries Running Hours",
     "date":"Date",
@@ -773,6 +896,7 @@
     "runninghours":"Running Hours",
     "totalrunninghours":"Total Running Hours"
   },
+
   "REPORTPRESSSTATION":{
     "title":"Pressing Station",
     "date":"Date",
@@ -786,7 +910,7 @@
     "doneby":"Done By",
     "time":"Time",
     "temperature":"Temperature",
-    "motor":"Motor (A)",
+    "motor":"Motor",
     "actual":"Actual",
     "level":"Level",
     "predicted":"Predicted",
@@ -797,6 +921,7 @@
     "fibre":"Fibre",
     "flow":"Flow"
   },
+
   "REPORTSTERILIZATION":{
     "title":"Sterilization Station",
     "date":"Date",
@@ -817,6 +942,7 @@
     "opentime":"Open Time",
     "view":"View"
   },
+
   "REPORTOILLOSSES":{
     "title":"Oil Losses",
     "month":"Month",
@@ -831,8 +957,11 @@
     "pressno4":"Press No.4",
     "pressno5":"Press No.5",
     "average":"Average",
-    "monthlyaverage":"Monthly Average"
+    "monthlyaverage":"Monthly Average",
+    "mtd":"Month to Date OER (%)",
+    "year": "Year"
   },
+
   "QRCODESCANNER":{
     "maintenancehistory":"Maintenance History",
     "station":"Station",
@@ -843,19 +972,21 @@
     "selectstatus":"Select Status",
     "searchbystatus":"Search By Status",
     "notificationno":"Notification No",
-    "partdefect":"Part Defect",
+    "partdefect":"Affected Parts",
     "damage":"Damage Type",
-    "operationactivity":"Operation / Activity",
+    "operationactivity":"Activity",
     "notvalidbarcode":"Not a Valid Barcode",
     "prompt":"Place a Barcode inside the Scan Area",
     "qrcodescanner":"QR Code Scanner",
     "message":"To view the maintenance history of a machinery , kindly scan a QR code.",
     "scan":"Scan"
   },
+
   "TIMELINEHISTORY":{
     "title":"Maintenance Timeline",
     "maintenancenotificationno":"Maintenance Notification No"
   },
+
   "MAINTENANCEENGINEERINGNOTIFICATIONMODAL":{
     "correctivemaintenance":"Corrective Maintenance",
     "problem":"Problem",
@@ -869,6 +1000,10 @@
     "confirm":"Confirm",
     "placeholder":"Enter Activity Name",
     "problemmandatory":"Problem Selection is Mandatory",
+    "maintenancetypemandatory":"Maintenance Type Selection is Mandatory",
+    "partdefectmandatory":"Affected Parts Selection is Mandatory",
+    "partnamemandatory":"Part Name is Mandatory",
+    "breakdowncausesmandatory":"Problem Causes Selection is Mandatory",
     "activitymandatory":"Activity Selection is Mandatory",
     "activitynamemandatory":"Activity Name is Mandatory",
     "alreadyexist":" already exists",
@@ -886,14 +1021,28 @@
     "fitterchargeman":"Fitter/Wireman List",
     "fitterlist":"Fitter List",
     "wiremanlist":"Wireman List",
-    "assignedtoselection":"Assigned To Selection is Mandatory",
-    "assigntomandatory":"Assigned To is Mandatory",
+    "assignedtoselection":"Assign To Selection is Mandatory",
+    "assigntomandatory":"Assign To is Mandatory",
     "selectedfitter":"Selected Fitter/Wireman",
-    "assignedto":"Assigned To",
+    "assignedto":"Assign To",
     "assigncorrective":"Are you sure, you want to assign this Corrective Maintenance?",
     "assignsuccess":"Corrective Maintenance Assigned Successfully",
-    "assignfailed":"Corrective Maintenance Assigning Failed"
+    "assignfailed":"Corrective Maintenance Assigning Failed",
+    "maintenancetype":"Maintenance Type",
+    "partdefect":"Affected Parts",
+    "partname":"Part Name",
+    "selectedpartdefect":"Selected Part Defect",
+    "enterpartname":"Enter Part Name",
+    "damagetype":"Damage Type",
+    "selecteddamagetype":"Selected Damage Type",
+    "breakdowncauses":"Problem Causes",
+    "selectedbreakdowncauses":"Selected Problem Causes",
+    "remarks": "Remarks",
+    "typeremark":"Please enter the remarks (optional)",
+    "multiplepartalertmessage": " pending for update",
+    "activitynotallowed":" activity not allowed to add."
   },
+
   "SEARCHACTIVITY":{
     "search":"Search",
     "searchactivity":"Search Activity",
@@ -901,6 +1050,7 @@
     "nosearchrecords":"No Search Records Found",
     "searchpartname":"Search Part Name"
   },
+
   "MAINTENANCEREPORT":{
     "oillossesreport":"Oil Losses Report",
     "preventivemaintenance":"Preventive Maintenance",
@@ -928,6 +1078,10 @@
     "newoillosses":"New Oil Losses",
     "date":"Date",
     "time":"Time",
+    "oer":"OER",
+    "mtd":"Month to Date OER (%)",
+    "oermandatory":"OER is mandatory",
+    "mtdmandatory":"Month to Date OER (%) is mandatory",
     "pressno1":"Press No.1",
     "pressno2":"Press No.2",
     "pressno3":"Press No.3",
@@ -943,6 +1097,7 @@
     "enter":"Enter",
     "nopressmachinefound":"No Press Machine Found",
     "mandatory":"Atleast one oil loss entry is mandatory",
+
     "insertedsuccessfully":"Oil Losses Inserted Successfully",
     "insertedfailed":"Oil Losses Inserted Failed",
     "failedtodelete":"Failed to Deleted",
@@ -966,15 +1121,15 @@
     "doneby":"Done By",
     "motor":"Motor (A)",
     "level":"Level",
-    "digestordrainage":"Digestor Drainage",
+    "digestordrainage":"Drainage Flow",
     "hydraulicpressure":"Hydraulic Pressure (Bar)",
     "fiberflow":"Fibre Flow",
     "verifiedby":"Verified By",
-    "remark":"Remark",
+    "remark":"Remarks",
     "checkedby":"Checked By",
     "verifyreport":"Verify Report",
     "checkreport":"Check Report",
-    "enterremark":"Enter Remark",
+    "enterremark":"Enter Remarks",
     "remarkssuccess":"Remarks Upated Successfully",
     "remarksfailed":"Remarks Updation Failed"
   },
@@ -1010,19 +1165,24 @@
     "remark":"Remark",
     "checkedby":"Checked By"
   },
+
   "IMAGESLIDER":{
     "viewimage":"View Image",
-    "temperatureimage":"Temperature Image ",
-    "motorimage":"Digestor Motor Image ",
-    "levelimage":"Level Image ",
-    "digestorimage":"Digestor Image ",
-    "pressmotorimage":"Press Motor Image ",
-    "fibreflowimage":"Fibre Flow Image ",
-    "hydraulicpressureimage":"Hydraulic Pressure Image ",
-    "fruittypeimage":"Fruit Type Image ",
-    "p1image":"P1 Image ",
-    "p3image":"P3 Image "
+    "temperatureimage":"Temperature",
+    "motorimage":"Digestor Motor Amps",
+    "levelimage":"Level",
+    "digestorimage":"Digestor Drain Flow",
+    "pressmotorimage":"Press Motor Amps",
+    "fibreflowimage":"Fibre Flow",
+    "hydraulicpressureimage":"Hydraulic Pressure",
+    "fruittypeimage":"Fruit Type",
+    "p1image":"P1",
+    "p3image":"P3",
+    "bpvimage":"Back Pressure Receiver (BPV)",
+    "peakimage":"Peak",
+    "image":"Image "
   },
+
   "HOURLYSTERILIZATIONSAVE":{
     "inletpressure":"Inlet Pressure",
     "toppressure":"Top Pressure",
@@ -1084,6 +1244,8 @@
     "condition":"Condition?",
     "good":"Good",
     "abnormal":"Abnormal",
+    "serviced":"Serviced",
+    "replaced":"Replaced",
     "damagetype":"Damage Type",
     "selecteddamagetype":"Selected Damage Type",
     "correctivemaintenance":"Corrective Maintenance",
@@ -1107,7 +1269,7 @@
   "MAINTENANCEACKNOWLEDGEMODAL":{
     "maintenancetype":"Maintenance Type",
     "select":"Select",
-    "partdefect":"Part Defect",
+    "partdefect":"Affected Parts",
     "partname":"Part Name",
     "partreplaced":"Part Replaced",
     "selectedpartdefect":"Selected Part Defect",
@@ -1118,8 +1280,8 @@
     "add":"Add",
     "damagetype":"Damage Type",
     "selecteddamagetype":"Selected Damage Type",
-    "breakdowncauses":"Breakdown Causes",
-    "selectedbreakdowncauses":"Selected Breakdown Causes",
+    "breakdowncauses":"Problem Causes",
+    "selectedbreakdowncauses":"Selected Problem Causes",
     "verify":"Verify",
     "next":"Next",
     "maintenance":"MAINTENANCE",
@@ -1144,11 +1306,11 @@
     "acknowledge":"Acknowledge",
     "correctivemaintenance":"Corrective Maintenance",
     "maintenancetypeselection":"Maintenance Type Selection is Mandatory",
-    "partdefectmandatory":"Part Defect Selection is Mandatory",
+    "partdefectmandatory":"Affected Parts Selection is Mandatory",
     "partselection":"Part Selection is Mandatory",
     "partreplacedselection":"Part Replaced Selection is Mandatory",
     "damagetypeselection":"Damage Type Selection is Mandatory",
-    "breakdowncausesselection":"Breakdown Causes Selection is Mandatory",
+    "breakdowncausesselection":"Problem Causes Selection is Mandatory",
     "partnamemandatory":"Part Name is Mandatory",
     "alreadyexist":" already exists",
     "alertroutine":"Are you sure, you want to acknowledge this completed Routine Preventive Maintenance Notification?",
@@ -1166,7 +1328,9 @@
     "okay":"Okay",
     "dismiss":"Dismiss",
     "searchpartname":"Search Part Name",
-    "verifyacknowledge":"Verify & Acknowledge"
+    "verifyacknowledge":"Verify & Acknowledge",
+    "closedsuccess":"Closed Successfully",
+    "closedfailed":"Close Failed"
   },
 
   "PREVENTIVEMAINTENANCEASSIGNMODAL":{
@@ -1200,23 +1364,35 @@
     "hardbunches":"Hard Bunches",
     "underripebunches":"Under Ripe Bunches",
     "ripeness":"Overall Ripeness",
+    "overdue":"Overdue",
     "loosefruits":"Loose Fruits",
-    "lastfiverecords":"Most Recent Five Records",
+    "lastfiverecords":"Most Recent Records",
     "entervehiclenumber":"Enter Vehicle Number",
     "searchvehicle":"Select Vehicle",
     "vehiclenumbermandatory":"Vehicle Number is Mandatory",
     "receivedloadsuccessfully":"Received Load Successfully",
-    "receivedloadfailed":"Receiving Load Failed"
+    "receivedloadfailed":"Receiving Load Failed",
+    "enter":"Enter",
+    "hardbunchesimage":"Hard Bunches Image",
+    "percentagevalidation":"Not a Valid Percentage"
   },
+  
   "GRADINGREPORT":{
-    "gradingreport":"Grading Report",
+    "gradingreport":"Grading",
     "from":"From",
     "to":"To",
+    "datetime": "Date & Time",
+    "vehiclenumber": "Vehicle Number",
     "hardbunches":"Hard Bunches",
-    "underripebunches":"Under Ripe Bunches",
-    "ripeness":"Ripeness",
-    "loosefruits":"Loose Fruits"
+    "underripe":"Under Ripe",
+    "bunches":"Bunches",
+    "ripeness":"Overall Ripeness",
+    "overdue":"Overdue",
+    "loosefruits":"Loose Fruits",
+    "image":"Image",
+    "doneby":"Done By"
   },
+
   "SEARCHVEHICLE":{
     "search":"Search",
     "searchvehicle":"Select Vehicle",
@@ -1231,6 +1407,146 @@
     "yourinternetconnection":"Your Internet Connection was",
     "pleasetry":"interrupted, Please retry.",
     "retry":"RETRY"
+  },
+  
+  "SUMMARYPOPUP":{
+    "millstartdatetime":"Mill Start Date & Time",
+    "millstopdatetime":"Mill Stop Date & Time",
+    "gradingdata":"Grading Data",
+    "data":"Data",
+    "average":"Average",
+    "nodatafound":"No Data Found",
+    "sterilizerpressoillossesdata":"Sterilizer & Press Oil Losses Data",
+    "sterilizerdata":"Sterilizer Data",
+    "pressoillossesdata":"Press Oil Loss Data",
+    "cycleno":"Cycle No",
+    "sterilizer":"Sterilizer",
+    "press":"Press",
+    "oillosses":"Oil Losses",
+    "pressoillosses":"Average Oil Losses by Press",
+    "maintenancedata":"Maintenance Data",
+    "created":"Created",
+    "completed":"Completed",
+    "acknowledge":"Acknowledge",
+    "acknowledgementfailed":"Acknowledgement Failed"
+  },
+
+  "ALERTACKNOWLEDGE":{
+    "reasontitle":"Reason",
+    "reasonplaceholder":"Enter your reason",
+    "reasonmandatory": "Reason is Mandatory",
+    "baseidmandatory": "Base Id is Mandatory",
+    "idmandatory": "Id is Mandatory",
+    "typemandatory": "Type is Mandatory",
+    "attendimagemandatory":"Image is Mandatory",
+    "alert":"Alert",
+    "okay":"Okay",
+    "acknowledge":"Acknowledge",
+    "acknowledgementsuccess":"Acknowledged Successfully",
+    "acknowledgementfailed":"Acknowledge Failed!",
+    "attendsuccess":"Attended Successfully",
+    "attendfailed":"Failed to Attend!",
+    "unabletorectifysuccess":"Unable to Rectify saved successfully",
+    "unabletorectifyfailed":"Failed to Unable to Rectify!",
+    "attendandrectify":"Attend",
+    "unabletorectify":"Unable to Rectify",
+    "enter":"Enter"
+  },
+
+  "OILLOSSESNEW":{
+    "time":"Time",
+    "predictedoilloss":"Predicted Oil Loss",
+    "reasonforoilloss":"Reasons For Oil Loss",
+    "actiontobetaken":"Recommendations",
+    "title":"Oil Loss History",
+    "mypalm":"MyPalm",
+    "oilloss":"Oil Loss",
+    "status":"Status",
+    "history":"History",
+    "recommendations":"Recommendations",
+    "reason":"Reasons"
+  },
+
+  "OILLOSSESHISTORY":{
+    "reasonforoilloss":"Reasons For",
+    "reasonforoillosssubtitle":"Oil Loss"
+  },
+
+  "MANAGERDASHBOARD":{
+    "gradinganalysis":"Grading Analysis",
+    "predictionanalysis":"Prediction Analysis",
+    "maintenancesummary":"Maintenance Summary"
+  },
+
+  "OWNERPRODUCTION":{
+    "production":"Production",
+    "productionalerts":"Production Alerts",
+    "latestmill": "Latest Mill",
+    "millstartdate":"Mill Start Time",
+    "millstopdate":"Mill Stop Time",
+    "startedby":"Supervisor",
+    "fromdate":"From Date",
+    "todate":"To Date",
+    "history":"History",
+    "alerttime": "Alert Time",
+    "station": "Station",
+    "parameters": "Parameters",
+    "attendedby": "Attended By",
+    "attendedtime": "Attended Time",
+    "remarks": "Remarks",
+    "image": "Image",
+    "getoldrecords": "Retrieve"
+  },
+
+  "OWNERMAINTENANCE":{
+    "maintenance":"Maintenance",
+    "corrective":"Corrective",
+    "cmaintenance":"Maintenance",
+    "preventivemaintenance":"Preventive Maintenance",
+    "routinepreventivemaintenance": "Routine Preventive Maintenance",
+    "replacementpreventivemaintenance": "Replacement Preventive Maintenance",
+    "note": "For detailed information, kindly refer to reports.",
+    "statistics": "Statistics"
+  },
+
+  "FFBCAGES":{
+    "title":"Update number of cages",
+    "enter":"Enter",
+    "total": "Total",
+    "inuse": "In Use",
+    "notinuse": "Not In Use",
+    "underrepair": "Under Repair"
+  },
+
+  "OWNERSTATISTICS":{
+    "title":"Statistics",
+    "millbreakdownstatistics":"Mill Breakdown Statistics",
+    "routinemaintenancestatistics":"Routine Maintenance Statistics",
+    "replacementmaintenancestatistics":"Replacement Maintenance Statistics",
+    "completed":"Completed",
+    "created":"Created",
+    "date":"Date",
+    "millbreakdown":"Mill Breakdown",
+    "breakdown":"Breakdown",
+    "numberofcorrectivemaintenance":"Number of Corrective Maintenance",
+    "month":"Month",
+    "numberofpreventivemaintenance":"Number of Preventive Maintenance",
+    "station":"Station"
+  },
+
+  "MACHINERUNNINGHOURS":{
+    "title": "Running Hours",
+    "station": "Station",
+    "machine": "Machine",
+    "parts": "Parts",
+    "runninghours": "Running Hours"
+  },
+
+  "SEARCHSTATIONMACHINE":{
+    "search":"Search",
+    "searchstation":"Search Station",
+    "searchmachine":"Search Machine",
+    "nosearchrecords":"No Search Records Found"
   }
 }
 

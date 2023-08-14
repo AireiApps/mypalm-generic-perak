@@ -21,8 +21,15 @@
     >
       <ion-slide *ngFor="let value of imagesArr">
         <ion-card class="card">
-          <img src="{{value.image}}" alt="" srcset="" />
-          <div class="overlay">
+          <img
+            src="{{value.image}}"
+            alt=""
+            srcset=""
+            [ngClass]="{'screenlandscapeimage' : (getscreenorientation=='landscape' || getscreenorientation=='landscape-primary' || getscreenorientation=='landscape-secondary'), 'screenportraitimage' : (getscreenorientation=='portrait' || getscreenorientation=='portrait-primary' || getscreenorientation=='portrait-secondary')}"
+          />
+          <div
+            [ngClass]="{'screenlandscapeoverlay' : (getscreenorientation=='landscape' || getscreenorientation=='landscape-primary' || getscreenorientation=='landscape-secondary'), 'screenportraitoverlay' : (getscreenorientation=='portrait' || getscreenorientation=='portrait-primary' || getscreenorientation=='portrait-secondary')}"
+          >
             <div class="card-title">{{ value.title }}</div>
           </div>
         </ion-card>

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar class="bg-brown-color">
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" mode="md">
       <ion-back-button color="whitefav"></ion-back-button>
     </ion-buttons>
     <ion-title color="light" mode="ios"
@@ -13,7 +13,7 @@
   <div id="chartContainer8" style="margin: 10px">
     <form [formGroup]="sterilizerreportForm">
       <ion-row class="form-row">
-        <ion-col size="2.5"> </ion-col>
+        <ion-col size="2.35"> </ion-col>
 
         <ion-col size="2">
           <div class="h7 text-white" style="text-align: right">
@@ -21,9 +21,10 @@
           </div>
         </ion-col>
 
-        <ion-col size="3">
+        <ion-col size="3.30">
           <input
             type="text"
+            style="padding: 5px"
             class="h7 form-control readonly"
             formControlName="pickdate"
             placeholder="DD-MM-YYYY"
@@ -42,7 +43,7 @@
           </button>
         </ion-col>
 
-        <ion-col size="2.5"> </ion-col>
+        <ion-col size="2.35"> </ion-col>
       </ion-row>
 
       <hr />
@@ -50,7 +51,7 @@
 
     <div style="overflow-x: auto; margin-top: 20px" *ngIf="!norecordsflag">
       <div *ngFor="let general of sterilizerhourlyperformanceArr">
-        <table style="width: 100%; height: 100%" class="table table-bordered">
+        <!-- <table style="width: 100%; height: 100%" class="table table-bordered">
           <tr>
             <th colspan="1" scope="colgroup" style="padding: 4px !important">
               <span class="mdfont" style="color: white"
@@ -109,7 +110,7 @@
               {{general.stop_time}}
             </td>
           </tr>
-        </table>
+        </table> -->
 
         <div *ngFor="let sterilizername of general.data">
           <table style="width: 100%; height: 100%" class="table table-bordered">
@@ -122,11 +123,11 @@
                   >{{ 'REPORTSTERILIZATION.cycle' | translate}}</span
                 >
               </th>
-              <th rowspan="2" scope="colgroup" style="padding: 4px !important">
+              <!-- <th rowspan="2" scope="colgroup" style="padding: 4px !important">
                 <span class="mdfont"
                   >{{ 'REPORTSTERILIZATION.ripeness' | translate}}</span
                 >
-              </th>
+              </th> -->
               <th colspan="2" scope="colgroup" style="padding: 4px !important">
                 <span class="mdfont"
                   >{{ 'REPORTSTERILIZATION.door' | translate}}</span
@@ -143,22 +144,22 @@
               </th> -->
               <th rowspan="2" scope="colgroup" style="padding: 4px !important">
                 <span class="mdfont"
-                  >{{ 'REPORTSTERILIZATION.bpv' | translate}}</span
+                  >{{ 'REPORTSTERILIZATION.bpv' | translate}}<br />[PSI]</span
                 >
               </th>
               <th rowspan="2" scope="colgroup" style="padding: 4px !important">
                 <span class="mdfont"
-                  >{{ 'REPORTSTERILIZATION.p1peak' | translate}}</span
+                  >{{ 'REPORTSTERILIZATION.p1peak' | translate}}<br />[PSI]</span
                 >
               </th>
               <th rowspan="2" scope="colgroup" style="padding: 4px !important">
                 <span class="mdfont"
-                  >{{ 'REPORTSTERILIZATION.p2peak' | translate}}</span
+                  >{{ 'REPORTSTERILIZATION.p2peak' | translate}}<br />[PSI]</span
                 >
               </th>
               <th rowspan="2" scope="colgroup" style="padding: 4px !important">
                 <span class="mdfont"
-                  >{{ 'REPORTSTERILIZATION.p3peak' | translate}}</span
+                  >{{ 'REPORTSTERILIZATION.p3peak' | translate}}<br />[PSI]</span
                 >
               </th>
               <th
@@ -189,7 +190,7 @@
               <tr>
                 <td scope="row">{{value.time}}</td>
                 <td scope="row">{{value.cycleno}}</td>
-                <td scope="row">{{value.fruittype}}</td>
+                <!-- <td scope="row">{{value.fruittype}}</td> -->
                 <td scope="row">{{value.door_shut_time}}</td>
                 <td scope="row">{{value.door_open_time}}</td>
                 <td scope="row">{{value.backpressurereceiver}}</td>
@@ -199,16 +200,16 @@
                 <td scope="row" *ngIf="general.image==1">
                   <button
                     type="button"
-                    class="h7 btn btn-outline-info btn-sm"
-                    (click)="btn_ViewImages(value.fruittypeimages, value.p1images, value.p3images)"
-                    *ngIf="(value.fruittypeimages!='' || value.p1images!='' || value.p3images!='')"
+                    class="h7 btn btn-imageview btn-sm"
+                    (click)="btn_ViewImages(value.bpvimages, value.p1images, value.p3images)"
+                    *ngIf="(value.bpvimages!='' || value.p1images!='' || value.p3images!='')"
                   >
                     <span class="icontext"
                       >{{ 'REPORTSTERILIZATION.view' | translate}}</span
                     >
                   </button>
                   <span
-                    *ngIf="(value.fruittypeimages =='' && value.p1images =='' && value.p3images =='')"
+                    *ngIf="(value.bpvimages =='' && value.p1images =='' && value.p3images =='')"
                     >-</span
                   >
                 </td>

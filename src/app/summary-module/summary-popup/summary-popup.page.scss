@@ -1,0 +1,116 @@
+/*ion-content {
+  background-image: none;
+  background-color: #ffffff;
+}*/
+
+.home {
+  margin: 55px 10px 10px 10px;
+}
+
+.ioshome {
+  margin: 55px 10px 10px 10px;
+}
+
+.summarytitleheader {
+  //border-radius: 10px 10px 0px 0px;
+  position: fixed;
+  width: 100%;
+  text-align: center;
+  background-color: #ff9f0c;
+  padding: 10px 0px 10px 0px;
+}
+
+.summarytitle {
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  color: #ffffff;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  //color: #ffffff;
+}
+
+.titleheader {
+  //border-radius: 10px 10px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
+  border: 1px solid #ffffff;
+  text-align: center;
+  background-color: #000000;
+  padding: 5px 0px 5px 0px;
+  //margin-bottom: -8px;
+}
+
+.subtitle {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  color: #ff9f0c;
+}
+
+table {
+  //margin-top: 10px;
+  font-size: 11px;
+  line-height: 1.42857143;
+  padding: 5px;
+  border-collapse: collapse;
+  margin-bottom: 0.6rem;
+}
+
+.table td,
+.table th {
+  border-color: #ffffff71 !important;
+  padding: 0.3rem !important;
+}
+
+td {
+  text-align: center;
+  vertical-align: middle;
+  color: #ffffff;
+}
+
+th {
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+  color: #ffffff;
+  font-weight: normal;
+}
+
+.table th {
+  padding: 0rem !important;
+}
+
+.mdfont {
+  font-size: 11px;
+}
+
+.legend {
+  border: 1px solid #dee2e6;
+}
+
+.icon {
+  vertical-align: middle;
+}
+
+.icontext {
+  vertical-align: middle;
+  font-size: 12px;
+  //color: #ffffff;
+}
+
+.btn-acknowledge {
+  font-size: 12px;
+  background-color: none;
+  border-color: #3cd2a5;
+  color: #ffffff;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border-top: 1px dashed #ffffff71;
+}

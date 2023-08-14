@@ -19,6 +19,7 @@ export class MaintenanceActivitysearchPage implements OnInit {
 
   activitylistArray = [];
   searchtext = "";
+  searchTerm: string = "";
 
   norecordsflag = false;
 
@@ -68,11 +69,15 @@ export class MaintenanceActivitysearchPage implements OnInit {
   }
 
   _ionchange(event) {
-    //this.searchtext = event.detail.value;
+    var val = event.detail.value;
 
     if (event.detail.value.length >= 0) {
-      this.getActivity(event.detail.value);
+      this.searchTerm = val;
+
+      this.getActivity(val);
     } else {
+      this.searchTerm = "";
+
       this.activitylistArray = [];
 
       this.norecordsflag = true;
@@ -82,6 +87,7 @@ export class MaintenanceActivitysearchPage implements OnInit {
   getvalue(getitem) {
     this.modalController.dismiss({
       dismissed: true,
+      searchtext: this.searchTerm,
       data: JSON.stringify(getitem),
     });
   }

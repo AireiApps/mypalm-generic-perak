@@ -2,22 +2,9 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">localhost</domain>
-        <domain includeSubdomains="true">103.27.72.29</domain>
-      <domain includeSubdomains="true">mspotrace.org.my</domain>
-        <domain includeSubdomains="true">103.27.72.29:8080</domain>
-        <domain includeSubdomains="true">http://103.27.72.29:8080</domain>
-        <domain includeSubdomains="true">http://airei.net:8080</domain>
-        <domain includeSubdomains="true">http://mypalmmikk.airei.net</domain>
-        <domain includeSubdomains="true">http://mypalmioi.airei.net</domain>
-      <domain includeSubdomains="true">https://mspoverified.org.my</domain>
-      <domain includeSubdomains="true">http://mspoverified.org.my</domain>
-      <domain includeSubdomains="true">https://mspotrace.org.my</domain>
-        <domain includeSubdomains="true">https://mypalmioieo.com:9092</domain>
-        <domain includeSubdomains="true">http://103.27.72.29:9091</domain>
-        <domain includeSubdomains="true">http://103.27.72.29:9092</domain>
-        <domain includeSubdomains="true">http://103.27.72.29:9093</domain>
-        <domain includeSubdomains="true">http://103.27.72.29:9094</domain>
-        <domain includeSubdomains="true">http://103.27.72.29:9095</domain>
+        <domain includeSubdomains="true">http://mypalm.com.my</domain>
+        <domain includeSubdomains="true">http://185.93.167.15:9096</domain>
+        <domain includeSubdomains="true">http://185.93.167.15:9098</domain>
     </domain-config>
     <base-config cleartextTrafficPermitted="true"/>
 </network-security-config>

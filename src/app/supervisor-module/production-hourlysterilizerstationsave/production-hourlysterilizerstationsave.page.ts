@@ -41,6 +41,7 @@ export class ProductionHourlysterilizerstationsavePage implements OnInit {
 
   async showalert() {
     const alert = await this.alertController.create({
+      mode: "md",
       header: this.translate.instant(
         "HOURLYSTERILIZATIONSTATIONSAVE.alertheader"
       ),

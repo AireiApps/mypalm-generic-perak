@@ -1,0 +1,529 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-buttons slot="start">
+      <ion-button color="whitefav" (click)="btn_close()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title mode="ios" color="light"
+      >{{ 'QRCODESCANNER.maintenancehistory' | translate}}</ion-title
+    >
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Displays after the QR code has been scanned --- Start -->
+  <div class="content">
+    <div class="checkcard" *ngIf="stationname!='' || machineryname!=''">
+      <ion-row *ngIf="stationname!=''">
+        <ion-col size="3.5">
+          <div style="font-size: 12px">
+            {{ 'QRCODESCANNER.station' | translate}}
+          </div>
+        </ion-col>
+        <ion-col size="0.5">
+          <div style="font-size: 12px">:</div>
+        </ion-col>
+
+        <ion-col size="8">
+          <div style="font-size: 12px; font-weight: bold">{{stationname}}</div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="machineryname!=''">
+        <ion-col size="3.5">
+          <div style="font-size: 12px">
+            {{ 'QRCODESCANNER.machinery' | translate}}
+          </div>
+        </ion-col>
+
+        <ion-col size="0.5">
+          <div style="font-size: 12px">:</div>
+        </ion-col>
+
+        <ion-col size="8">
+          <div style="font-size: 12px; font-weight: bold">
+            {{machineryname}}
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+    <ion-segment
+      (ionChange)="segmentChanged($event)"
+      [(ngModel)]="tabs_segment"
+    >
+      <ion-segment-button value="Routine Preventive Maintenance">
+        <!-- ROUT Changed to RoPM -->
+        <ion-label text-wrap class="h7" style="text-transform: none"
+          >{{ 'QRCODESCANNER.routine' | translate}}</ion-label
+        >
+      </ion-segment-button>
+
+      <ion-segment-button value="Replacement Preventive Maintenance">
+        <!-- REPL Changed to RePM -->
+        <ion-label text-wrap class="h7" style="text-transform: none"
+          >{{ 'QRCODESCANNER.replacement' | translate}}</ion-label
+        >
+      </ion-segment-button>
+
+      <ion-segment-button value="Corrective Maintenance">
+        <ion-label text-wrap class="h7" style="text-transform: none"
+          >{{ 'QRCODESCANNER.corrective' | translate}}</ion-label
+        >
+      </ion-segment-button>
+    </ion-segment>
+    <form [formGroup]="historyForm">
+      <div [ngSwitch]="tabs_segment">
+        <div *ngSwitchCase="'Routine Preventive Maintenance'">
+          <div class="col">
+            <select
+              formControlName="select_status"
+              style="margin-top: 10px"
+              (change)="onchagestatus()"
+              class="h7 text-dark form-control"
+            >
+              <option value="">
+                {{ 'QRCODESCANNER.searchbystatus' | translate}}
+              </option>
+              <option value="{{item.id}}" *ngFor="let item of statusArr">
+                {{ item.status }}
+              </option>
+            </select>
+          </div>
+          <div class="container" *ngIf="!enableflag">
+            <ul>
+              <li *ngFor="let value of historyList">
+                <div class="textdate">{{value.date}}</div>
+                <span
+                  class="time"
+                  [style]="'--timeline-color:' + getBorderColor(value.statusId)"
+                ></span>
+                <div class="home-box">
+                  <div class="card gedf-card margin-bottom">
+                    <div class="card-header">
+                      <div class="form-row">
+                        <div class="col">
+                          <div
+                            class="h7 text-dark"
+                            style="float: left; text-align: center"
+                          >
+                            <b>{{value.statusName}}</b>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="bg-card" style="margin: 10px 5px 10px 5px">
+                      <ion-row
+                        *ngIf="value.notificationno!=''"
+                        style="margin-top: 1px"
+                      >
+                        <ion-col size="4.5"><b>ID</b></ion-col>
+                        <ion-col size="0.5">:</ion-col>
+                        <ion-col size="7">
+                          <p>{{value.notificationno}}</p>
+                        </ion-col>
+                      </ion-row>
+
+                      <ion-row *ngIf="value.partdefect!=''">
+                        <ion-col size="4.5"
+                          ><b
+                            >{{ 'QRCODESCANNER.partdefect' | translate}}</b
+                          ></ion-col
+                        >
+                        <ion-col size="0.5">:</ion-col>
+                        <ion-col size="7">
+                          <p [innerHTML]="value.partdefect"></p>
+                        </ion-col>
+                      </ion-row>
+
+                      <ion-row *ngIf="value.damage!=''">
+                        <ion-col size="4.5"
+                          ><b
+                            >{{ 'QRCODESCANNER.damage' | translate}}</b
+                          ></ion-col
+                        >
+                        <ion-col size="0.5">:</ion-col>
+                        <ion-col size="7">
+                          <p>{{value.damage}}</p>
+                        </ion-col>
+                      </ion-row>
+
+                      <ion-row *ngIf="value.operationoractivity!=''">
+                        <ion-col size="4.5"
+                          ><b
+                            >{{ 'QRCODESCANNER.operationactivity' |
+                            translate}}</b
+                          ></ion-col
+                        >
+                        <ion-col size="0.5">:</ion-col>
+                        <ion-col size="7">
+                          <p>{{value.operationoractivity}}</p>
+                        </ion-col>
+                      </ion-row>
+                    </div>
+
+                    <ion-row class="row-reverse">
+                      <button
+                        type="button"
+                        class="h7 btn timelinebtn btn-sm margin-5px button"
+                        (click)="gettimeline(value)"
+                      >
+                        <ion-icon
+                          class="icon"
+                          name="stopwatch-outline"
+                        ></ion-icon>
+                      </button>
+
+                      <button
+                        type="button"
+                        class="h7 btn summarybtn btn-sm margin-5px"
+                        (click)="getmaintenancesummary(value)"
+                      >
+                        <ion-icon
+                          class="icon"
+                          name="document-text-outline"
+                        ></ion-icon>
+                      </button>
+                    </ion-row>
+
+                    <!-- 
+                  <ion-row class="row-reverse">
+                  
+                    <ion-button fill="outline">
+                      <ion-icon slot="icon-only" name="document-text-outline" color="light"></ion-icon>
+                    </ion-button>
+
+                  </ion-row> -->
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <ion-infinite-scroll
+            threshold="100px"
+            (ionInfinite)="pagination($event)"
+            *ngIf="historyList.length>0"
+          >
+            <ion-infinite-scroll-content
+              class="loadmore"
+              loadingSpinner="bubbles"
+              loadingText="{{'NORECORDSFOUND.loadingmoredata' | translate}}"
+            >
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+
+          <div class="norecords" *ngIf="enableflag">
+            {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+          </div>
+
+          <div class="pleasewait" *ngIf="pleasewaitflag">
+            <div style="width: 100%; text-align: center">
+              <img
+                style="width: 80px; height: 80px"
+                src="../../../assets/img/loading.gif"
+              />
+            </div>
+            {{ 'NORECORDSFOUND.loading' | translate}}
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'Replacement Preventive Maintenance'">
+          <div class="col">
+            <select
+              formControlName="select_status"
+              style="margin-top: 10px"
+              (change)="onchagestatus()"
+              class="h7 text-dark form-control"
+            >
+              <option value="">
+                {{ 'QRCODESCANNER.searchbystatus' | translate}}
+              </option>
+              <option value="{{item.id}}" *ngFor="let item of statusArr">
+                {{ item.status }}
+              </option>
+            </select>
+          </div>
+          <div class="container" *ngIf="!enableflag">
+            <ul>
+              <li *ngFor="let value of historyList">
+                <div class="textdate">{{value.date}}</div>
+                <span
+                  class="time"
+                  [style]="'--timeline-color:' + getBorderColor(value.statusId)"
+                ></span>
+                <div class="home-box">
+                  <div class="card gedf-card margin-bottom">
+                    <div class="card-header">
+                      <div class="form-row">
+                        <div class="col">
+                          <div
+                            class="h7 text-dark"
+                            style="float: left; text-align: center"
+                          >
+                            <b>{{value.statusName}}</b>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="bg-card" style="margin: 10px 5px 10px 5px">
+                      <ion-row
+                        *ngIf="value.notificationno!=''"
+                        style="margin-top: 1px"
+                      >
+                        <ion-col size="4.5"><b>ID</b></ion-col>
+                        <ion-col size="0.5">:</ion-col>
+                        <ion-col size="7">
+                          <p>{{value.notificationno}}</p>
+                        </ion-col>
+                      </ion-row>
+
+                      <ion-row *ngIf="value.partdefect!=''">
+                        <ion-col size="4.5"
+                          ><b
+                            >{{ 'QRCODESCANNER.partdefect' | translate}}</b
+                          ></ion-col
+                        >
+                        <ion-col size="0.5">:</ion-col>
+                        <ion-col size="7">
+                          <p [innerHTML]="value.partdefect"></p>
+                        </ion-col>
+                      </ion-row>
+
+                      <ion-row *ngIf="value.damage!=''">
+                        <ion-col size="4.5"
+                          ><b
+                            >{{ 'QRCODESCANNER.damage' | translate}}</b
+                          ></ion-col
+                        >
+                        <ion-col size="0.5">:</ion-col>
+                        <ion-col size="7">
+                          <p>{{value.damage}}</p>
+                        </ion-col>
+                      </ion-row>
+
+                      <ion-row *ngIf="value.operationoractivity!=''">
+                        <ion-col size="4.5"
+                          ><b
+                            >{{ 'QRCODESCANNER.operationactivity' |
+                            translate}}</b
+                          ></ion-col
+                        >
+                        <ion-col size="0.5">:</ion-col>
+                        <ion-col size="7">
+                          <p>{{value.operationoractivity}}</p>
+                        </ion-col>
+                      </ion-row>
+                    </div>
+
+                    <ion-row class="row-reverse">
+                      <button
+                        type="button"
+                        class="h7 btn timelinebtn btn-sm margin-5px"
+                        (click)="gettimeline(value)"
+                      >
+                        <ion-icon
+                          class="icon"
+                          name="stopwatch-outline"
+                        ></ion-icon>
+                      </button>
+
+                      <button
+                        type="button"
+                        class="h7 btn summarybtn btn-sm margin-5px"
+                        (click)="getmaintenancesummary(value)"
+                      >
+                        <ion-icon
+                          class="icon"
+                          name="document-text-outline"
+                        ></ion-icon>
+                      </button>
+                    </ion-row>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <ion-infinite-scroll
+            threshold="100px"
+            (ionInfinite)="pagination($event)"
+            *ngIf="historyList.length>0"
+          >
+            <ion-infinite-scroll-content
+              class="loadmore"
+              loadingSpinner="bubbles"
+              loadingText="{{'NORECORDSFOUND.loadingmoredata' | translate}}"
+            >
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+
+          <div class="norecords" *ngIf="enableflag==true">
+            {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+          </div>
+
+          <div class="pleasewait" *ngIf="pleasewaitflag">
+            <div style="width: 100%; text-align: center">
+              <img
+                style="width: 80px; height: 80px"
+                src="../../../assets/img/loading.gif"
+              />
+            </div>
+            {{ 'NORECORDSFOUND.loading' | translate}}
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'Corrective Maintenance'">
+          <div class="col">
+            <select
+              formControlName="select_status"
+              style="margin-top: 10px"
+              (change)="onchagestatus()"
+              class="h7 text-dark form-control"
+            >
+              <option value="">
+                {{ 'QRCODESCANNER.searchbystatus' | translate}}
+              </option>
+              <option value="{{item.id}}" *ngFor="let item of statusArr">
+                {{ item.status }}
+              </option>
+            </select>
+          </div>
+
+          <div class="container" *ngIf="!enableflag">
+            <ul>
+              <li *ngFor="let value of historyList">
+                <div class="textdate">{{value.date}}</div>
+                <span
+                  class="time"
+                  [style]="'--timeline-color:' + getBorderColor(value.statusId)"
+                ></span>
+                <div class="home-box">
+                  <div class="card gedf-card margin-bottom">
+                    <div class="card-header">
+                      <div class="form-row">
+                        <div class="col">
+                          <div
+                            class="h7 text-dark"
+                            style="float: left; text-align: center"
+                          >
+                            <b>{{value.statusName}}</b>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="bg-card" style="margin: 10px 5px 10px 5px">
+                      <ion-row
+                        *ngIf="value.notificationno!=''"
+                        style="margin-top: 1px"
+                      >
+                        <ion-col size="4.5"><b>ID</b></ion-col>
+                        <ion-col size="0.5">:</ion-col>
+                        <ion-col size="7">
+                          <p>{{value.notificationno}}</p>
+                        </ion-col>
+                      </ion-row>
+
+                      <ion-row *ngIf="value.partdefect!=''">
+                        <ion-col size="4.5"
+                          ><b
+                            >{{ 'QRCODESCANNER.partdefect' | translate}}</b
+                          ></ion-col
+                        >
+                        <ion-col size="0.5">:</ion-col>
+                        <ion-col size="7">
+                          <p [innerHTML]="value.partdefect"></p>
+                        </ion-col>
+                      </ion-row>
+
+                      <ion-row *ngIf="value.damage!=''">
+                        <ion-col size="4.5"
+                          ><b
+                            >{{ 'QRCODESCANNER.damage' | translate}}</b
+                          ></ion-col
+                        >
+                        <ion-col size="0.5">:</ion-col>
+                        <ion-col size="7">
+                          <p>{{value.damage}}</p>
+                        </ion-col>
+                      </ion-row>
+
+                      <ion-row *ngIf="value.operationoractivity!=''">
+                        <ion-col size="4.5"
+                          ><b
+                            >{{ 'QRCODESCANNER.operationactivity' |
+                            translate}}</b
+                          ></ion-col
+                        >
+                        <ion-col size="0.5">:</ion-col>
+                        <ion-col size="7">
+                          <p>{{value.operationoractivity}}</p>
+                        </ion-col>
+                      </ion-row>
+                    </div>
+
+                    <ion-row class="row-reverse">
+                      <button
+                        type="button"
+                        class="h7 btn timelinebtn btn-sm margin-5px"
+                        (click)="gettimeline(value)"
+                      >
+                        <ion-icon
+                          class="icon"
+                          name="stopwatch-outline"
+                        ></ion-icon>
+                      </button>
+
+                      <button
+                        type="button"
+                        class="h7 btn summarybtn btn-sm margin-5px"
+                        (click)="getmaintenancesummary(value)"
+                      >
+                        <ion-icon
+                          class="icon"
+                          name="document-text-outline"
+                        ></ion-icon>
+                      </button>
+                    </ion-row>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <ion-infinite-scroll
+            threshold="100px"
+            (ionInfinite)="pagination($event)"
+            *ngIf="historyList.length>0"
+          >
+            <ion-infinite-scroll-content
+              class="loadmore"
+              loadingSpinner="bubbles"
+              loadingText="{{'NORECORDSFOUND.loadingmoredata' | translate}}"
+            >
+            </ion-infinite-scroll-content>
+          </ion-infinite-scroll>
+
+          <div class="norecords" *ngIf="enableflag==true">
+            {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+          </div>
+
+          <div class="pleasewait" *ngIf="pleasewaitflag">
+            <div style="width: 100%; text-align: center">
+              <img
+                style="width: 80px; height: 80px"
+                src="../../../assets/img/loading.gif"
+              />
+            </div>
+            {{ 'NORECORDSFOUND.loading' | translate}}
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- Displays after the QR code has been scanned --- End -->
+</ion-content>

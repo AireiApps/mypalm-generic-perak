@@ -252,6 +252,7 @@ export class ProductionSterilizerpressHomePage implements OnInit {
 
   async showalert(item) {
     const alert = await this.alertController.create({
+      mode: "md",
       header: "Nama",
       cssClass: "alertmessage",
       inputs: [
@@ -300,7 +301,9 @@ export class ProductionSterilizerpressHomePage implements OnInit {
 
         this.router.navigate([item.path]);
       } else {
-        this.commonservice.presentToast(this.translate.instant("PRODUCTIONHOME.namesavedfailed"));
+        this.commonservice.presentToast(
+          this.translate.instant("PRODUCTIONHOME.namesavedfailed")
+        );
       }
     });
   }

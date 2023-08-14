@@ -1,0 +1,321 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color modaltoolbar">
+    <ion-title mode="ios" color="light">{{title}}</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button class="bg-light-color" (click)="btn_close()">
+        <ion-icon color="light" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #pageTop>
+  <form [formGroup]="assignForm">
+    <ion-row class="form-row" *ngIf="getstationid!=''">
+      <ion-col size="5.5">
+        <div class="title">
+          {{'PREVENTIVEMAINTENANCEASSIGN.station' | translate}}
+        </div>
+      </ion-col>
+
+      <ion-col size="0.5" style="text-align: right">
+        <div class="title">
+          <b>:</b>
+        </div>
+      </ion-col>
+      <ion-col size="6" style="text-align: left">
+        <div class="viewtitle"><b>{{getstationname}}</b></div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="form-row" *ngIf="getmachineid!=''">
+      <ion-col size="5.5">
+        <div class="title">
+          {{'PREVENTIVEMAINTENANCEASSIGN.machine' | translate}}
+        </div>
+      </ion-col>
+
+      <ion-col size="0.5" style="text-align: right">
+        <div class="title">
+          <b>:</b>
+        </div>
+      </ion-col>
+
+      <ion-col size="6" style="text-align: left">
+        <div class="viewtitle"><b>{{getmachinename}}</b></div>
+      </ion-col>
+    </ion-row>
+
+    <div style="margin-top: 10px">
+      <ion-row class="form-row">
+        <ion-col size="5.5">
+          <div class="title">
+            {{'PREVENTIVEMAINTENANCEASSIGN.partname' | translate}}
+          </div>
+        </ion-col>
+
+        <ion-col size="0.5" style="text-align: right">
+          <div class="title">
+            <b>:</b>
+          </div>
+        </ion-col>
+
+        <ion-col size="6" style="text-align: initial">
+          <ion-button class="optionbutton" (click)="openParts()"
+            >{{'PREVENTIVEMAINTENANCEASSIGN.select' | translate}}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <!-- <div class="hl4line" *ngIf="partvalue==''"></div> -->
+
+      <div
+        class="selecteddata"
+        style="text-align: center"
+        *ngIf="partvalue!=''"
+        [innerHTML]="partvalue"
+      ></div>
+
+      <!-- <div class="hl4line" *ngIf="partvalue!=''"></div> -->
+
+      <ion-select
+        mode="md"
+        [interfaceOptions]="partsOptions"
+        formControlName="select_parts"
+        multiple="true"
+        [okText]="'GENERALBUTTON.okay' | translate"
+        [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
+        class="ionicselect"
+        (ionChange)="partshandleChange($event)"
+        #partsSelect
+      >
+        <ion-select-option
+          value="{{parseString(value)}}"
+          *ngFor="let value of multipartsArr; let i = index"
+          >{{ value.partname }}</ion-select-option
+        >
+      </ion-select>
+    </div>
+
+    <div style="margin-top: 10px">
+      <ion-row class="form-row">
+        <ion-col size="5.5">
+          <div class="title">
+            {{'PREVENTIVEMAINTENANCEASSIGN.assignto' | translate}}
+          </div>
+        </ion-col>
+
+        <ion-col size="0.5" style="text-align: right">
+          <div class="title">
+            <b>:</b>
+          </div>
+        </ion-col>
+
+        <ion-col size="6" style="text-align: initial">
+          <ion-button class="optionbutton" (click)="openAssignedTo()"
+            >{{'PREVENTIVEMAINTENANCEASSIGN.select' | translate}}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <!-- <div class="hl4line" *ngIf="assignedtovalue==''"></div> -->
+
+      <div
+        class="selecteddata"
+        style="text-align: center"
+        *ngIf="assignedtovalue!=''"
+        [innerHTML]="assignedtovalue"
+      ></div>
+
+      <!-- <div class="hl4line" *ngIf="assignedtovalue!=''"></div> -->
+
+      <ion-select
+        mode="md"
+        [interfaceOptions]="assignedtoOptions"
+        formControlName="select_assignedto"
+        multiple="true"
+        [okText]="'GENERALBUTTON.okay' | translate"
+        [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
+        class="ionicselect"
+        (ionChange)="assignedtohandleChange($event)"
+        #assignedtoSelect
+      >
+        <ion-select-option
+          value="{{parseString(value)}}"
+          *ngFor="let value of assignedtoArr; let i = index"
+          >{{ value.name }}</ion-select-option
+        >
+      </ion-select>
+    </div>
+
+    <!-- RoPM - Start -->
+    <!-- Condition -->
+    <div style="margin-top: 10px">
+      <ion-row class="form-row">
+        <ion-col size="4">
+          <div class="title">
+            {{ 'MAINTENANCEACCEPTMODAL.condition' | translate}}
+          </div>
+        </ion-col>
+
+        <ion-col size="8">
+          <ion-row class="conditionradiobutton">
+            <ion-col>
+              <ion-row>
+                <ion-col size="5" style="text-align: right; padding: 0px">
+                  <input
+                    type="radio"
+                    id="radio_good"
+                    name="radio_conditionoption"
+                    value="Good"
+                    (change)="onConditionOptionChange('Good')"
+                    [checked]="goodFlag"
+                  />
+                  <label for="radio_good"
+                    >{{ 'MAINTENANCEACCEPTMODAL.good' | translate}}</label
+                  >
+                </ion-col>
+                <ion-col size="7" style="text-align: right; padding: 0px">
+                  <input
+                    type="radio"
+                    id="radio_abnormal"
+                    name="radio_conditionoption"
+                    value="Abnormal"
+                    (change)="onConditionOptionChange('Abnormal')"
+                    [checked]="abnormalFlag"
+                  />
+                  <label for="radio_abnormal"
+                    >{{ 'MAINTENANCEACCEPTMODAL.abnormal' | translate}}</label
+                  >
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div *ngIf="abnormalFlag">
+      <!-- <div class="hl4line"></div> -->
+      <!-- Maintenance Type -->
+      <div style="margin-top: 10px">
+        <ion-row class="form-row">
+          <ion-col size="5.5">
+            <div class="title">
+              {{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.maintenancetype' |
+              translate}}
+            </div>
+          </ion-col>
+
+          <ion-col size="0.5" style="text-align: center">
+            <div class="title">
+              <b>:</b>
+            </div>
+          </ion-col>
+
+          <ion-col size="6">
+            <ion-select
+              mode="md"
+              [interfaceOptions]="maintenancetypeOptions"
+              formControlName="select_maintenancetype"
+              multiple="false"
+              [okText]="'GENERALBUTTON.okay' | translate"
+              [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
+              class="selectdropdown"
+              placeholder="{{ 'MAINTENANCEENGINEERINGNOTIFICATIONMODAL.select' | translate}}"
+              (ionChange)="maintenancetypehandleChange($event)"
+            >
+              <ion-select-option
+                value="{{parseString(value)}}"
+                *ngFor="let value of maintenancetypeArr; let i = index"
+                >{{ value.maintanence_type }}</ion-select-option
+              >
+            </ion-select>
+          </ion-col>
+        </ion-row>
+
+        <!-- <div class="hl4line"></div> -->
+      </div>
+
+      <!-- Damage Type -->
+      <div style="margin-top: 10px">
+        <ion-row class="form-row">
+          <ion-col size="5.5">
+            <div class="title">
+              {{ 'MAINTENANCEACKNOWLEDGEMODAL.damagetype' | translate}}
+            </div>
+          </ion-col>
+
+          <ion-col size="0.5" style="text-align: center">
+            <div class="title">
+              <b>:</b>
+            </div>
+          </ion-col>
+
+          <ion-col size="6">
+            <ion-button class="optionbutton" (click)="openDamageType()"
+              >{{ 'MAINTENANCEACKNOWLEDGEMODAL.select' | translate}}
+            </ion-button>
+          </ion-col>
+        </ion-row>
+
+        <!-- <div class="hl4line" *ngIf="damagetypevalue==''"></div> -->
+
+        <div
+          class="selecteddata"
+          style="text-align: center"
+          *ngIf="damagetypevalue!=''"
+          [innerHTML]="damagetypevalue"
+        ></div>
+
+        <div class="hl4line" *ngIf="damagetypevalue!=''"></div>
+
+        <ion-select
+          mode="md"
+          [interfaceOptions]="damagetypeOptions"
+          formControlName="select_damagetype"
+          multiple="true"
+          [okText]="'GENERALBUTTON.okay' | translate"
+          [cancelText]="'GENERALBUTTON.cancelbutton' | translate"
+          class="ionicselect"
+          (ionChange)="damagehandleChange($event)"
+          #damagetypeSelect
+        >
+          <ion-select-option
+            value="{{parseString(value)}}"
+            *ngFor="let value of damageArr; let i = index"
+            >{{ value.damage }}</ion-select-option
+          >
+        </ion-select>
+      </div>
+    </div>
+
+    <!-- RoPM - Stop -->
+
+    <ion-row style="margin-top: 10px">
+      <ion-col style="text-align: center !important" no-padding>
+        <button
+          type="submit"
+          class="btn btn-next"
+          [disabled]="confirmDisable"
+          (click)="savealert()"
+        >
+          <span class="icontext" style="color: #ffffff"
+            >{{'PREVENTIVEMAINTENANCEASSIGN.save' | translate}}</span
+          >
+        </button>
+      </ion-col>
+    </ion-row>
+  </form>
+
+  <div class="pleasewait" *ngIf="pleasewaitflag">
+    <div style="width: 100%; text-align: center">
+      <img
+        style="width: 80px; height: 80px"
+        src="../../../assets/img/loading.gif"
+      />
+    </div>
+    {{ 'NORECORDSFOUND.pleasewait' | translate}}
+  </div>
+</ion-content>

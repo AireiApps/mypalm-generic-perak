@@ -27,6 +27,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
   @ViewChild("pageTop") pageTop: IonContent;
 
   userlist = JSON.parse(localStorage.getItem("userlist"));
+  getlanguage = this.userlist.language;
 
   pressstationForm;
 
@@ -75,6 +76,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
   presshydraulicpressureimageviewFlag = false;
 
   imagetype = "";
+  imageviewtitle = "";
 
   /*Variable to for to View entered Data*/
   view_observationtime = "";
@@ -127,15 +129,17 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
     this.pressingstationstatus = params.status;
 
     this.pressstationForm = this.fb.group({
-      txt_observationtime: new FormControl(this.observationtime),
+      //txt_observationtime: new FormControl(this.observationtime),
       select_level: new FormControl("", Validators.required),
-      select_temperature: new FormControl("", Validators.required),
+      //select_temperature: new FormControl("", Validators.required),
+      txt_temperature: new FormControl("", Validators.required),
       select_digestordrainoilflow: new FormControl("", Validators.required),
       select_fiberflow: new FormControl("", Validators.required),
-      select_hydraulicpressure: new FormControl("", Validators.required),
-      select_pressmotoramps: new FormControl("", Validators.required),
-      select_digestormotoramps: new FormControl("", Validators.required),
-      //txt_dilutiontemperature: new FormControl("", Validators.required),
+      //select_pressmotoramps: new FormControl("", Validators.required),
+      //select_digestormotoramps: new FormControl("", Validators.required),
+      txt_pressmotoramps: new FormControl("", Validators.required),
+      txt_digestormotoramps: new FormControl("", Validators.required),
+      txt_hydraulicpressure: new FormControl("", Validators.required),
 
       txt_temperatureimageupload: new FormControl(""),
       txt_motorimageupload: new FormControl(""),
@@ -775,7 +779,8 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
       }
     );
 
-    /*var dummyimagepath = "http://test.mypalm.com.my/java/generic_upload/1013-generic7898-1677923173458.jpg";
+    /*var dummyimagepath =
+      "http://demo.mypalm.com.my/java/generic_upload/1014-generic1333-1679038204465.jpg";
 
     if (type == "Temperature") {
       this.imagePaths.temperatureimage_path = dummyimagepath;
@@ -954,32 +959,9 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
       if (resultdata.httpcode == 200) {
         this.levelArr = resultdata.data;
 
-        this.getTemperature();
-      } else {
-        this.levelArr = [];
-
-        this.getTemperature();
-      }
-    });
-  }
-
-  getTemperature() {
-    const req = {
-      user_id: this.userlist.userId,
-      millcode: this.userlist.millcode,
-      dept_id: this.userlist.dept_id,
-      language: this.languageService.selected,
-    };
-
-    this.supervisorservice.getTemperature(req).then((result) => {
-      let resultdata: any;
-      resultdata = result;
-      if (resultdata.httpcode == 200) {
-        this.temperatureArr = resultdata.data;
-
         this.getDigestorDrainPipe();
       } else {
-        this.temperatureArr = [];
+        this.levelArr = [];
 
         this.getDigestorDrainPipe();
       }
@@ -1022,107 +1004,61 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
       resultdata = result;
       if (resultdata.httpcode == 200) {
         this.fiberflowArr = resultdata.data;
-
-        this.getHydraulicPressure();
       } else {
         this.fiberflowArr = [];
-
-        this.getHydraulicPressure();
-      }
-    });
-  }
-
-  getHydraulicPressure() {
-    const req = {
-      user_id: this.userlist.userId,
-      millcode: this.userlist.millcode,
-      dept_id: this.userlist.dept_id,
-      language: this.languageService.selected,
-    };
-
-    this.supervisorservice.getHydraulicPressureValue(req).then((result) => {
-      let resultdata: any;
-      resultdata = result;
-      if (resultdata.httpcode == 200) {
-        this.hydraulicpressureArr = resultdata.data;
-
-        this.getPressureAmps();
-      } else {
-        this.hydraulicpressureArr = [];
-
-        this.getPressureAmps();
-      }
-    });
-  }
-
-  getPressureAmps() {
-    const req = {
-      user_id: this.userlist.userId,
-      millcode: this.userlist.millcode,
-      dept_id: this.userlist.dept_id,
-      language: this.languageService.selected,
-    };
-
-    this.supervisorservice.getPressureAmpsValue(req).then((result) => {
-      let resultdata: any;
-      resultdata = result;
-      if (resultdata.httpcode == 200) {
-        this.pressureampsArr = resultdata.data;
-        //this.digestorampsArr = resultdata.data;
-        this.getDigestorPressureAmps();
-      } else {
-        this.pressureampsArr = [];
-
-        this.getDigestorPressureAmps();
-      }
-    });
-  }
-
-  getDigestorPressureAmps() {
-    const req = {
-      user_id: this.userlist.userId,
-      millcode: this.userlist.millcode,
-      dept_id: this.userlist.dept_id,
-      language: this.languageService.selected,
-    };
-
-    this.supervisorservice.getDigestorPressureAmpsValue(req).then((result) => {
-      let resultdata: any;
-      resultdata = result;
-      if (resultdata.httpcode == 200) {
-        this.digestorampsArr = resultdata.data;
       }
     });
   }
 
   confirm() {
     if (this.pressstationForm.valid) {
-      this.view_observationtime = moment(
-        this.pressstationForm.value.txt_observationtime
-      ).format("HH:mm");
-      this.view_temperature = JSON.parse(
-        this.pressstationForm.value.select_temperature
-      ).temperature;
-      this.view_digestormotoramps = JSON.parse(
-        this.pressstationForm.value.select_digestormotoramps
-      ).digestoramps;
+      if (this.motorimagesArr.length <= 0) {
+        this.commonservice.presentToast(
+          this.translate.instant(
+            "HOURLYPRESSSTATIONSAVE.digestorimagemandatory"
+          )
+        );
+        return;
+      }
+
+      if (this.pressmotorimagesArr.length <= 0) {
+        this.commonservice.presentToast(
+          this.translate.instant(
+            "HOURLYPRESSSTATIONSAVE.pressmotorimagemandatory"
+          )
+        );
+        return;
+      }
+
+      if (this.pressfibreflowimagesArr.length <= 0) {
+        this.commonservice.presentToast(
+          this.translate.instant(
+            "HOURLYPRESSSTATIONSAVE.fibreflowimagemandatory"
+          )
+        );
+        return;
+      }
+
+      this.view_temperature = this.pressstationForm.value.txt_temperature;
+
+      this.view_digestormotoramps =
+        this.pressstationForm.value.txt_digestormotoramps;
+
       this.view_level = JSON.parse(
         this.pressstationForm.value.select_level
       ).percentage;
+
       this.view_digestordrainoilflow = JSON.parse(
         this.pressstationForm.value.select_digestordrainoilflow
       ).digestordrainpipevalue;
-      this.view_pressmotoramps = JSON.parse(
-        this.pressstationForm.value.select_pressmotoramps
-      ).pressureamps;
+
+      this.view_pressmotoramps = this.pressstationForm.value.txt_pressmotoramps;
       this.view_fiberflow = JSON.parse(
         this.pressstationForm.value.select_fiberflow
       ).level;
-      this.view_hydraulicpressure = JSON.parse(
-        this.pressstationForm.value.select_hydraulicpressure
-      ).pressure;
 
-      //this.view_dilutiontemperature = this.pressstationForm.value.txt_dilutiontemperature;
+      this.view_hydraulicpressure =
+        this.pressstationForm.value.txt_hydraulicpressure;
 
       this.pageTop.scrollToTop();
 
@@ -1151,6 +1087,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
 
     if (this.imagetype == "Temperature") {
       if (this.temperatureimagesArr.length > 0) {
+        this.imageviewtitle = "Temperature";
         this.temperatureimageviewFlag = true;
       } else {
         if (this.temperatureimagesArr.length > 1) {
@@ -1169,6 +1106,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
 
     if (this.imagetype == "Motor") {
       if (this.motorimagesArr.length > 0) {
+        this.imageviewtitle = "Digestor Motor";
         this.motorimageviewFlag = true;
       } else {
         if (this.motorimagesArr.length > 1) {
@@ -1189,6 +1127,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
 
     if (this.imagetype == "Level") {
       if (this.levelimagesArr.length > 0) {
+        this.imageviewtitle = "Level";
         this.levelimageviewFlag = true;
       } else {
         if (this.levelimagesArr.length > 1) {
@@ -1207,6 +1146,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
 
     if (this.imagetype == "Drainage") {
       if (this.drainageimagesArr.length > 0) {
+        this.imageviewtitle = "Digestor Drainage";
         this.drainageimageviewFlag = true;
       } else {
         if (this.drainageimagesArr.length > 1) {
@@ -1225,6 +1165,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
 
     if (this.imagetype == "PressMotor") {
       if (this.pressmotorimagesArr.length > 0) {
+        this.imageviewtitle = "Press Motor";
         this.pressmotorimageviewFlag = true;
       } else {
         if (this.pressmotorimagesArr.length > 1) {
@@ -1243,6 +1184,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
 
     if (this.imagetype == "PressFibreFlow") {
       if (this.pressfibreflowimagesArr.length > 0) {
+        this.imageviewtitle = "Fibre Flow";
         this.pressfibreflowimageviewFlag = true;
       } else {
         if (this.pressfibreflowimagesArr.length > 1) {
@@ -1261,6 +1203,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
 
     if (this.imagetype == "PressHydraulicPressure") {
       if (this.presshydraulicpressureimagesArr.length > 0) {
+        this.imageviewtitle = "Hydraulic Pressure";
         this.presshydraulicpressureimageviewFlag = true;
       } else {
         if (this.presshydraulicpressureimagesArr.length > 1) {
@@ -1299,7 +1242,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
       this.pressmotorimageviewFlag = false;
     }
 
-    if (this.imagetype == "PressFibreflow") {
+    if (this.imagetype == "PressFibreFlow") {
       this.pressfibreflowimageviewFlag = false;
     }
 
@@ -1344,9 +1287,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
       var getcurrentdate = moment(new Date().toISOString()).format(
         "YYYY-MM-DD HH:mm:ss"
       );
-      var observation_time = moment(
-        this.pressstationForm.value.txt_observationtime
-      ).format("HH:mm");
+      var observation_time = moment(this.observationtime).format("HH:mm");
 
       var req = {
         userid: this.userlist.userId,
@@ -1357,21 +1298,23 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
         status: this.pressingstationstatus,
         observationtime: observation_time,
         level: JSON.parse(this.pressstationForm.value.select_level).id,
-        temperature: JSON.parse(this.pressstationForm.value.select_temperature)
-          .id,
+        //temperature: JSON.parse(this.pressstationForm.value.select_temperature).id,
+        temperature: this.pressstationForm.value.txt_temperature,
         diegestorDrainOilLow: JSON.parse(
           this.pressstationForm.value.select_digestordrainoilflow
         ).id,
         fiberFlow: JSON.parse(this.pressstationForm.value.select_fiberflow).id,
-        hydralicPressure: JSON.parse(
+        /*hydralicPressure: JSON.parse(
           this.pressstationForm.value.select_hydraulicpressure
-        ).id,
-        pressMotorAmp: JSON.parse(
-          this.pressstationForm.value.select_pressmotoramps
-        ).id,
-        digestorMotorAmp: JSON.parse(
+        ).id,*/
+        hydralicPressure: this.pressstationForm.value.txt_hydraulicpressure,
+
+        /*pressMotorAmp: JSON.parse(this.pressstationForm.value.select_pressmotoramps).id,*/
+        pressMotorAmp: this.pressstationForm.value.txt_pressmotoramps,
+        /*digestorMotorAmp: JSON.parse(
           this.pressstationForm.value.select_digestormotoramps
-        ).id,
+        ).id,*/
+        digestorMotorAmp: this.pressstationForm.value.txt_digestormotoramps,
         //dilutionTemperature: this.pressstationForm.value.txt_dilutiontemperature,
         dilutionTemperature: "",
         running_user_id: localStorage.getItem("runninghourid"),
@@ -1385,6 +1328,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
         presshydraulicpressureimages:
           this.presshydraulicpressureimagesArr.join("~"),
         language: this.languageService.selected,
+        newflow: "1",
       };
 
       console.log(req);
@@ -1403,15 +1347,15 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
           this.modalController.dismiss({
             dismissed: true,
             level: this.pressstationForm.value.select_level,
-            temperature: this.pressstationForm.value.select_temperature,
+            temperature: this.pressstationForm.value.txt_temperature,
             digestordrainoilflow:
               this.pressstationForm.value.select_digestordrainoilflow,
             pressoilflow: this.pressstationForm.value.select_fiberflow,
             hydraulicpressure:
-              this.pressstationForm.value.select_hydraulicpressure,
-            pressmotoramps: this.pressstationForm.value.select_pressmotoramps,
+              this.pressstationForm.value.txt_hydraulicpressure,
+            pressmotoramps: this.pressstationForm.value.txt_pressmotoramps,
             digestormotoramps:
-              this.pressstationForm.value.select_digestormotoramps,
+              this.pressstationForm.value.txt_digestormotoramps,
             //dilutiontemperature: this.pressstationForm.value.txt_dilutiontemperature,
             recordstatus: "1",
           });
@@ -1442,7 +1386,7 @@ export class ProductionHourlypressingstationsavePage implements OnInit {
   }
 
   decimalFilter(event: any) {
-    const reg = /^-?\d*(\.\d{0,2})?$/;
+    const reg = /^\d+(\.\d{0,2})?$/;
     let input = event.target.value + String.fromCharCode(event.charCode);
 
     if (!reg.test(input)) {

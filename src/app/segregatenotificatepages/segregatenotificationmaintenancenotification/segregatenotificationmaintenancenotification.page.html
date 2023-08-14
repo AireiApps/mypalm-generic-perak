@@ -3,7 +3,7 @@
     <ion-buttons *ngIf="todaysnotificationArr.length > 0">
       <button
         type="submit"
-        class="btn checkcard"
+        class="btn alertcheckcard"
         (click)="gettodaysnotification()"
       >
         {{ 'SEGREGATENOTIFICATION.current' | translate}} - {{currentdate}}
@@ -20,6 +20,8 @@
       <div
         class="card marigin-10px"
         *ngFor="let value of todaysnotificationArr"
+        [style.backgroundColor]="getBackgroundColor(value.redirect)"
+        [style.borderColor]="geBorderColor(value.redirect)"
       >
         <ion-row class="marigin-10px row-reverse">
           <ion-col>
@@ -27,7 +29,10 @@
               <b>{{value.notification_date}}</b>
             </div>
             <div class="h6 text-dark"><b>{{value.title}}</b></div>
-            <div class="h7 text-dark">{{value.notification_text}}</div>
+            <div
+              class="h7 text-dark"
+              [innerHTML]="value.notification_text"
+            ></div>
             <div>
               <button
                 type="button"
@@ -42,10 +47,12 @@
       </div>
     </div>
 
+    <hr *ngIf="todaysnotificationArr.length > 0" />
+
     <ion-buttons *ngIf="oldernotificationArr.length > 0">
       <button
         type="submit"
-        class="btn checkcard"
+        class="btn alertcheckcard"
         (click)="getoldernotification()"
       >
         {{ 'SEGREGATENOTIFICATION.previous' | translate}}
@@ -56,14 +63,22 @@
     </ion-buttons>
 
     <div *ngIf="oldernotificationflag">
-      <div class="card marigin-10px" *ngFor="let value of oldernotificationArr">
+      <div
+        class="card marigin-10px"
+        *ngFor="let value of oldernotificationArr"
+        [style.backgroundColor]="getBackgroundColor(value.redirect)"
+        [style.borderColor]="geBorderColor(value.redirect)"
+      >
         <ion-row class="marigin-10px row-reverse">
           <ion-col>
             <div class="h7" style="float: right; color: #ff9f0c">
               <b>{{value.notification_date}}</b>
             </div>
             <div class="h6 text-dark"><b>{{value.title}}</b></div>
-            <div class="h7 text-dark">{{value.notification_text}}</div>
+            <div
+              class="h7 text-dark"
+              [innerHTML]="value.notification_text"
+            ></div>
             <div>
               <button
                 type="button"

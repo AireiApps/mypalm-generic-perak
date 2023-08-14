@@ -1,0 +1,190 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-buttons slot="start" mode="md">
+      <ion-back-button color="whitefav"></ion-back-button>
+    </ion-buttons>
+    <ion-title color="light" mode="ios"> Perfomance Analysis </ion-title>
+
+    <!-- Production and Maintenance Count for Android - Start -->
+    <ion-buttons slot="primary" *ngIf="getplatform == 'android'">
+      <ion-button class="bg-light-color" (click)="btn_orientation()">
+        <ion-icon [name]="iconname"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="pressstationreportForm">
+    <div id="chartContainer8" style="margin: 10px 5px 10px 5px">
+      <div class="titletxt text-uppercase">
+        <b> Daily Laboratory Average Oil Losses at Press Station and OER</b>
+      </div>
+      <div>
+        <ion-row class="form-row">
+          <ion-col size="2.35"></ion-col>
+          <ion-col size="2">
+            <div class="h7 text-white" style="text-align: right">
+              <b>{{ 'REPORTOILLOSSES.month' | translate}} </b>
+            </div>
+          </ion-col>
+          <ion-col size="3.30">
+            <ion-datetime
+              mode="ios"
+              class="h7 form-control"
+              formControlName="pickpressmonth"
+              display-format="MM-YYYY"
+              [(ngModel)]="pressstationreportmonth"
+              cancelText="{{ 'GENERALBUTTON.cancelbutton' | translate}}"
+              doneText="{{ 'GENERALBUTTON.okay' | translate}}"
+            ></ion-datetime>
+          </ion-col>
+          <ion-col size="2">
+            <button
+              type="button"
+              class="h7 btn btn-general btn-sm margin-5px float-left"
+              (click)="getPressReport()"
+              [disabled]="pressGetDisable"
+            >
+              {{ 'GENERALBUTTON.getrecords' | translate}}
+            </button>
+          </ion-col>
+          <ion-col size="2.35"></ion-col>
+        </ion-row>
+      </div>
+      <div class="prediction-box">
+        <apx-chart
+          [series]="multilineOptions.series"
+          [chart]="multilineOptions.chart"
+          [yaxis]="multilineOptions.yaxis"
+          [xaxis]="multilineOptions.xaxis"
+          [labels]="multilineOptions.labels"
+          [stroke]="multilineOptions.stroke"
+          [markers]="multilineOptions.markers"
+          [fill]="multilineOptions.fill"
+          [tooltip]="multilineOptions.tooltip"
+          [legend]="multilineOptions.legend"
+          [dataLabels]="multilineOptions.dataLabels"
+          [plotOptions]="multilineOptions.plotOptions"
+        ></apx-chart>
+      </div>
+      <hr />
+
+      <!-- //2nd  chart// -->
+      <div class="titletxt text-uppercase">
+        <b>Todate OER and Monthly Average Oil Losses in Press Machines</b>
+      </div>
+      <div>
+        <ion-row class="form-row">
+          <ion-col size="2.35"></ion-col>
+          <ion-col size="2">
+            <div class="h7 text-white" style="text-align: right">
+              <b>{{ 'REPORTOILLOSSES.year' | translate}} </b>
+            </div>
+          </ion-col>
+          <ion-col size="3.30">
+            <ion-datetime
+              mode="ios"
+              class="h7 form-control"
+              formControlName="pickyear"
+              display-format="YYYY"
+            ></ion-datetime>
+          </ion-col>
+          <ion-col size="2">
+            <button
+              type="button"
+              class="h7 btn btn-general btn-sm margin-5px float-left"
+              (click)="getMonthWiseAverage()"
+              [disabled]="presslabGetDisable"
+            >
+              {{ 'GENERALBUTTON.getrecords' | translate}}
+            </button>
+          </ion-col>
+          <ion-col size="2.35"> </ion-col>
+        </ion-row>
+      </div>
+      <div class="prediction-box">
+        <apx-chart
+          [series]="linebarOptions.series"
+          [chart]="linebarOptions.chart"
+          [yaxis]="linebarOptions.yaxis"
+          [xaxis]="linebarOptions.xaxis"
+          [labels]="linebarOptions.labels"
+          [stroke]="linebarOptions.stroke"
+          [markers]="linebarOptions.markers"
+          [fill]="linebarOptions.fill"
+          [tooltip]="linebarOptions.tooltip"
+          [legend]="linebarOptions.legend"
+          [dataLabels]="linebarOptions.dataLabels"
+          [plotOptions]="linebarOptions.plotOptions"
+        ></apx-chart>
+      </div>
+      <hr />
+      <!-- //3rd  chart//  -->
+      <!--This code commented said by veda sir on 19-06-2023-->
+      <!-- <div class="titletxt text-uppercase">
+        <b>Monthly Laboratory Average Oil Losses at Press Station (%)</b>
+      </div>
+      <div>
+        <ion-row class="form-row">
+          <ion-col size="2.35"></ion-col>
+          <ion-col size="2">
+            <div class="h7 text-white" style="text-align: right">
+              <b>{{ 'REPORTOILLOSSES.year' | translate}} </b>
+            </div>
+          </ion-col>
+          <ion-col size="3.30">
+            <ion-datetime
+              mode="ios"
+              class="h7 form-control"
+              formControlName="picklabyear"
+              display-format="YYYY"
+            ></ion-datetime>
+          </ion-col>
+          <ion-col size="2">
+            <button
+              type="button"
+              class="h7 btn btn-general btn-sm margin-5px float-left"
+              (click)="getPressMonthWiseAverage()"
+              [disabled]="presslaboillossGetDisable"
+            >
+              {{ 'GENERALBUTTON.getrecords' | translate}}
+            </button>
+          </ion-col>
+          <ion-col size="2.35"> </ion-col>
+        </ion-row>
+      </div>
+      <div class="prediction-box">
+        <apx-chart
+          [series]="barOptions.series"
+          [chart]="barOptions.chart"
+          [yaxis]="barOptions.yaxis"
+          [xaxis]="barOptions.xaxis"
+          [labels]="barOptions.labels"
+          [stroke]="barOptions.stroke"
+          [markers]="barOptions.markers"
+          [fill]="barOptions.fill"
+          [tooltip]="barOptions.tooltip"
+          [legend]="barOptions.legend"
+          [dataLabels]="barOptions.dataLabels"
+          [plotOptions]="barOptions.plotOptions"
+        ></apx-chart>
+      </div>
+      <hr />-->
+
+      <div class="pleasewait" *ngIf="pleasewaitflag">
+        <div style="width: 100%; text-align: center">
+          <img
+            style="width: 80px; height: 80px"
+            src="../../../assets/img/loading.gif"
+          />
+        </div>
+        {{ 'NORECORDSFOUND.loading' | translate}}
+      </div>
+
+      <div class="norecords" *ngIf="norecordsflag==true">
+        {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+      </div>
+    </div>
+  </form>
+</ion-content>

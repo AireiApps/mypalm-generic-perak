@@ -46,16 +46,15 @@ export class ReportSterilizerhourlyperformancePage implements OnInit {
     private commonservice: AIREIService,
     private service: SupervisorService
   ) {
-    this.reportdate = this.route.snapshot.paramMap.get("reportdate");
+    /*this.reportdate = this.route.snapshot.paramMap.get("reportdate");
 
     if (this.reportdate == "") {
-      //this.reportdate = this.currentdate;
       this.reportdate = "";
     } else {
       this.reportdate = moment(this.reportdate, "YYYY-MM-DD").format(
         "DD-MM-YYYY"
       );
-    }
+    }*/
 
     this.sterilizerreportForm = this.fb.group({
       pickdate: new FormControl(this.reportdate),
@@ -99,27 +98,27 @@ export class ReportSterilizerhourlyperformancePage implements OnInit {
     );
   }
 
-  async btn_ViewImages(fruittypeimages, p1images, p3images) {
-    if (fruittypeimages != "" || p1images != "" || p3images != "") {
-      this.screenOrientation.unlock();
+  async btn_ViewImages(bpvimages, p1images, p3images) {
+    if (bpvimages != "" || p1images != "" || p3images != "") {
+      /*this.screenOrientation.unlock();
       this.screenOrientation.lock(
         this.screenOrientation.ORIENTATIONS.PORTRAIT_PRIMARY
-      );
+      );*/
 
       const modal = await this.modalController.create({
         component: PressingsterilizerstationImageSliderPage,
         componentProps: {
           from: "Sterilisation",
-          fruitypeitem: fruittypeimages,
+          bpvitem: bpvimages,
           p1item: p1images,
           p3item: p3images,
         },
       });
 
       modal.onDidDismiss().then((data) => {
-        this.screenOrientation.lock(
+        /*this.screenOrientation.lock(
           this.screenOrientation.ORIENTATIONS.LANDSCAPE
-        );
+        );*/
       });
 
       return await modal.present();
@@ -144,7 +143,7 @@ export class ReportSterilizerhourlyperformancePage implements OnInit {
       language: this.languageService.selected,
     };
 
-    //console.log(req);
+    console.log(req);
 
     this.service.getsterilizervalue(req).then((result) => {
       var resultdata: any;

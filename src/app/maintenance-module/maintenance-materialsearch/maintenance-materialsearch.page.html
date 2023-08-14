@@ -48,7 +48,7 @@
     <ion-infinite-scroll threshold="100px" (ionInfinite)="pagination($event)">
       <ion-infinite-scroll-content
         loadingSpinner="bubbles"
-        loadingText="Loading more data..."
+        loadingText="{{'NORECORDSFOUND.loadingmoredata' | translate}}"
       >
       </ion-infinite-scroll-content>
     </ion-infinite-scroll>

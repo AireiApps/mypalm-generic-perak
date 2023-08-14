@@ -404,7 +404,10 @@ export class MaintenanceNotificationAcceptModalPage implements OnInit {
       }
     }
 
-    if (this.conditionoptionSelected == "Abnormal") {
+    if (
+      this.optionSelected == "Yes" &&
+      this.conditionoptionSelected == "Abnormal"
+    ) {
       if (this.damagetypeid.length <= 0) {
         this.commonservice.presentToast(
           this.translate.instant("MAINTENANCEACCEPTMODAL.damagetypemandatory")
@@ -456,6 +459,8 @@ export class MaintenanceNotificationAcceptModalPage implements OnInit {
   }
 
   save(getremarks) {
+    console.log("Test");
+
     if (this.optionSelected == "") {
       if (this.statusid == "3" || this.statusid == "10") {
         this.commonservice.presentToast(
@@ -501,7 +506,10 @@ export class MaintenanceNotificationAcceptModalPage implements OnInit {
       }
     }
 
-    if (this.conditionoptionSelected == "Abnormal") {
+    if (
+      this.optionSelected == "Yes" &&
+      this.conditionoptionSelected == "Abnormal"
+    ) {
       if (this.damagetypeid.length <= 0) {
         this.commonservice.presentToast(
           this.translate.instant("MAINTENANCEACCEPTMODAL.damagetypemandatory")

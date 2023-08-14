@@ -1,0 +1,745 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color modaltoolbar">
+    <ion-title mode="ios" color="light"
+      >{{ 'REPORTCORRECTIVEMAINTENANCE.detail' | translate}}</ion-title
+    >
+
+    <ion-buttons slot="primary">
+      <ion-button class="bg-light-color" (click)="btn_close()">
+        <ion-icon color="light" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="notificationview" style="margin: 10px">
+    <ion-row class="form-row">
+      <ion-col size="2" style="text-align: center">
+        <img class="logoimg" src="../../../assets/img/logo.png" />
+      </ion-col>
+      <ion-col size="8">
+        <div class="usertext" style="text-align: center; font-size: 15px">
+          <b
+            >{{ 'MAINTENANCENOTIFICATIONVIEW.maintenance' | translate}}<br />{{
+            'MAINTENANCENOTIFICATIONVIEW.notificationform' | translate}}</b
+          >
+        </div>
+      </ion-col>
+      <ion-col size="2" style="text-align: center">
+        <img
+          class="statusimg"
+          *ngIf="notificationstatusid == '1'"
+          src="../../../assets/img/notificationcreated.png"
+        />
+
+        <img
+          class="statusimg"
+          *ngIf="notificationstatusid != '1' && notificationstatusid != '7'"
+          src="../../../assets/img/notificationinprogress.png"
+        />
+
+        <img
+          class="statusimg"
+          *ngIf="notificationstatusid == '7'"
+          src="../../../assets/img/notificationclosed.png"
+        />
+      </ion-col>
+    </ion-row>
+
+    <table style="width: 100%; height: 100%" class="table table-bordered">
+      <tr *ngIf="notificationstatus!=''">
+        <td width="50%">
+          {{ 'MAINTENANCENOTIFICATIONVIEW.status' | translate}}
+        </td>
+        <td
+          width="50%"
+          style="background-color: #e74c3c; color: #ffffff"
+          *ngIf="notificationstatusid=='1'"
+        >
+          <b>{{notificationstatus}}</b>
+        </td>
+
+        <td
+          width="50%"
+          style="background-color: #ffff00; color: #000000"
+          *ngIf="notificationstatusid!='1' && notificationstatusid!='7'"
+        >
+          <b>{{notificationstatus}}</b>
+        </td>
+
+        <td
+          width="50%"
+          style="background-color: #008000; color: #ffffff"
+          *ngIf="notificationstatusid=='7'"
+        >
+          <b>{{notificationstatus}}</b>
+        </td>
+      </tr>
+
+      <tr *ngIf="notificationno!=''">
+        <td width="50%">{{'MAINTENANCENOTIFICATIONVIEW.id' | translate}}</td>
+        <td width="50%" class="data">{{notificationno}}</td>
+      </tr>
+
+      <tr *ngIf="notificationtype!=''">
+        <td width="50%">
+          {{'MAINTENANCENOTIFICATIONVIEW.notificationtype' | translate}}
+        </td>
+        <td width="50%" class="data">{{notificationtype}}</td>
+      </tr>
+
+      <tr
+        *ngIf="breakdowncoding!='' && (fromscreen == 'CM' || fromscreen == 'CMVIEW')"
+      >
+        <td width="50%">
+          {{ 'MAINTENANCENOTIFICATIONVIEW.problem' | translate}}
+        </td>
+        <td width="50%" class="data">{{breakdowncoding}}</td>
+      </tr>
+
+      <tr
+        *ngIf="breakdowncoding!='' && fromscreen != 'CM' && fromscreen != 'CMVIEW'"
+      >
+        <td width="50%">
+          {{ 'MAINTENANCENOTIFICATIONVIEW.condition' | translate}}
+        </td>
+        <td width="50%" class="data">{{breakdowncoding}}</td>
+      </tr>
+
+      <tr *ngIf="maintenancetype!=''">
+        <td width="50%">
+          {{ 'MAINTENANCENOTIFICATIONVIEW.maintenancetype' | translate}}
+        </td>
+        <td width="50%" class="data">{{maintenancetype}}</td>
+      </tr>
+
+      <tr *ngIf="reportedby!=''">
+        <td width="50%">
+          {{ 'MAINTENANCENOTIFICATIONVIEW.reportedby' | translate}}
+        </td>
+        <td width="50%" class="data">{{reportedby}}</td>
+      </tr>
+
+      <tr *ngIf="breakdownremarks!=''">
+        <td>{{ 'MAINTENANCENOTIFICATIONVIEW.initialcomplaint' | translate}}</td>
+        <td width="50%" class="data">{{breakdownremarks}}</td>
+      </tr>
+    </table>
+
+    <div *ngIf="!detailsnorecordFlag">
+      <div class="titleheader">
+        <div class="col">
+          <div class="title text-uppercase">
+            <b
+              >{{ 'MAINTENANCENOTIFICATIONVIEW.maintenancenotificationdetails' |
+              translate}}</b
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="notificationcard">
+        <ion-row class="form-row">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.stationname' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{station}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.machineryname' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{equipment}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row" *ngIf="partdefect!=''">
+          <ion-col size="4.5">
+            <div
+              class="h7 text-dark"
+              *ngIf="fromscreen == 'CM' || fromscreen == 'CMVIEW'"
+            >
+              {{ 'MAINTENANCENOTIFICATIONVIEW.partdefect' | translate}}
+            </div>
+            <div
+              class="h7 text-dark"
+              *ngIf="fromscreen == 'RoPM' || fromscreen == 'RoPMVIEW'"
+            >
+              {{ 'MAINTENANCENOTIFICATIONVIEW.partname' | translate}}
+            </div>
+            <div
+              class="h7 text-dark"
+              *ngIf="fromscreen == 'RePM' || fromscreen == 'RePMVIEW'"
+            >
+              {{ 'MAINTENANCENOTIFICATIONVIEW.partname' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{partdefect}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row" *ngIf="maximumrunninghours!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.lifetimehours' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{maximumrunninghours}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row" *ngIf="runninghours!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.currentrunninghours' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{runninghours}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row" *ngIf="extendedmaximumrunninghours!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.extendhours' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{extendedmaximumrunninghours}}</div>
+          </ion-col>
+        </ion-row>
+
+        <!-- CM Multiple Parts - Start -->
+        <div
+          *ngIf="(fromscreen == 'CM' || fromscreen == 'CMVIEW') && cmpartslistArr.length>0"
+        >
+          <ion-row class="form-row">
+            <ion-col size="4.5">
+              <div class="h7 text-dark">
+                {{ 'MAINTENANCENOTIFICATIONVIEW.partdefect' | translate}}
+              </div>
+            </ion-col>
+            <ion-col size="0.5" style="text-align: center">
+              <div class="h7 text-dark">:</div>
+            </ion-col>
+            <ion-col size="7"> </ion-col>
+          </ion-row>
+
+          <div
+            *ngFor="let value of cmpartslistArr; let i=index"
+            class="multipleparts"
+          >
+            <table
+              style="width: 100%; height: 100%"
+              class="table table-bordered"
+            >
+              <tr class="table_head">
+                <th colspan="3" style="padding: 4px !important">
+                  <span class="head">({{i+1}}) {{value.partname}}</span>
+                </th>
+              </tr>
+
+              <tr>
+                <td scope="row" colspan="2">
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.currentrunninghours' |
+                  translate}} :
+                  <b *ngIf="value.runninghours!=''">{{value.runninghours}}</b>
+                  <b *ngIf="value.runninghours==''">-</b>
+                </td>
+              </tr>
+
+              <tr>
+                <td scope="row" style="width: 50%">
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.damagetype' | translate}} :
+                  <b *ngIf="value.damagetype!=''">{{value.damagetype}}</b>
+                  <b *ngIf="value.damagetype==''">-</b>
+                </td>
+                <td scope="row" style="width: 50%">
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.smallactivity' | translate}} :
+                  <b *ngIf="value.activity!=''">{{value.activity}}</b>
+                  <b *ngIf="value.activity==''">-</b>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <!-- CM Multiple Parts - End -->
+
+        <!-- RoPM Multiple Parts - Start -->
+        <div
+          *ngIf="(fromscreen == 'RoPM' || fromscreen == 'RoPMVIEW') && ropmpartslistArr.length>0"
+        >
+          <ion-row class="form-row">
+            <ion-col size="4.5">
+              <div class="h7 text-dark">
+                {{ 'MAINTENANCENOTIFICATIONVIEW.partsname' | translate}}
+              </div>
+            </ion-col>
+            <ion-col size="0.5" style="text-align: center">
+              <div class="h7 text-dark">:</div>
+            </ion-col>
+            <ion-col size="7"> </ion-col>
+          </ion-row>
+
+          <div
+            *ngFor="let value of ropmpartslistArr; let i=index"
+            class="multipleparts"
+          >
+            <table
+              style="width: 100%; height: 100%"
+              class="table table-bordered"
+            >
+              <tr class="table_head">
+                <th colspan="3" style="padding: 4px !important">
+                  <span class="head">({{i+1}}) {{value.partname}}</span>
+                </th>
+              </tr>
+
+              <!-- <tr>
+               <th style="padding: 4px !important; width: 20%">
+                 <span>Condition</span>
+               </th>
+
+               <th style="padding: 4px !important; width: 40%">
+                 <span>Maintenance Type</span>
+               </th>
+
+               <th style="padding: 4px !important; width: 40%">
+                 <span>Damage</span>
+               </th>
+             </tr> -->
+              <tr>
+                <td
+                  scope="row"
+                  style="width: 50%"
+                  *ngIf="(value.condition!='')"
+                >
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.condition' | translate}} :
+                  <b>{{value.condition}}</b>
+                </td>
+                <td
+                  scope="row"
+                  style="width: 50%"
+                  *ngIf="(value.condition=='')"
+                >
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.condition' | translate}} :
+                  <b>-</b>
+                </td>
+
+                <td scope="row" style="width: 50%">
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.current' | translate}}<br />{{
+                  'MAINTENANCENOTIFICATIONVIEW.runninghourscurrent' |
+                  translate}} :
+                  <b>{{value.runninghours}}</b>
+                </td>
+              </tr>
+
+              <tr *ngIf="(value.maintenancetype!='' && value.damagetype!='')">
+                <td scope="row" style="width: 50%">
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.maintenancetype' | translate}}
+                  : <b>{{value.maintenancetype}}</b>
+                </td>
+                <td scope="row" style="width: 50%">
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.damagetype' | translate}} :
+                  <b>{{value.damagetype}}</b>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <!-- RoPM Multiple Parts - End -->
+
+        <!-- RePM Multiple Parts - Start -->
+        <div
+          *ngIf="(fromscreen == 'RePM' || fromscreen == 'RePMVIEW') && repmpartslistArr.length>0"
+        >
+          <ion-row class="form-row">
+            <ion-col size="4.5">
+              <div class="h7 text-dark">
+                {{ 'MAINTENANCENOTIFICATIONVIEW.partsname' | translate}}
+              </div>
+            </ion-col>
+            <ion-col size="0.5" style="text-align: center">
+              <div class="h7 text-dark">:</div>
+            </ion-col>
+            <ion-col size="7"> </ion-col>
+          </ion-row>
+
+          <div
+            *ngFor="let value of repmpartslistArr; let i=index"
+            class="multipleparts"
+          >
+            <table
+              style="width: 100%; height: 100%"
+              class="table table-bordered"
+            >
+              <tr class="table_head">
+                <th colspan="3" style="padding: 4px !important">
+                  <span class="head">({{i+1}}) {{value.partname}}</span>
+                </th>
+              </tr>
+
+              <!-- <tr>
+               <th style="padding: 4px !important; width: 30%">
+                 <span>Maximum<br />Runnning Hours</span>
+               </th>
+
+               <th style="padding: 4px !important; width: 35%">
+                 <span>Current<br />Running Hours</span>
+               </th>
+
+               <th style="padding: 4px !important; width: 35%">
+                 <span>Extended Maximum<br />Running Hours</span>
+               </th>
+             </tr> -->
+
+              <tr>
+                <td
+                  scope="row"
+                  style="width: 50%"
+                  *ngIf="(value.condition!='')"
+                >
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.smallactivity' | translate}} :
+                  <b>{{value.condition}}</b>
+                </td>
+                <td
+                  scope="row"
+                  style="width: 50%"
+                  *ngIf="(value.condition=='')"
+                >
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.smallactivity' | translate}} :
+                  <b>-</b>
+                </td>
+
+                <td scope="row" style="width: 50%">
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.current' | translate}}<br />{{
+                  'MAINTENANCENOTIFICATIONVIEW.runninghourscurrent' |
+                  translate}} :
+                  <b>{{value.currentrunninghours}}</b>
+                </td>
+              </tr>
+
+              <tr
+                *ngIf="(value.maximumrunninghours!='' && value.extendedmaximumrunninghours!='')"
+              >
+                <td scope="row" style="width: 50%">
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.maximum' | translate}}<br />{{
+                  'MAINTENANCENOTIFICATIONVIEW.submaximum' | translate}} :
+                  <b>{{value.maximumrunninghours}}</b>
+                </td>
+                <td scope="row" style="width: 50%">
+                  {{ 'MAINTENANCENOTIFICATIONVIEW.extentedmaximum' |
+                  translate}}<br />{{ 'MAINTENANCENOTIFICATIONVIEW.subextented'
+                  | translate}} :
+                  <b>{{value.extendedmaximumrunninghours}}</b>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <!-- RePM Multiple Parts - End -->
+
+        <ion-row class="form-row" *ngIf="breakdowncauses!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.breakdowncauses' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{breakdowncauses}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row" *ngIf="damage!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.damagetype' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{damage}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row" *ngIf="remarks!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.remarks' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{remarks}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row" *ngIf="createddatetime!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.dateandtime' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{createddatetime}}</div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+
+    <!-- Repair Activity -->
+    <div *ngIf="!repairactivitynorecordFlag">
+      <div class="titleheader">
+        <div class="col">
+          <div class="title text-uppercase">
+            <b>{{ 'MAINTENANCENOTIFICATIONVIEW.activity' | translate}}</b>
+          </div>
+        </div>
+      </div>
+
+      <div class="notificationcard">
+        <ion-row class="form-row" *ngIf="activity!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.smallactivity' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{activity}}</div>
+          </ion-col>
+        </ion-row>
+
+        <!-- <ion-row class="form-row">
+        <ion-col size="6">
+          <div class="h7 text-dark">Carried Out By</div>
+        </ion-col>
+        <ion-col size="6">
+          <div class="h7 blockdata">: Name 1</div>
+        </ion-col>
+      </ion-row> -->
+
+        <ion-row class="form-row" *ngIf="partreceiveddatetime!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.partreceived' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{partreceiveddatetime}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row" *ngIf="activitycompletiondatetime!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.activitycompletion' |
+              translate}}<br />{{
+              'MAINTENANCENOTIFICATIONVIEW.activitycompletiondatetime' |
+              translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{activitycompletiondatetime}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row" *ngIf="carriedoutby!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.carriedoutby' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{carriedoutby}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row" *ngIf="verifiedby!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.verifiedby' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{verifiedby}}</div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+
+    <!-- Job Authorization -->
+    <div *ngIf="!jobauthorizationnorecordFlag">
+      <div class="titleheader">
+        <div class="col">
+          <div class="title text-uppercase">
+            <b
+              >{{ 'MAINTENANCENOTIFICATIONVIEW.jobacknowledgement' |
+              translate}}</b
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="notificationcard">
+        <ion-row class="form-row" *ngIf="authorizedby!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.acknowlegedby' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{authorizedby}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row" *ngIf="authorizeddatetime!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.acknowledged' | translate}}<br />{{
+              'MAINTENANCENOTIFICATIONVIEW.acknowledgeddatetime' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{authorizeddatetime}}</div>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+
+    <!-- <div style="overflow-x: auto">
+      <div *ngIf="tasklistArr.length > 0">
+        <div class="tasktitleheader">
+          <div class="col">
+            <div class="title text-uppercase">
+              <b>{{ 'MAINTENANCENOTIFICATIONVIEW.tasklist' | translate}}</b>
+            </div>
+          </div>
+        </div>
+
+        <div *ngFor="let value of tasklistArr; let i=index">
+          <div class="userfont" style="margin-top: 10px; font-weight: bold">
+            <b>{{value.taskname}}</b>
+          </div>
+
+          <table style="width: 100%; height: 100%" class="table table-bordered">
+            <tr class="table_head">
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont text-dark"
+                  >{{ 'MAINTENANCENOTIFICATIONVIEW.task' | translate}}</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont text-dark"
+                  >{{ 'MAINTENANCENOTIFICATIONVIEW.yes' | translate}}</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont text-dark"
+                  >{{ 'MAINTENANCENOTIFICATIONVIEW.no' | translate}}</span
+                >
+              </th>
+
+              <th colspan="1" scope="colgroup" style="padding: 4px !important">
+                <span class="mdfont text-dark"
+                  >{{ 'MAINTENANCENOTIFICATIONVIEW.note' | translate}}</span
+                >
+              </th>
+            </tr>
+
+            <tr *ngFor="let record of value.subtaskdata; let i=index">
+              <td style="text-align: left" width="25%">{{record.subtask}}</td>
+              <td style="text-align: center" width="25%">
+                <img
+                  style="width: 10px; height: 10px"
+                  *ngIf="record.yes=='1'"
+                  src="../../../assets/img/entry.png"
+                />
+                <img
+                  style="width: 10px; height: 10px"
+                  *ngIf="record.yes=='0'"
+                  src="../../../assets/img/noentry.png"
+                />
+              </td>
+              <td style="text-align: center" width="25%">
+                <img
+                  style="width: 10px; height: 10px"
+                  *ngIf="record.no=='1'"
+                  src="../../../assets/img/entry.png"
+                />
+                <img
+                  style="width: 10px; height: 10px"
+                  *ngIf="record.no=='0'"
+                  src="../../../assets/img/noentry.png"
+                />
+              </td>
+              <td style="text-align: center" width="25%">{{record.remarks}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</ion-content>

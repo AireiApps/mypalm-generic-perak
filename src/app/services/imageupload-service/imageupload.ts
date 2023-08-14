@@ -511,6 +511,7 @@ export class ImageUploadService {
         quality: 80,
         destinationType: this.camera.DestinationType.FILE_URI,
         sourceType: this.camera.PictureSourceType.CAMERA,
+        allowEdit: true, //Added on 21.07.2023
         saveToPhotoAlbum: false,
         correctOrientation: true,
         targetWidth: 500,
@@ -543,16 +544,21 @@ export class ImageUploadService {
             mimeType: "multipart/form-data",
             params: reqparam,
           };
-          console.log(reqparam);
+
+          //console.log(reqparam);
+
           const fileTransfer: FileTransferObject = this.transfer.create();
           this.commonservice.presentLoading();
           // Use the FileTransfer to upload the image
           fileTransfer.upload(targetPath, url, options).then(
             (data) => {
+              this.camera.cleanup().then(() => {
+                this.commonservice.presentToast("Cache Cleaned Successfully");
+              });
+
               this.commonservice.dimmissLoading();
               var resultdata: any;
               resultdata = data;
-              //console.log(JSON.stringify(resultdata.response));
               resolve(resultdata);
             },
             (err) => {
@@ -610,7 +616,7 @@ export class ImageUploadService {
               this.commonservice.dimmissLoading();
               var resultdata: any;
               resultdata = data;
-              console.log(JSON.stringify(resultdata.response));
+              //console.log(JSON.stringify(resultdata.response));
               resolve(resultdata);
             },
             (err) => {

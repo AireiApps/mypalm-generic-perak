@@ -9,16 +9,9 @@
     <ion-title color="light" [innerHTML]="mill_name"></ion-title>
 
     <ion-buttons slot="primary">
-      <ion-button class="bg-light-color" (click)="callmodalcontroller()">
+      <ion-button class="bg-light-color" (click)="callmodalcontroller('')">
         <ion-icon name="calendar-outline"></ion-icon>
       </ion-button>
-
-      <!-- <ion-button class="bg-light-color" (click)="btn_notification()">
-        <ion-badge class="todaybadge" *ngIf="count && count != 0" color="accent"
-          >{{ count }}</ion-badge
-        >
-        <ion-icon name="notifications-outline"></ion-icon>
-      </ion-button> -->
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -40,6 +33,7 @@
   </div>
 
   <div #myElementRef class="home-box">
+    <!-- Mill Production Status - Start -->
     <div class="titleheader" *ngIf="productionflag!=''">
       <div class="col">
         <div class="title text-uppercase">
@@ -63,8 +57,8 @@
       </ion-row>
 
       <ion-row>
-        <ion-col style="text-align: center" *ngIf="productionflag=='1'">
-          <p class="mdfont">{{txt_millstartstop}}</p>
+        <ion-col style="text-align: center">
+          <p class="mdfont">{{txt_millstart}}</p>
           <p
             class="mdfont"
             style="color: #008000"
@@ -80,20 +74,10 @@
           >
             -
           </p>
-
-          <div>
-            <button
-              type="button"
-              class="h7 btn btn-refresh btn-sm float-right"
-              (click)="refreshRecords()"
-            >
-              {{ 'GENERALBUTTON.refresh' | translate}}
-            </button>
-          </div>
         </ion-col>
 
-        <ion-col style="text-align: center" *ngIf="productionflag!='1'">
-          <p class="mdfont">{{txt_millstartstop}}</p>
+        <ion-col style="text-align: center">
+          <p class="mdfont">{{txt_millstop}}</p>
           <p
             class="mdfont"
             style="color: #cb4335"
@@ -109,60 +93,118 @@
           >
             -
           </p>
-
-          <div>
-            <button
-              type="button"
-              class="h7 btn btn-refresh btn-sm float-right"
-              (click)="refreshRecords()"
-            >
-              {{ 'GENERALBUTTON.refresh' | translate}}
-            </button>
-          </div>
         </ion-col>
       </ion-row>
     </div>
+    <!-- Mill Production Status - End -->
 
-    <!-- Stations and Machines -->
-    <div *ngIf="uienable && !pleasewaitflag" style="margin-top: 10px">
-      <div *ngFor="let station of stationsArr">
-        <div class="titleheader">
-          <div class="col">
-            <div class="title text-uppercase">{{station.stationname}}</div>
-          </div>
-        </div>
-
-        <div class="stationcard">
-          <ion-row *ngFor="let machines of station.machines">
-            <ion-col size="6" *ngFor="let eachitem of machines">
-              <ion-card class="card card-height">
-                <!-- <ion-badge class="badgecolor">100</ion-badge> -->
-                <ion-row style="height: 100%">
-                  <ion-col class="imagecenter" size="3">
-                    <img src="../../../assets/img/productiondashboard.png" />
-                    <!-- <img src="{{eachitem.imageurl}}" alt="PROFILE" /> -->
-                  </ion-col>
-
-                  <ion-col
-                    class="vertical-align-content"
-                    [style.background-color]="getBackGroundColor(eachitem.machinestatus)"
-                    [style.color]="getStatusTextColor(eachitem.machinestatus)"
-                    size="9"
-                  >
-                    <div class="h7">{{eachitem.machinename}}</div>
-                  </ion-col>
-                </ion-row>
-              </ion-card>
-            </ion-col>
-          </ion-row>
+    <!-- Grading Analysis - Start -->
+    <div class="titleheader" style="margin-top: 20px">
+      <div class="col">
+        <div class="title text-uppercase">
+          {{ 'MANAGERDASHBOARD.gradinganalysis' | translate}}
         </div>
       </div>
     </div>
-    <!-- End -->
 
-    <div class="norecords" *ngIf="!uienable && !pleasewaitflag">
-      {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+    <div class="checkcard">
+      <ion-row>
+        <ion-card
+          *ngFor="let item of gradingArr; let i = index"
+          [ngClass]="{'gradingevencard' : (i%2 == 0), 'gradingoddcard' : (i%2 != 0)}"
+          [style.background]="getGradingBackGroundColor(item.position)"
+          [style.borderColor]="geBorderColor(item.position)"
+        >
+          <ion-row class="ion-text-center">
+            <ion-col no-padding size="8.75" style="align-self: center">
+              <div class="gradingcardtitle">{{item.title}}</div>
+              <div class="gradingcardvalue">{{item.value}}</div>
+            </ion-col>
+
+            <ion-col no-padding size="0.5" style="align-self: center">
+              <div class="vl4line"></div>
+            </ion-col>
+
+            <ion-col no-padding size="2.75" style="align-self: center">
+              <img src="../../../assets/img/grading.png" />
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </ion-row>
     </div>
+    <!-- Grading Analysis - End -->
+
+    <!-- Prediction Analysis - Start -->
+    <div class="titleheader" style="margin-top: 20px">
+      <div class="col">
+        <div class="title text-uppercase">
+          {{ 'MANAGERDASHBOARD.predictionanalysis' | translate}}
+        </div>
+      </div>
+    </div>
+
+    <div class="checkcard">
+      <ion-row>
+        <ion-card
+          *ngFor="let item of oillossArr; let i = index"
+          [ngClass]="{'gradingevencard' : (i%2 == 0), 'gradingoddcard' : (i%2 != 0)}"
+          [style.background]="getOillossBackGroundColor(item.position)"
+          [style.borderColor]="geBorderColor(item.position)"
+        >
+          <ion-row class="ion-text-center">
+            <ion-col no-padding size="8.75" style="align-self: center">
+              <div class="gradingcardtitle">{{item.title}}</div>
+              <div class="gradingcardvalue">{{item.value}}</div>
+            </ion-col>
+
+            <ion-col no-padding size="0.5" style="align-self: center">
+              <div class="vl4line"></div>
+            </ion-col>
+
+            <ion-col no-padding size="2.75" style="align-self: center">
+              <img src="../../../assets/img/oilloss.png" />
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </ion-row>
+    </div>
+    <!-- Prediction Analysis - End -->
+
+    <!-- Maintenance Summary - Start -->
+    <div class="titleheader" style="margin-top: 20px">
+      <div class="col">
+        <div class="title text-uppercase">
+          {{ 'MANAGERDASHBOARD.maintenancesummary' | translate}}
+        </div>
+      </div>
+    </div>
+
+    <div class="checkcard">
+      <ion-row>
+        <ion-card
+          *ngFor="let item of maintenancesummaryArr; let i = index"
+          [ngClass]="{'gradingevencard' : (i%2 == 0), 'gradingoddcard' : (i%2 != 0)}"
+          [style.background]="getMaintenanceSummaryBackGroundColor(item.position)"
+          [style.borderColor]="geBorderColor(item.position)"
+        >
+          <ion-row class="ion-text-center">
+            <ion-col no-padding size="8.75" style="align-self: center">
+              <div class="gradingcardtitle">{{item.title}}</div>
+              <div class="gradingcardvalue">{{item.value}}</div>
+            </ion-col>
+
+            <ion-col no-padding size="0.5" style="align-self: center">
+              <div class="vl4line"></div>
+            </ion-col>
+
+            <ion-col no-padding size="2.75" style="align-self: center">
+              <img src="../../../assets/img/machineryrunninghours.png" />
+            </ion-col>
+          </ion-row>
+        </ion-card>
+      </ion-row>
+    </div>
+    <!-- Maintenance Summary - End -->
   </div>
 
   <div class="pleasewait" *ngIf="pleasewaitflag">

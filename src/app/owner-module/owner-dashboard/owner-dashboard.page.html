@@ -1,0 +1,358 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-avatar slot="start">
+      <ion-img
+        class="toolbarimage"
+        src="../../../assets/img/logo.png"
+      ></ion-img>
+    </ion-avatar>
+    <ion-title color="light" mode="ios" [innerHTML]="mill_name"></ion-title>
+
+    <ion-buttons slot="primary">
+      <!-- Production and Maintenance Count for Android - Start -->
+      <ion-button
+        class="bg-light-color"
+        *ngIf="getplatform == 'android'"
+        (click)="btn_notification('Production')"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : productioncountlength == 1, 'twodigitbadgecount' : productioncountlength >= 2}"
+          *ngIf="productioncount && productioncount != 0"
+          >{{ productioncount }}</ion-badge
+        >
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        *ngIf="getplatform == 'android'"
+        (click)="btn_notification('Maintenance')"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : maintenancecountlength == 1, 'twodigitbadgecount' : maintenancecountlength >= 2}"
+          *ngIf="maintenancecount && maintenancecount != 0"
+          >{{ maintenancecount }}</ion-badge
+        >
+        <ion-icon name="construct-outline"></ion-icon>
+      </ion-button>
+      <!-- Production and Maintenance Count for Android - End -->
+
+      <!-- Production and Maintenance Count for IOS - Start -->
+      <ion-button
+        class="bg-light-color"
+        *ngIf="getplatform == 'ios'"
+        (click)="btn_notification('Production')"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : productioncountlength == 1, 'iostwodigitbadgecount' : productioncountlength >= 2}"
+          *ngIf="productioncount && productioncount != 0"
+          >{{ productioncount }}</ion-badge
+        >
+        <ion-icon name="settings-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        *ngIf="getplatform == 'ios'"
+        (click)="btn_notification('Maintenance')"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : maintenancecountlength == 1, 'iostwodigitbadgecount' : maintenancecountlength >= 2}"
+          *ngIf="maintenancecount && maintenancecount != 0"
+          >{{ maintenancecount }}</ion-badge
+        >
+        <ion-icon name="construct-outline"></ion-icon>
+      </ion-button>
+      <!-- Production and Maintenance Count for IOS - End -->
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- <ion-toolbar class="bg-search-color">
+    <ion-searchbar
+      placeholder="Search"
+      [(ngModel)]="filterTerm"
+      animated="true"
+      clearIcon="close"
+    ></ion-searchbar>
+  </ion-toolbar> -->
+</ion-header>
+
+<ion-content>
+  <div class="myCard">
+    <img class="backgroundimage" src="../../../assets/img/header_myPalm.png" />
+    <div class="myOverlay">
+      <div class="usermessagecard">
+        <ion-row>
+          <ion-col size="11">
+            <p style="font-size: 16px; font-weight: bold; margin: 0px">
+              {{ 'MAINTENANCEDASHBOARD.welcome' | translate}} {{userlist.name}}
+            </p>
+          </ion-col>
+          <ion-col size="1">
+            <ion-icon
+              style="font-size: 20px"
+              name="person-outline"
+              (click)="gotoprofile()"
+            ></ion-icon>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-box" #myElementRef>
+    <div *ngIf="!nomachinesfound">
+      <form [formGroup]="dashboardForm">
+        <div class="titleheader" *ngIf="productionflag!=''">
+          <div class="col">
+            <div class="title text-uppercase">
+              {{ 'MAINTENANCEDASHBOARD.millproductionstatus' | translate}}
+            </div>
+          </div>
+        </div>
+
+        <div class="checkcard" *ngIf="productionflag!=''">
+          <ion-row>
+            <ion-col style="display: grid; justify-content: center">
+              <div
+                class="productionstatustitleheader"
+                [style.backgroundColor]="getProductionStatusBackGroundColor(productionflag)"
+              >
+                <div class="productionstatustitle text-uppercase">
+                  {{txt_millproductionstatus}}
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col style="text-align: center" *ngIf="productionflag=='1'">
+              <p class="mdfont">{{txt_millstartstop}}</p>
+              <p
+                class="mdfont"
+                style="color: #008000"
+                *ngIf="millstartdatetime != ''"
+              >
+                {{millstartdatetime}}
+              </p>
+
+              <p
+                class="mdfont"
+                style="color: #008000"
+                *ngIf="millstartdatetime == ''"
+              >
+                -
+              </p>
+
+              <div>
+                <button
+                  type="button"
+                  class="h7 btn btn-refresh btn-sm float-right"
+                  (click)="refreshRecords()"
+                >
+                  {{ 'GENERALBUTTON.refresh' | translate}}
+                </button>
+              </div>
+            </ion-col>
+
+            <ion-col style="text-align: center" *ngIf="productionflag!='1'">
+              <p class="mdfont">{{txt_millstartstop}}</p>
+              <p
+                class="mdfont"
+                style="color: #cb4335"
+                *ngIf="millstopdatetime != ''"
+              >
+                {{millstopdatetime}}
+              </p>
+
+              <p
+                class="mdfont"
+                style="color: #cb4335"
+                *ngIf="millstopdatetime == ''"
+              >
+                -
+              </p>
+
+              <div
+                style="margin: 10px 0px 10px 0px"
+                *ngIf="breakdownreason != ''"
+              >
+                <p class="mdfont">
+                  {{ 'MAINTENANCEDASHBOARD.breakdownreason' | translate}}
+                </p>
+
+                <p class="mdfont" style="color: #cb4335">{{breakdownreason}}</p>
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  class="h7 btn btn-refresh btn-sm float-right"
+                  (click)="refreshRecords()"
+                >
+                  {{ 'GENERALBUTTON.refresh' | translate}}
+                </button>
+              </div>
+            </ion-col>
+          </ion-row>
+        </div>
+
+        <div style="padding: 0px 5px 0px 5px; margin-top: 10px">
+          <select
+            formControlName="select_station"
+            [ngClass]="{'selectdropdown' : (getplatform=='android'), 'iosselectdropdown' : (getplatform=='ios')}"
+            (change)="onChangeStation()"
+          >
+            <option value="" selected>
+              {{ 'MAINTENANCEDASHBOARD.searchbystation' | translate}}
+            </option>
+            <option
+              value="{{item.station_id}}"
+              *ngFor="let item of stationlistArr"
+            >
+              {{ item.station_name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Stations and Machines -->
+        <div *ngIf="uienable && !pleasewaitflag" style="margin-top: 10px">
+          <div *ngFor="let station of stationsArr | filter:filterTerm">
+            <div class="titleheader">
+              <div class="col">
+                <div class="title text-uppercase">{{station.stationname}}</div>
+              </div>
+            </div>
+
+            <div class="stationcard">
+              <ion-row *ngFor="let machines of station.machines">
+                <ion-col size="6" *ngFor="let eachitem of machines">
+                  <ion-card
+                    class="card card-height"
+                    (click)="callmodalcontroller(eachitem)"
+                  >
+                    <!-- <ion-badge class="badgecolor">100</ion-badge> -->
+                    <ion-row style="height: 100%">
+                      <ion-col class="imagecenter" size="3">
+                        <img
+                          src="../../../assets/img/productiondashboard.png"
+                        />
+                        <!-- <img src="{{eachitem.imageurl}}" alt="PROFILE" /> -->
+                      </ion-col>
+
+                      <ion-col
+                        class="vertical-align-content"
+                        [style.background-color]="getBackGroundColor(eachitem.machinestatus, eachitem.breakdownstatus)"
+                        [style.color]="getStatusTextColor(eachitem.machinestatus)"
+                        size="9"
+                      >
+                        <div class="h7">{{eachitem.machinename}}</div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+
+              <!-- FFB Cages - Start -->
+              <div *ngIf="ffbcageenableflag == 1">
+                <ng-container *ngFor="let machines of station.machines">
+                  <ng-container *ngFor="let eachitem of machines">
+                    <div
+                      style="margin: 0px 5px 0px 5px"
+                      *ngIf="eachitem.ffbcageflag==1"
+                    >
+                      <div class="ffbcageheader">
+                        <ion-row>
+                          <ion-col
+                            style="
+                              padding: 0px;
+                              margin: 0px;
+                              align-self: center;
+                            "
+                          >
+                            <div class="ffbcagetitle text-uppercase">
+                              {{eachitem.machinename}}
+                            </div>
+                          </ion-col>
+                        </ion-row>
+                      </div>
+
+                      <table
+                        style="width: 100%; height: 100%"
+                        class="table table-bordered"
+                      >
+                        <tr>
+                          <th style="padding: 4px !important">
+                            <span class="tablefont"
+                              >{{ 'FFBCAGES.total' | translate}}</span
+                            >
+                          </th>
+
+                          <th colspan="1" style="padding: 4px !important">
+                            <span class="tablefont"
+                              >{{ 'FFBCAGES.inuse' | translate}}</span
+                            >
+                          </th>
+
+                          <th colspan="1" style="padding: 4px !important">
+                            <span class="tablefont"
+                              >{{ 'FFBCAGES.notinuse' | translate}}</span
+                            >
+                          </th>
+
+                          <th colspan="1" style="padding: 4px !important">
+                            <span class="tablefont"
+                              >{{ 'FFBCAGES.underrepair' | translate}}</span
+                            >
+                          </th>
+                        </tr>
+
+                        <tr>
+                          <td scope="row">
+                            <b>{{ffbtotal}}</b>
+                          </td>
+
+                          <td scope="row">
+                            <b>{{ffbinuse}}</b>
+                          </td>
+
+                          <td scope="row">
+                            <b>{{ffbnotinuse}}</b>
+                          </td>
+
+                          <td scope="row">
+                            <b>{{ffbunderrepair}}</b>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </div>
+              <!-- FFB Cages - End -->
+            </div>
+          </div>
+        </div>
+        <!-- End -->
+      </form>
+    </div>
+  </div>
+
+  <div class="norecords" *ngIf="nomachinesfound">
+    {{ 'NOMACHINESFOUND.nomachinesfound' | translate}}
+  </div>
+
+  <div class="pleasewait" *ngIf="pleasewaitflag">
+    <div style="width: 100%; text-align: center">
+      <img
+        style="width: 80px; height: 80px"
+        src="../../../assets/img/loading.gif"
+      />
+    </div>
+    {{ 'NORECORDSFOUND.loading' | translate}}
+  </div>
+</ion-content>

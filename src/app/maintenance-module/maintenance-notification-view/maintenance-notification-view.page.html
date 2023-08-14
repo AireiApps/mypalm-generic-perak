@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar class="bg-brown-color">
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" mode="md">
       <ion-back-button
         style="text-transform: none"
         text="{{ 'MAINTENANCENOTIFICATIONVIEW.back' | translate}}"
@@ -81,39 +81,6 @@
     </ion-row>
 
     <table style="width: 100%; height: 100%" class="table table-bordered">
-      <tr *ngIf="notificationno!=''">
-        <td width="50%">{{ 'MAINTENANCENOTIFICATIONVIEW.id' | translate}}</td>
-        <td width="50%" class="data">{{notificationno}}</td>
-      </tr>
-
-      <tr *ngIf="notificationtype!=''">
-        <td width="50%">
-          {{ 'MAINTENANCENOTIFICATIONVIEW.notificationtype' | translate}}
-        </td>
-        <td width="50%" class="data">{{notificationtype}}</td>
-      </tr>
-
-      <tr *ngIf="breakdowncoding!=''">
-        <td width="50%">
-          {{ 'MAINTENANCENOTIFICATIONVIEW.problem' | translate}}
-        </td>
-        <td width="50%" class="data">{{breakdowncoding}}</td>
-      </tr>
-
-      <tr *ngIf="maintenancetype!=''">
-        <td width="50%">
-          {{ 'MAINTENANCENOTIFICATIONVIEW.maintenancetype' | translate}}
-        </td>
-        <td width="50%" class="data">{{maintenancetype}}</td>
-      </tr>
-
-      <tr *ngIf="reportedby!=''">
-        <td width="50%">
-          {{ 'MAINTENANCENOTIFICATIONVIEW.reportedby' | translate}}
-        </td>
-        <td width="50%" class="data">{{reportedby}}</td>
-      </tr>
-
       <tr *ngIf="notificationstatus!=''">
         <td width="50%">
           {{ 'MAINTENANCENOTIFICATIONVIEW.status' | translate}}
@@ -141,6 +108,44 @@
         >
           <b>{{notificationstatus}}</b>
         </td>
+      </tr>
+
+      <tr *ngIf="notificationno!=''">
+        <td width="50%">{{ 'MAINTENANCENOTIFICATIONVIEW.id' | translate}}</td>
+        <td width="50%" class="data">{{notificationno}}</td>
+      </tr>
+
+      <tr *ngIf="notificationtype!=''">
+        <td width="50%">
+          {{ 'MAINTENANCENOTIFICATIONVIEW.notificationtype' | translate}}
+        </td>
+        <td width="50%" class="data">{{notificationtype}}</td>
+      </tr>
+
+      <tr *ngIf="breakdowncoding!=''">
+        <td width="50%">
+          {{ 'MAINTENANCENOTIFICATIONVIEW.condition' | translate}}
+        </td>
+        <td width="50%" class="data">{{breakdowncoding}}</td>
+      </tr>
+
+      <tr *ngIf="maintenancetype!=''">
+        <td width="50%">
+          {{ 'MAINTENANCENOTIFICATIONVIEW.maintenancetype' | translate}}
+        </td>
+        <td width="50%" class="data">{{maintenancetype}}</td>
+      </tr>
+
+      <tr *ngIf="reportedby!=''">
+        <td width="50%">
+          {{ 'MAINTENANCENOTIFICATIONVIEW.reportedby' | translate}}
+        </td>
+        <td width="50%" class="data">{{reportedby}}</td>
+      </tr>
+
+      <tr *ngIf="breakdownremarks!=''">
+        <td>{{ 'MAINTENANCENOTIFICATIONVIEW.initialcomplaint' | translate}}</td>
+        <td width="50%" class="data">{{breakdownremarks}}</td>
       </tr>
     </table>
 
@@ -216,20 +221,6 @@
           </ion-col>
         </ion-row>
 
-        <ion-row class="form-row" *ngIf="damage!=''">
-          <ion-col size="4.5">
-            <div class="h7 text-dark">
-              {{ 'MAINTENANCENOTIFICATIONVIEW.damagetype' | translate}}
-            </div>
-          </ion-col>
-          <ion-col size="0.5" style="text-align: center">
-            <div class="h7 text-dark">:</div>
-          </ion-col>
-          <ion-col size="7">
-            <div class="h7 blockdata">{{damage}}</div>
-          </ion-col>
-        </ion-row>
-
         <ion-row class="form-row" *ngIf="breakdowncauses!=''">
           <ion-col size="4.5">
             <div class="h7 text-dark">
@@ -241,6 +232,20 @@
           </ion-col>
           <ion-col size="7">
             <div class="h7 blockdata">{{breakdowncauses}}</div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="form-row" *ngIf="damage!=''">
+          <ion-col size="4.5">
+            <div class="h7 text-dark">
+              {{ 'MAINTENANCENOTIFICATIONVIEW.damagetype' | translate}}
+            </div>
+          </ion-col>
+          <ion-col size="0.5" style="text-align: center">
+            <div class="h7 text-dark">:</div>
+          </ion-col>
+          <ion-col size="7">
+            <div class="h7 blockdata">{{damage}}</div>
           </ion-col>
         </ion-row>
 

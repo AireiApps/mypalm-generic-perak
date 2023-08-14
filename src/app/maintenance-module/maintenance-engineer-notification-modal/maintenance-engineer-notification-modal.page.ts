@@ -8,12 +8,14 @@ import {
   NavParams,
   AlertController,
   IonSelect,
+  IonContent,
 } from "@ionic/angular";
 import { MaintenanceServiceService } from "src/app/services/maintenance-serivce/maintenance-service.service";
 
 // Custom Date Picker
 import { DatePickerPluginInterface } from "@capacitor-community/date-picker";
-import { Plugins } from "@capacitor/core";
+import { Plugins, KeyboardInfo } from "@capacitor/core";
+const { Keyboard } = Plugins;
 const DatePicker: DatePickerPluginInterface = Plugins.DatePickerPlugin as any;
 
 // Language Convertion
@@ -29,8 +31,10 @@ import { MaintenanceActivitysearchPage } from "src/app/maintenance-module/mainte
   styleUrls: ["./maintenance-engineer-notification-modal.page.scss"],
 })
 export class MaintenanceEngineerNotificationModalPage implements OnInit {
+  @ViewChild("pageTop") pageTop: IonContent;
   //@ViewChild("damagetypeSelect", { static: false }) damagetypeRef: IonSelect;
-  //@ViewChild("breakdowncausesSelect", { static: false }) breakdowncausesRef: IonSelect;
+  @ViewChild("breakdowncausesSelect", { static: false })
+  breakdowncausesRef: IonSelect;
   @ViewChild("assignedtoSelect", { static: false }) assignedtoRef: IonSelect;
 
   userlist = JSON.parse(localStorage.getItem("userlist"));
@@ -41,14 +45,13 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
   params;
 
   title = this.translate.instant(
-    "CORRECTIVEMAINTENACE.correctivemaintenancenotification"
+    "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.correctivemaintenance"
   );
   module = "";
 
   breakdownArr = [];
-  //maintenancetypeArr = [];
-  //damageArr = [];
-  //breakdowncausesArr = [];
+  maintenancetypeArr = [];
+  breakdowncausesArr = [];
   activityArr = [];
   assignedtoArr = [];
 
@@ -56,18 +59,23 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
   stepFlag = true;
   step1completedFlag = false;
   step2completedFlag = false;
+  step3completedFlag = false;
+  step4completedFlag = false;
+
+  otherFlag = false;
 
   viewFlag = false;
 
   breakdownFlag = false;
-  activityFlag = false;
-  otheractivityFlag = false;
 
   confirmDisable = false;
 
   // Variables
   getstationid = "";
+  getstationname = "";
+
   getmachineid = "";
+  getmachinename = "";
 
   notificationno = "";
   breakdownid = "";
@@ -81,29 +89,18 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
   partidArr = [];
   partvalueArr = [];
 
-  additionalpartid = "";
-  additionalpartvalue = "";
-  additionalpartidArr = [];
-  additionalpartvalueArr = [];
-
-  damagetypeid = "";
-  damagetypevalue = "";
-  damagetypeidArr = [];
-  damagetypevalueArr = [];
-
   breakdowncausesid = "";
   breakdowncausesvalue = "";
   breakdowncausesidArr = [];
   breakdowncausesvalueArr = [];
 
-  activityid = "";
-  activityvalue = "";
-  activityidArr = [];
-  activityvalueArr = [];
-
   // View the details
   view_breakdown = "";
-  view_activity = "";
+  view_maintenancetype = "";
+  view_partdefect = "";
+  view_breakdowncauses = "";
+
+  ffbcageflag = "";
 
   // Ionic Select Header
   public breakdownOptions: any = {
@@ -113,15 +110,17 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
     cssClass: "singleselect",
   };
 
-  public assignedtoOptions: any = {
-    header:
-      this.userlist.desigId == 4
-        ? this.translate.instant(
-            "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.fitterlist"
-          )
-        : this.translate.instant(
-            "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.wiremanlist"
-          ),
+  public maintenancetypeOptions: any = {
+    header: this.translate.instant(
+      "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.maintenancetype"
+    ),
+    cssClass: "multiselect",
+  };
+
+  public breakdowncausesOptions: any = {
+    header: this.translate.instant(
+      "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.breakdowncauses"
+    ),
     cssClass: "multiselect",
   };
 
@@ -150,18 +149,24 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
 
     let viewform = navParams.get("item");
     this.params = JSON.parse(viewform);
-
-    this.title = this.params.machinename;
+    this.ffbcageflag = this.params.ffbcageflag;
+    this.title = this.params.stationname;
     this.module = navParams.get("module");
 
-    console.log(this.module);
+    console.log(this.params);
 
     this.getstationid = this.params.stationid;
     this.getmachineid = this.params.machineid;
 
+    this.getstationname = this.params.stationname;
+    this.getmachinename = this.params.machinename;
+
     this.step1Form = this.fb.group({
       select_breakdown: new FormControl("", Validators.required),
-      txt_activityname: new FormControl("", Validators.required),
+      select_maintenancetype: new FormControl("", Validators.required),
+      txt_partname: new FormControl(""),
+      select_breakdowncauses: new FormControl("", Validators.required),
+      ta_remarks: new FormControl(""),
     });
   }
 
@@ -176,22 +181,38 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
 
     if (type == "STEP1") {
       if (!this.step1completedFlag) {
-        color = "#ff0000";
+        color = "#CB4335";
       } else if (this.step1completedFlag) {
         color = "#008000";
       } else {
-        color = "#ff0000";
+        color = "#CB4335";
       }
     } else if (type == "STEP2") {
       if (!this.step2completedFlag) {
-        color = "#ff0000";
+        color = "#CB4335";
       } else if (this.step2completedFlag) {
         color = "#008000";
       } else {
-        color = "#ff0000";
+        color = "#CB4335";
+      }
+    } else if (type == "STEP3") {
+      if (!this.step3completedFlag) {
+        color = "#CB4335";
+      } else if (this.step3completedFlag) {
+        color = "#008000";
+      } else {
+        color = "#CB4335";
+      }
+    } else if (type == "STEP4") {
+      if (!this.step4completedFlag) {
+        color = "#CB4335";
+      } else if (this.step4completedFlag) {
+        color = "#008000";
+      } else {
+        color = "#CB4335";
       }
     } else {
-      color = "#ff0000";
+      color = "#CB4335";
     }
 
     return color;
@@ -254,13 +275,93 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
 
         this.breakdownFlag = true;
 
-        this.activityFlag = true;
+        this.getMaintenancetype();
       } else {
         this.breakdownArr = [];
 
         this.breakdownFlag = false;
 
-        this.activityFlag = false;
+        this.getMaintenancetype();
+      }
+    });
+  }
+
+  getMaintenancetype() {
+    const req = {
+      user_id: this.userlist.userId,
+      millcode: this.userlist.millcode,
+      dept_id: this.userlist.dept_id,
+      language: this.languageService.selected,
+    };
+    this.maintenanceservice.getMaintenanceTypeList(req).then((result) => {
+      let resultdata: any;
+      resultdata = result;
+      if (resultdata.httpcode == 200) {
+        this.maintenancetypeArr = resultdata.data;
+
+        let eachArr = [];
+
+        for (let i = 0; i < this.maintenancetypeArr.length; i++) {
+          let eachitem = this.maintenancetypeArr[i];
+          let eachreq = {
+            id: eachitem.id,
+            maintanence_type: eachitem.maintanence_type,
+            selected: 0,
+          };
+          eachArr.push(eachreq);
+
+          if (this.maintenancetypeid != "") {
+            if (eachitem.id == this.maintenancetypeid) {
+              eachArr[i]["selected"] = 1;
+            }
+          }
+        }
+
+        this.maintenancetypeArr = eachArr;
+
+        this.getBreakDownCauses();
+      } else {
+        this.maintenancetypeArr = [];
+
+        this.getBreakDownCauses();
+      }
+    });
+  }
+
+  getBreakDownCauses() {
+    const req = {
+      user_id: this.userlist.userId,
+      millcode: this.userlist.millcode,
+      dept_id: this.userlist.dept_id,
+      language: this.languageService.selected,
+    };
+    this.maintenanceservice.getBreakDownCausesList(req).then((result) => {
+      let resultdata: any;
+      resultdata = result;
+      if (resultdata.httpcode == 200) {
+        this.breakdowncausesArr = resultdata.data;
+
+        let eachArr = [];
+
+        for (let i = 0; i < this.breakdowncausesArr.length; i++) {
+          let eachitem = this.breakdowncausesArr[i];
+          let eachreq = {
+            cause_id: eachitem.cause_id,
+            BreakdownCause: eachitem.BreakdownCause,
+            selected: 0,
+          };
+          eachArr.push(eachreq);
+
+          if (this.breakdowncausesid != "") {
+            if (eachitem.cause_id == this.breakdowncausesid) {
+              eachArr[i]["selected"] = 1;
+            }
+          }
+        }
+
+        this.breakdowncausesArr = eachArr;
+      } else {
+        this.breakdowncausesArr = [];
       }
     });
   }
@@ -282,6 +383,55 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
     }
   }
 
+  maintenancetypehandleChange(e) {
+    let value = e.detail.value;
+    if (value.length > 0) {
+      this.maintenancetypeid = JSON.parse(value).id;
+      this.maintenancetypevalue = JSON.parse(value).maintanence_type;
+
+      this.step2completedFlag = true;
+      this.getStatusColor("STEP2");
+    } else {
+      this.maintenancetypeid = "";
+      this.maintenancetypevalue = "";
+
+      this.step2completedFlag = false;
+      this.getStatusColor("STEP2");
+    }
+  }
+
+  breakdowncauseshandleChange(e) {
+    let value = e.detail.value;
+    if (value.length > 0) {
+      this.breakdowncausesidArr = [];
+      this.breakdowncausesvalueArr = [];
+      for (let i = 0; i < value.length; i++) {
+        this.breakdowncausesidArr.push(JSON.parse(value[i]).cause_id);
+        this.breakdowncausesvalueArr.push(JSON.parse(value[i]).BreakdownCause);
+      }
+
+      this.breakdowncausesid = this.breakdowncausesidArr.join(",");
+      this.breakdowncausesvalue = this.nl2br(
+        this.breakdowncausesvalueArr.join(", ")
+      );
+
+      this.step4completedFlag = true;
+      this.getStatusColor("STEP4");
+    } else {
+      this.breakdowncausesidArr = [];
+      this.breakdowncausesvalueArr = [];
+      this.breakdowncausesid = "";
+      this.breakdowncausesvalue = "";
+
+      this.step4completedFlag = false;
+      this.getStatusColor("STEP4");
+    }
+  }
+
+  openBreakdownCauses() {
+    this.breakdowncausesRef.open();
+  }
+
   btn_next(type) {
     if (type == "STEP1") {
       if (this.step1Form.value.select_breakdown == "") {
@@ -293,10 +443,28 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
         return;
       }
 
-      if (this.activityidArr.length <= 0) {
+      if (this.step1Form.value.select_maintenancetype == "") {
         this.commonservice.presentToast(
           this.translate.instant(
-            "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.activitymandatory"
+            "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.maintenancetypemandatory"
+          )
+        );
+        return;
+      }
+
+      if (this.partvalueArr.length <= 0) {
+        this.commonservice.presentToast(
+          this.translate.instant(
+            "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.partdefectmandatory"
+          )
+        );
+        return;
+      }
+
+      if (this.breakdowncausesid.length <= 0) {
+        this.commonservice.presentToast(
+          this.translate.instant(
+            "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.breakdowncausesmandatory"
           )
         );
         return;
@@ -312,127 +480,141 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
   }
 
   btn_add(type) {
-    if (type == "Activity") {
-      if (this.step1Form.value.txt_activityname == "") {
+    if (type == "Part") {
+      if (this.step1Form.value.txt_partname == "") {
         this.commonservice.presentToast(
           this.translate.instant(
-            "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.activitynamemandatory"
+            "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.partnamemandatory"
           )
         );
         return;
       }
 
-      this.activityid = "0";
+      this.partid = "0";
 
-      this.activityidArr.push(this.activityid);
+      this.partidArr.push(this.partid);
 
-      this.activityvalueArr.push(this.step1Form.value.txt_activityname);
+      this.partvalueArr.push(this.step1Form.value.txt_partname);
 
-      this.activityvalue = this.nl2br(this.activityvalueArr.join(", "));
+      this.partvalue = this.nl2br(this.partvalueArr.join("\n"));
 
-      this.otheractivityFlag = false;
+      this.otherFlag = false;
 
-      this.step1Form.controls.txt_activityname.setValue("");
+      this.step1Form.controls.txt_partname.setValue("");
 
-      if (this.activityvalue.length > 0) {
-        this.step2completedFlag = true;
-        this.getStatusColor("STEP2");
+      if (this.partvalue.length > 0) {
+        this.step3completedFlag = true;
+        this.getStatusColor("STEP3");
       } else {
-        if (this.activityvalue.length <= 0) {
-          this.step2completedFlag = false;
-          this.getStatusColor("STEP2");
+        if (this.partvalue.length <= 0) {
+          this.step3completedFlag = false;
+          this.getStatusColor("STEP3");
         }
       }
     }
   }
 
   async callmodalcontroller(type) {
-    if (type == "Activity") {
-      const activitymodal = await this.activitymodalController.create({
-        component: MaintenanceActivitysearchPage,
+    if (type == "PartDefect") {
+      const partmodal = await this.partmodalController.create({
+        component: MaintenanceMaterialsearchPage,
         componentProps: {
           type: "0",
           station_id: this.getstationid,
           equipment_id: this.getmachineid,
+          title: this.translate.instant(
+            "MAINTENANCEACKNOWLEDGEMODAL.searchpartname"
+          ),
         },
       });
 
-      activitymodal.onDidDismiss().then((modeldata) => {
+      partmodal.onDidDismiss().then((modeldata) => {
         let viewform = modeldata.data.data;
 
         if (viewform != "") {
           this.params = JSON.parse(viewform);
 
-          this.activityid = this.params.activity_id;
-          this.activityvalue = this.params.activity_name;
+          this.partid = this.params.item_id;
+          this.partvalue = this.params.item_name;
 
-          if (this.activityid == "0") {
-            this.otheractivityFlag = true;
+          if (this.partid == "0") {
+            if (modeldata.data.searchtext != "") {
+              this.step1Form.controls.txt_partname.setValue(
+                modeldata.data.searchtext
+              );
+            }
+
+            this.otherFlag = true;
           } else {
-            let activity_validate = false;
-            this.otheractivityFlag = false;
+            let part_validate = false;
 
-            this.step1Form.controls.txt_activityname.setValue("");
+            this.otherFlag = false;
 
-            if (this.activityidArr.length > 0) {
-              for (let i = 0; i < this.activityidArr.length; i++) {
-                if (this.activityidArr[i] == this.activityid) {
-                  activity_validate = true;
+            this.step1Form.controls.txt_partname.setValue("");
+
+            if (this.partidArr.length > 0) {
+              for (let i = 0; i < this.partidArr.length; i++) {
+                if (this.partidArr[i] == this.partid) {
+                  part_validate = true;
                 }
               }
             }
 
-            if (!activity_validate) {
-              if (this.activityid != "") {
-                this.activityidArr.push(this.activityid);
+            if (!part_validate) {
+              if (this.partid != "") {
+                this.partidArr.push(this.partid);
               }
 
-              if (this.activityvalue != "") {
-                this.activityvalueArr.push(this.activityvalue);
+              if (this.partvalue != "") {
+                this.partvalueArr.push(this.partvalue);
               }
             } else {
               this.commonservice.presentToast(
-                this.activityvalue +
+                this.partvalue +
                   this.translate.instant(
-                    "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.alreadyexist"
+                    "MAINTENANCEACKNOWLEDGEMODAL.alreadyexist"
                   )
               );
             }
           }
-          this.activityvalue = this.nl2br(this.activityvalueArr.join(", "));
+          this.partvalue = this.nl2br(this.partvalueArr.join("\n"));
 
-          if (this.activityvalue.length > 0) {
-            this.step2completedFlag = true;
-            this.getStatusColor("STEP2");
+          if (this.partvalue.length > 0) {
+            this.step3completedFlag = true;
+            this.getStatusColor("STEP3");
           } else {
-            if (this.activityvalue.length <= 0) {
-              this.step2completedFlag = false;
-              this.getStatusColor("STEP2");
+            if (this.partvalue.length <= 0) {
+              this.step3completedFlag = false;
+              this.getStatusColor("STEP3");
             }
           }
         }
       });
 
-      return await activitymodal.present();
+      return await partmodal.present();
     }
   }
 
   clear(type) {
-    if ("Activity") {
-      this.activityidArr.splice(-1);
-      this.activityvalueArr.splice(-1);
+    if (type == "Part") {
+      this.partidArr.splice(-1);
+      this.partvalueArr.splice(-1);
 
-      if (this.activityvalueArr.length > 0) {
-        this.activityvalue = this.nl2br(this.activityvalueArr.join("\n"));
+      if (this.partvalueArr.length > 0) {
+        this.partvalue = this.nl2br(this.partvalueArr.join("\n"));
       } else {
-        this.activityid = "";
-        this.activityvalue = "";
-        this.activityidArr = [];
-        this.activityvalueArr = [];
+        this.partid = "";
+        this.partvalue = "";
+        this.partidArr = [];
+        this.partvalueArr = [];
+        if (this.otherFlag) {
+          this.otherFlag = false;
+          this.step1Form.controls.txt_partname.setValue("");
+        }
 
-        if (this.activityvalue.length <= 0) {
-          this.step2completedFlag = false;
-          this.getStatusColor("STEP2");
+        if (this.partvalue.length <= 0) {
+          this.step3completedFlag = false;
+          this.getStatusColor("STEP3");
         }
       }
     }
@@ -442,11 +624,35 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
     this.view_breakdown = JSON.parse(
       this.step1Form.value.select_breakdown
     ).breakdownCoding;
-    this.view_activity = this.activityvalueArr.join(", ");
 
-    this.stepFlag = false;
+    this.view_maintenancetype = JSON.parse(
+      this.step1Form.value.select_maintenancetype
+    ).maintanence_type;
+
+    this.view_partdefect = this.partvalueArr.join(", ");
+    this.view_breakdowncauses = this.breakdowncausesvalueArr.join(", ");
+
+    /*console.log(
+      this.view_breakdown +
+        "\n" +
+        this.view_maintenancetype +
+        "\n" +
+        this.view_partdefect +
+        "\n" +
+        this.view_breakdowncauses +
+        "\n" +
+        this.view_activity +
+        "\n" +
+        this.view_assignto
+    );*/
+
+    /*this.stepFlag = false;
 
     this.viewFlag = true;
+
+    this.pageTop.scrollToTop();*/
+
+    this.showalert();
   }
 
   async showalert() {
@@ -459,16 +665,34 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
       return;
     }
 
-    if (this.view_activity == "") {
+    if (this.view_maintenancetype == "") {
       this.commonservice.presentToast(
         this.translate.instant(
-          "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.activitysmandatory"
+          "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.maintenancetypemandatory"
         )
       );
       return;
     }
 
-    const alert = await this.alertController.create({
+    if (this.view_partdefect == "") {
+      this.commonservice.presentToast(
+        this.translate.instant(
+          "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.partdefectmandatory"
+        )
+      );
+      return;
+    }
+
+    if (this.view_breakdowncauses == "") {
+      this.commonservice.presentToast(
+        this.translate.instant(
+          "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.breakdowncausesmandatory"
+        )
+      );
+      return;
+    }
+
+    /*const alert = await this.alertController.create({
       header: this.translate.instant(
         "MAINTENANCEENGINEERINGNOTIFICATIONMODAL.header"
       ),
@@ -494,20 +718,24 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
       ],
     });
 
-    await alert.present();
+    await alert.present();*/
+
+    this.save();
   }
 
   save() {
-    let activityid = [];
-    let activityname = [];
-
-    for (let i = 0; i < this.activityidArr.length; i++) {
-      if (this.activityidArr[i] == 0) {
-        activityname.push(this.activityvalueArr[i]);
+    let partid = [];
+    let partvalue = [];
+    let otherpartname = [];
+    for (let i = 0; i < this.partidArr.length; i++) {
+      if (this.partidArr[i] == 0) {
+        otherpartname.push(this.partvalueArr[i]);
       } else {
-        activityid.push(this.activityidArr[i]);
+        partid.push(this.partidArr[i]);
       }
     }
+
+    partvalue.push(this.partvalueArr);
 
     this.confirmDisable = true;
 
@@ -523,21 +751,23 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
       malfunctionstarttime: "",
       malfunctionstoptime: "",
       notificationtype: "",
-      breakdown_coding: String(this.breakdownid),
-      maintanence_type: "",
-      part_defect: "",
+      breakdown_coding: this.breakdownid,
+      maintanence_type: this.maintenancetypeid,
+      part_defect: partid.join(","),
       other_partdefectflag: "",
-      other_part_name: "",
+      other_part_name: otherpartname.join("~"),
       damage: "",
-      breakdown_cause: "",
-      activity: activityid.join("~"),
-      other_activity_name: activityname.join("~"),
+      breakdown_cause: this.breakdowncausesidArr.join(","),
+      activity: "",
+      other_activity_name: "",
       operation: "",
       carryoutby: "",
       materialid: "",
       quantity: "",
       assignedto: "",
       pvflag: 0,
+      remarks: this.step1Form.value.ta_remarks,
+      ffbcagestatus: this.ffbcageflag,
       language: this.languageService.selected,
     };
 
@@ -556,11 +786,10 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
           )
         );
 
-        this.btn_close();
-
-        /*if (this.module == "MAINTENANCE") {
-          this.router.navigate(["/report-maintenance-notification"]);
-        }*/
+        this.modalController.dismiss({
+          dismissed: true,
+          item: "Submitted",
+        });
 
         if (this.module == "PRODUCTION") {
           this.router.navigate(["/report-production-maintenance-notification"]);
@@ -581,6 +810,28 @@ export class MaintenanceEngineerNotificationModalPage implements OnInit {
     this.modalController.dismiss({
       dismissed: true,
       item: "",
+    });
+  }
+
+  scrollbottom() {
+    Keyboard.addListener("keyboardWillShow", (info: KeyboardInfo) => {
+      setTimeout(() => {
+        this.pageTop.scrollToPoint(
+          0,
+          document.getElementById("ta_remarks").offsetTop,
+          10
+        );
+      }, 200);
+    });
+
+    Keyboard.addListener("keyboardDidShow", (info: KeyboardInfo) => {
+      setTimeout(() => {
+        this.pageTop.scrollToPoint(
+          0,
+          document.getElementById("ta_remarks").offsetTop,
+          10
+        );
+      }, 200);
     });
   }
 

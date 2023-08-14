@@ -1,18 +1,23 @@
 <ion-header>
   <ion-toolbar class="bg-brown-color">
-    <ion-buttons slot="start">
-      <ion-back-button color="whitefav"></ion-back-button>
-    </ion-buttons>
-    <ion-title mode="ios" color="light">{{ 'PREVENTIVEMAINTENANCE.title' | translate}}</ion-title>
+    <ion-buttons slot="start" mode="md">
+      <ion-back-button
+        color="whitefav"
+        *ngIf="!isReplacementFlag"
+      ></ion-back-button>
 
-    <!-- <ion-buttons slot="primary">
-      <ion-button class="bg-light-color" (click)="btn_notification()">
-        <ion-badge *ngIf="count && count != 0" color="accent"
-          >{{ count }}</ion-badge
-        >
-        <ion-icon name="notifications-outline"></ion-icon>
+      <ion-button
+        color="whitefav"
+        *ngIf="isReplacementFlag"
+        (click)="goBack();"
+        style="font-size: 17px"
+      >
+        <ion-icon name="arrow-back"></ion-icon>
       </ion-button>
-    </ion-buttons> -->
+    </ion-buttons>
+    <ion-title mode="ios" color="light"
+      >{{ 'PREVENTIVEMAINTENANCE.title' | translate}}</ion-title
+    >
   </ion-toolbar>
 
   <ion-toolbar>
@@ -20,14 +25,17 @@
       <ion-segment
         (ionChange)="segmentChanged($event)"
         [(ngModel)]="tabs_segment"
-        style="background-color: white"
       >
         <ion-segment-button value="Routine">
-          <ion-label text-wrap class="h7">{{ 'PREVENTIVEMAINTENANCE.routine' | translate}}</ion-label>
+          <ion-label text-wrap class="h7"
+            >{{ 'PREVENTIVEMAINTENANCE.routine' | translate}}</ion-label
+          >
         </ion-segment-button>
 
         <ion-segment-button value="Replacement">
-          <ion-label text-wrap class="h7">{{ 'PREVENTIVEMAINTENANCE.replacement' | translate}}</ion-label>
+          <ion-label text-wrap class="h7"
+            >{{ 'PREVENTIVEMAINTENANCE.replacement' | translate}}</ion-label
+          >
         </ion-segment-button>
       </ion-segment>
     </div>
@@ -35,150 +43,195 @@
 </ion-header>
 
 <ion-content>
-  <div [ngSwitch]="tabs_segment">
-    <div *ngSwitchCase="'Routine'">
-      <form [formGroup]="routineForm">
-        <ion-row>
-          <ion-col size="1.6" style="align-self: center" no-padding>
-            <div class="h7 text-white"><b>{{ 'PREVENTIVEMAINTENANCE.fromdate' | translate}}</b></div>
-          </ion-col>
-
-          <ion-col size="3.45">
-            <input
-              type="text"
-              class="h7 form-control readonly"
-              formControlName="txt_fromdate"
-              placeholder="DD-MM-YYYY"
-              (click)="openRoutFromDateTimePicker()"
-              readonly
-            />
-          </ion-col>
-
-          <ion-col size="1" style="align-self: center" no-padding>
-            <div class="h7 text-white"><b>{{ 'PREVENTIVEMAINTENANCE.todate' | translate}}</b></div>
-          </ion-col>
-
-          <ion-col size="3.45">
-            <input
-              type="text"
-              class="h7 form-control readonly"
-              formControlName="txt_todate"
-              placeholder="DD-MM-YYYY"
-              (click)="openRoutToDateTimePicker()"
-              readonly
-            />
-          </ion-col>
-
-          <ion-col size="2.5">
-            <button
-              type="button"
-              class="h7 btn btn-general btn-sm float-right"
-              style="height: 31px; width: 100%"
-              (click)="getRoutineNotification()"
-            >
-            {{ 'GENERALBUTTON.getrecords' | translate}}
-            </button>
-          </ion-col>
-        </ion-row>
-
-        <hr />
-      </form>
-
-      <div>
-        <ion-card
-          class="bg-card"
-          *ngFor="let value of routinenotificationlistArr"
+  <div class="home-box">
+    <!-- <ion-row
+      style="margin-top: 5px; margin-bottom: 5px"
+      *ngIf="!isReplacementFlag"
+    >
+      <ion-col style="text-align: right">
+        <button
+          type="submit"
+          class="btn btn-replacement"
+          (click)="btn_replacement()"
         >
-          <ion-card-content class="cardcontent">
-            <ion-row *ngIf="(value.notificationno!='' || value.insDate!='')">
-              <ion-col>
-                <p class="title-content">
-                  {{value.notificationno}} - {{value.insDate}}
-                </p>
-              </ion-col>
-            </ion-row>
+          <span class="icontext" style="color: #ffffff">
+            {{ 'PREVENTIVEMAINTENANCE.replacementpreventivemaintenance' |
+            translate}}
+          </span>
+        </button>
+      </ion-col>
+    </ion-row> -->
 
-            <ion-row *ngIf="value.stationname!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.station' | translate}}</ion-col>
+    <div [ngSwitch]="tabs_segment">
+      <div *ngSwitchCase="'Routine'">
+        <form [formGroup]="routineForm">
+          <ion-row>
+            <ion-col size="1.6" style="align-self: center" no-padding>
+              <div class="h7 text-white">
+                <b>{{ 'PREVENTIVEMAINTENANCE.fromdate' | translate}}</b>
+              </div>
+            </ion-col>
 
-              <ion-col size="8">
-                <p class="data">{{value.stationname}}</p>
-              </ion-col>
-            </ion-row>
+            <ion-col size="3.45">
+              <input
+                type="text"
+                class="h7 form-control readonly"
+                formControlName="txt_fromdate"
+                placeholder="DD-MM-YYYY"
+                (click)="openRoutFromDateTimePicker()"
+                readonly
+              />
+            </ion-col>
 
-            <ion-row *ngIf="value.equipment!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.machine' | translate}}</ion-col>
+            <ion-col size="1" style="align-self: center" no-padding>
+              <div class="h7 text-white">
+                <b>{{ 'PREVENTIVEMAINTENANCE.todate' | translate}}</b>
+              </div>
+            </ion-col>
 
-              <ion-col size="8">
-                <p class="data">{{value.equipment}}</p>
-              </ion-col>
-            </ion-row>
+            <ion-col size="3.45">
+              <input
+                type="text"
+                class="h7 form-control readonly"
+                formControlName="txt_todate"
+                placeholder="DD-MM-YYYY"
+                (click)="openRoutToDateTimePicker()"
+                readonly
+              />
+            </ion-col>
 
-            <ion-row *ngIf="value.partdefect!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.partname' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p class="data">{{value.partdefect}}</p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.problem!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.problem' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p class="data">{{value.problem}}</p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.reportBy!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.reportedby' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p class="data">{{value.reportBy}}</p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.statusname!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.status' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p
-                  class="statusdata"
-                  [style.color]="getStatusTextColor(value.statusId)"
-                >
-                  {{ value.statusname }}
-                </p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.reason!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.reason' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p class="data">{{value.reason}}</p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.remarks!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.remarks' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p class="data">{{value.remarks}}</p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row class="row-reverse">
+            <ion-col size="2.5">
               <button
                 type="button"
-                class="h7 btn btn-view btn-sm margin-5px"
-                (click)="btn_PVNotificationView(value)"
+                class="h7 btn btn-general btn-sm float-right"
+                style="height: 31px; width: 100%"
+                (click)="getRoutineNotification()"
               >
-                <ion-icon class="icon" name="document-text-outline"></ion-icon>
-                <span class="icontext"> {{ 'PREVENTIVEMAINTENANCE.view' | translate}}</span>
+                {{ 'GENERALBUTTON.getrecords' | translate}}
               </button>
-            </ion-row>
-          </ion-card-content>
-        </ion-card>
+            </ion-col>
+          </ion-row>
+
+          <hr />
+        </form>
+
+        <div *ngIf="routinenotificationlistArr.length>0">
+          <div style="overflow-x: auto">
+            <table
+              style="width: 100%; height: 100%"
+              class="table table-bordered"
+            >
+              <tr class="table_head">
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.datetime' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.notificationid' |
+                    translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.station' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.machine' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.assignedto' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.status' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.detail' | translate}}</span
+                  >
+                </th>
+              </tr>
+
+              <ng-container *ngFor="let value of routinenotificationlistArr">
+                <tr>
+                  <td scope="row">{{value.insDate}}</td>
+
+                  <td scope="row">{{value.notificationno}}</td>
+
+                  <td scope="row">{{value.stationname}}</td>
+
+                  <td scope="row">{{value.equipment}}</td>
+
+                  <td scope="row" *ngIf="value.carriedoutby!=''">
+                    {{value.carriedoutby}}
+                  </td>
+                  <td scope="row" *ngIf="value.carriedoutby==''">-</td>
+
+                  <td
+                    scope="row"
+                    [style.background-color]="getStatusTextColor(value.statusId)"
+                  >
+                    {{value.statusname}}
+                  </td>
+
+                  <td scope="row">
+                    <button
+                      type="button"
+                      class="h7 btn btn-viewnotificationform btn-sm"
+                      (click)="callmodalcontroller(value)"
+                    >
+                      <span class="icontext"
+                        >{{ 'GENERALBUTTON.viewbutton' | translate}}</span
+                      >
+                    </button>
+                  </td>
+                </tr>
+              </ng-container>
+            </table>
+          </div>
+        </div>
 
         <div class="norecords" *ngIf="norecordroutineenableflag">
           {{ 'NORECORDSFOUND.norecordsfound' | translate}}
@@ -194,151 +247,178 @@
           {{ 'NORECORDSFOUND.loading' | translate}}
         </div>
       </div>
-    </div>
 
-    <div *ngSwitchCase="'Replacement'">
-      <form [formGroup]="replacementForm">
-        <ion-row style="margin-top: 10px">
-          <ion-col size="1.6" style="align-self: center" no-padding>
-            <div class="h7 text-white"><b>{{ 'PREVENTIVEMAINTENANCE.fromdate' | translate}}</b></div>
-          </ion-col>
+      <div *ngSwitchCase="'Replacement'">
+        <form [formGroup]="replacementForm">
+          <ion-row>
+            <ion-col size="1.6" style="align-self: center" no-padding>
+              <div class="h7 text-white">
+                <b>{{ 'PREVENTIVEMAINTENANCE.fromdate' | translate}}</b>
+              </div>
+            </ion-col>
 
-          <ion-col size="3.45">
-            <input
-              type="text"
-              class="h7 form-control readonly"
-              formControlName="txt_fromdate"
-              placeholder="DD-MM-YYYY"
-              (click)="openReplFromDateTimePicker()"
-              readonly
-            />
-          </ion-col>
+            <ion-col size="3.45">
+              <input
+                type="text"
+                class="h7 form-control readonly"
+                formControlName="txt_fromdate"
+                placeholder="DD-MM-YYYY"
+                (click)="openReplFromDateTimePicker()"
+                readonly
+              />
+            </ion-col>
 
-          <ion-col size="1" style="align-self: center" no-padding>
-            <div class="h7 text-white"><b>{{ 'PREVENTIVEMAINTENANCE.todate' | translate}}</b></div>
-          </ion-col>
+            <ion-col size="1" style="align-self: center" no-padding>
+              <div class="h7 text-white">
+                <b>{{ 'PREVENTIVEMAINTENANCE.todate' | translate}}</b>
+              </div>
+            </ion-col>
 
-          <ion-col size="3.45">
-            <input
-              type="text"
-              class="h7 form-control readonly"
-              formControlName="txt_todate"
-              placeholder="DD-MM-YYYY"
-              (click)="openReplToDateTimePicker()"
-              readonly
-            />
-          </ion-col>
+            <ion-col size="3.45">
+              <input
+                type="text"
+                class="h7 form-control readonly"
+                formControlName="txt_todate"
+                placeholder="DD-MM-YYYY"
+                (click)="openReplToDateTimePicker()"
+                readonly
+              />
+            </ion-col>
 
-          <ion-col size="2.5">
-            <button
-              type="button"
-              class="h7 btn btn-general btn-sm float-right"
-              style="height: 31px; width: 100%"
-              (click)="getReplacementNotification()"
-            >
-            {{ 'GENERALBUTTON.getrecords' | translate}}
-            </button>
-          </ion-col>
-        </ion-row>
-
-        <hr />
-      </form>
-
-      <div>
-        <ion-card
-          class="bg-card"
-          *ngFor="let value of replacementnotificationlistArr"
-        >
-          <ion-card-content class="cardcontent">
-            <ion-row *ngIf="(value.notificationno!='' || value.insDate!='')">
-              <ion-col>
-                <p class="title-content">
-                  {{value.notificationno}} - {{value.insDate}}
-                </p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.stationname!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.station' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p class="data">{{value.stationname}}</p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.equipment!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.machine' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p class="data">{{value.equipment}}</p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.partdefect!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.partname' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p class="data">{{value.partdefect}}</p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.problem!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.problem' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p class="data">{{value.problem}}</p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.reportBy!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.reportedby' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p class="data">{{value.reportBy}}</p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.statusname!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.status' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p
-                  class="statusdata"
-                  [style.color]="getStatusTextColor(value.statusId)"
-                >
-                  {{ value.statusname }}
-                </p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.reason!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.reason' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p class="data">{{value.reason}}</p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row *ngIf="value.remarks!=''">
-              <ion-col size="4">{{ 'PREVENTIVEMAINTENANCE.remarks' | translate}}</ion-col>
-
-              <ion-col size="8">
-                <p class="data">{{value.remarks}}</p>
-              </ion-col>
-            </ion-row>
-
-            <ion-row class="row-reverse">
+            <ion-col size="2.5">
               <button
                 type="button"
-                class="h7 btn btn-view btn-sm margin-5px"
-                (click)="btn_PVNotificationView(value)"
+                class="h7 btn btn-general btn-sm float-right"
+                style="height: 31px; width: 100%"
+                (click)="getReplacementNotification()"
               >
-                <ion-icon class="icon" name="document-text-outline"></ion-icon>
-                <span class="icontext"> {{ 'PREVENTIVEMAINTENANCE.view' | translate}}</span>
+                {{ 'GENERALBUTTON.getrecords' | translate}}
               </button>
-            </ion-row>
-          </ion-card-content>
-        </ion-card>
+            </ion-col>
+          </ion-row>
+
+          <hr />
+        </form>
+
+        <div *ngIf="replacementnotificationlistArr.length>0">
+          <div style="overflow-x: auto">
+            <table
+              style="width: 100%; height: 100%"
+              class="table table-bordered"
+            >
+              <tr class="table_head">
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.datetime' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.notificationid' |
+                    translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.station' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.machine' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.assignedto' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.status' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'PREVENTIVEMAINTENANCE.detail' | translate}}</span
+                  >
+                </th>
+              </tr>
+
+              <ng-container
+                *ngFor="let value of replacementnotificationlistArr"
+              >
+                <tr>
+                  <td scope="row">{{value.insDate}}</td>
+
+                  <td scope="row">{{value.notificationno}}</td>
+
+                  <td scope="row">{{value.stationname}}</td>
+
+                  <td scope="row">{{value.equipment}}</td>
+
+                  <td scope="row" *ngIf="value.carriedoutby!=''">
+                    {{value.carriedoutby}}
+                  </td>
+                  <td scope="row" *ngIf="value.carriedoutby==''">-</td>
+
+                  <td
+                    scope="row"
+                    [style.background-color]="getStatusTextColor(value.statusId)"
+                  >
+                    {{value.statusname}}
+                  </td>
+
+                  <td scope="row">
+                    <button
+                      type="button"
+                      class="h7 btn btn-viewnotificationform btn-sm"
+                      (click)="callmodalcontroller(value)"
+                    >
+                      <span class="icontext"
+                        >{{ 'GENERALBUTTON.viewbutton' | translate}}</span
+                      >
+                    </button>
+                  </td>
+                </tr>
+              </ng-container>
+            </table>
+          </div>
+        </div>
 
         <div class="norecords" *ngIf="norecordreplacementenableflag">
           {{ 'NORECORDSFOUND.norecordsfound' | translate}}

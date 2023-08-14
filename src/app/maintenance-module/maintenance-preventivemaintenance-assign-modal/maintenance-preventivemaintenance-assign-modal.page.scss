@@ -1,3 +1,10 @@
+ion-content {
+  background-image: url(../../../assets/img/machinebg.png);
+  background-position: center center fixed;
+  background-repeat: repeat;
+  background-size: cover;
+}
+
 .content {
   text-align: center;
   /*position: absolute;
@@ -28,7 +35,7 @@ ion-header {
 }
 
 form {
-  padding: 5px;
+  padding: 10px;
 }
 
 .form-row {
@@ -52,6 +59,13 @@ form {
   color: #ff9f0c;
   font-size: 14px;
   text-align: left;
+}
+
+.selecteddata {
+  margin-top: 20px;
+  color: #3cd2a5;
+  text-align: center;
+  font-size: 14px;
 }
 
 .circle {
@@ -110,7 +124,7 @@ ion-select::part(icon) {
 
 .optionbutton {
   --background: transparent;
-  width: 90%;
+  width: 100%;
   height: 40px;
   font-size: 14px;
   text-transform: initial;
@@ -179,30 +193,54 @@ sup {
   color: red;
 }
 
+.conditionradiobutton {
+  label {
+    font-weight: bold;
+    //padding-right: 20px;
+    margin-left: 10px;
+    font-size: 14px;
+    color: #ffffff;
+    margin-bottom: 0px;
+  }
+
+  input[type="radio"] {
+    margin-top: -4px;
+    vertical-align: middle;
+  }
+
+  input[type="radio"]:after {
+    width: 18px;
+    height: 18px;
+    border-radius: 18px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #d1d3d1;
+    content: "";
+    display: inline-block;
+    visibility: visible;
+    border: 1px solid white;
+  }
+
+  input[type="radio"]:checked:after {
+    width: 18px;
+    height: 18px;
+    border-radius: 18px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #08ff08;
+    content: "";
+    display: inline-block;
+    visibility: visible;
+    border: 1px solid white;
+  }
+}
+
 hr {
   height: 1px;
   border-top: 1px solid #ffffff;
 }
-
-.hl4line {
-  border-top: 1px dashed #ffffff71;
-  height: 0px !important;
-  margin: 20px;
-}
-
-/*.float {
-    width: 60px;
-    height: 60px;
-    bottom: 40px;
-    right: 40px;
-    margin-top: 20px;
-    background-color: #3cd2a5;
-    color: #ffffff;
-    border-radius: 50px;
-    text-align: center;
-    box-shadow: 1px 1px 2px #999;
-    float: right;
-  }*/
 
 .hl4line {
   border-top: 1px dashed #ffffff;

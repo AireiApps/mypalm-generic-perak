@@ -1,5 +1,5 @@
 .bg-light-color {
-  --color: var(--ion-color-lightorange);
+  --color: var(--ion-color-white);
 }
 
 .welcome-card img {
@@ -111,6 +111,7 @@ table {
   color: #333;
   padding: 5px;
   border-collapse: collapse;
+  border: 1px solid #dee2e6;
 }
 
 .table td,
@@ -148,7 +149,7 @@ b {
   margin-top: 10;
   vertical-align: middle;
   td {
-    font-size: 14px;
+    font-size: 13px;
   }
 }
 
@@ -248,10 +249,34 @@ th {
   //border-color: #ffffff;
 }
 
+.btn-retrieve {
+  height: 40px;
+  background-color: none;
+  border-color: #3cd2a5;
+  color: #ffffff;
+}
+
 .btn-general {
   background-color: none;
   border-color: #ff9f0c;
   color: #ffffff;
+}
+
+.btn-back {
+  background-color: none;
+  border-color: none;
+  color: #ffffff;
+}
+
+.icon {
+  vertical-align: middle;
+  font-size: 24px;
+}
+
+.icontext {
+  vertical-align: middle;
+  font-size: 14px;
+  color: #3cd2a5;
 }
 
 .nooillossrecords {

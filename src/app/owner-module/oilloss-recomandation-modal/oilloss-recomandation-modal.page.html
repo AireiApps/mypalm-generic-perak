@@ -1,0 +1,74 @@
+<ion-content>
+  <div class="checkcard" *ngIf="reasonflag==true">
+    <div class="reasontitleheader">
+      <div class="col">
+        <div class="title">
+          {{ 'OILLOSSESNEW.reasonforoilloss' | translate}}
+        </div>
+      </div>
+    </div>
+    <div *ngFor="let actions of reasonArr;let i = index;" class="content">
+      <div style="color: #000; font-size: 12px">
+        {{i+1}}) {{actions.values}}
+      </div>
+    </div>
+    <!-- <ion-row>
+      <ion-col></ion-col>
+      <ion-col class="footer">
+        <div style="text-align: center">
+          <button
+            type="submit"
+            class="h6 btn btn-success"
+            (click)="btn_close()"
+            style="color: #000; margin-top: 10px; margin-bottom: 10px"
+          >
+            {{ 'GENERALBUTTON.closebutton' | translate}}
+          </button>
+        </div>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row> -->
+  </div>
+  <div class="checkcard" *ngIf="reasonflag!=true">
+    <div class="titleheader">
+      <div class="col">
+        <div class="title">{{ 'OILLOSSESNEW.recommendations' | translate}}</div>
+      </div>
+    </div>
+    <div
+      *ngFor="let actions of recommendationArr;let i = index;"
+      class="content"
+    >
+      <div style="color: #000; font-size: 12px">
+        {{i+1}}) {{actions.values}}
+      </div>
+    </div>
+    <!-- <ion-row >
+      <ion-col></ion-col>
+      <ion-col class="footer">
+        <div style="text-align: center">
+          <button type="submit" class="h6 btn btn-success" (click)="btn_close()"
+            style="color:#000;margin-top: 10px; margin-bottom: 10px">
+            {{ 'GENERALBUTTON.closebutton' | translate}}
+          </button>
+        </div>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row> -->
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-row class="footerbutton">
+    <ion-col style="text-align: center !important">
+      <button
+        type="submit"
+        class="h6 btn btn-success"
+        (click)="btn_close()"
+        style="color: #000; margin-top: 10px; margin-bottom: 10px"
+      >
+        {{ 'GENERALBUTTON.closebutton' | translate}}
+      </button>
+    </ion-col>
+  </ion-row>
+</ion-footer>

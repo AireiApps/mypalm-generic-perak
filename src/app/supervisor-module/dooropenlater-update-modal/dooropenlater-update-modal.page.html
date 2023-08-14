@@ -1,0 +1,142 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color modaltoolbar">
+    <ion-title mode="ios" color="light"></ion-title>
+
+    <ion-buttons slot="primary">
+      <ion-button class="bg-light-color" (click)="btn_close()">
+        <ion-icon color="light" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="home">
+    <!-- <table style="width: 100%; height: 100%" class="table table-bordered">
+      <tr>
+        <td style="padding: 4px !important; text-align: left">
+          <span class="mdfont"
+            >{{ 'STERILIZATIONSTATIONPOPUP.lastupdatedon' | translate}}</span
+          >
+        </td>
+
+        <td>{{params.lastupdatedon}}</td>
+      </tr>
+      <tr>
+        <td style="padding: 4px !important; text-align: left">
+          <span class="mdfont"
+            >{{ 'STERILIZATIONSTATIONPOPUP.doneby' | translate}}</span
+          >
+        </td>
+
+        <td>{{params.rasiedby}}</td>
+      </tr>
+    </table> -->
+
+    <table style="width: 100%; height: 100%" class="table table-bordered">
+      <tr>
+        <th
+          colspan="2"
+          style="
+            padding: 5px 0px 5px 0px !important;
+            background-color: #ff9f0c;
+            color: #000000;
+          "
+        >
+          <span class="para">{{params.sterilizer}}</span>
+        </th>
+      </tr>
+
+      <tr>
+        <td style="width: 50%; font-weight: bold; text-align: left">
+          {{ 'STERILIZATIONSTATIONPOPUP.cycle' | translate}}
+        </td>
+        <td style="width: 50%">{{params.cycleno}}</td>
+      </tr>
+
+      <tr>
+        <td style="width: 50%; font-weight: bold; text-align: left">
+          {{ 'STERILIZATIONSTATIONPOPUP.doorshutdatetime' | translate}}
+        </td>
+        <td style="width: 50%">{{params.door_shut_time}}</td>
+      </tr>
+
+      <tr>
+        <td style="width: 50%; font-weight: bold; text-align: left">
+          {{ 'STERILIZATIONSTATIONPOPUP.dooropendatetime' | translate}}
+        </td>
+        <td style="width: 50%">{{params.door_open_time}}</td>
+      </tr>
+
+      <tr>
+        <td style="width: 50%; font-weight: bold; text-align: left">
+          {{ 'STERILIZATIONSTATIONPOPUP.bpv' | translate}} [PSI]
+        </td>
+        <td style="width: 50%">{{params.backpressurereceiver}}</td>
+      </tr>
+
+      <tr>
+        <td style="width: 50%; font-weight: bold; text-align: left">
+          {{ 'STERILIZATIONSTATIONPOPUP.p1peak' | translate}} [PSI]
+        </td>
+        <td style="width: 50%">{{params.p1}}</td>
+      </tr>
+
+      <tr>
+        <td style="width: 50%; font-weight: bold; text-align: left">
+          {{ 'STERILIZATIONSTATIONPOPUP.p2peak' | translate}} [PSI]
+        </td>
+        <td style="width: 50%">{{params.p2}}</td>
+      </tr>
+
+      <tr>
+        <td style="width: 50%; font-weight: bold; text-align: left">
+          {{ 'STERILIZATIONSTATIONPOPUP.p3peak' | translate}} [PSI]
+        </td>
+        <td style="width: 50%">{{params.p3}}</td>
+      </tr>
+
+      <tr>
+        <td style="width: 50%; font-weight: bold; text-align: left">
+          {{ 'STERILIZATIONSTATIONPOPUP.doneby' | translate}}
+        </td>
+        <td style="width: 50%">{{params.rasiedby}}</td>
+      </tr>
+    </table>
+
+    <form [formGroup]="dooropenlaterForm">
+      <ion-row class="form-row">
+        <ion-col size="6">
+          <div class="h7 text-light">
+            {{ 'HOURLYSTERILIZATIONSTATIONSAVE.dooropentime' | translate}}
+          </div>
+        </ion-col>
+        <ion-col size="6">
+          <ion-datetime
+            mode="ios"
+            class="h7 form-control"
+            formControlName="txt_dooropentime"
+            display-format="DD-MM-YYYY HH:mm"
+            placeholder="DD-MM-YYYY HH:mm"
+            cancelText="{{ 'GENERALBUTTON.cancelbutton' | translate}}"
+            doneText="{{ 'GENERALBUTTON.okay' | translate}}"
+          >
+          </ion-datetime>
+        </ion-col>
+      </ion-row>
+
+      <ion-row style="margin-top: 20px">
+        <ion-col size="12" style="text-align: center !important">
+          <button
+            type="submit"
+            [disabled]="isDisabled"
+            class="btn btn-save"
+            (click)="save()"
+          >
+            {{ 'GENERALBUTTON.savebutton' | translate}}
+          </button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </div>
+</ion-content>

@@ -40,10 +40,12 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>We take the images of document for verification purpose and not share to anyone</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>MyPalm needs location access for verification purpose and not share to anyone</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow Geoloaction to share the location for verification purpose</string>
+	<string>MyPalm needs location access for verification purpose and not share to anyone</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Allow Geoloaction to share the location for verification purpose</string>
+	<string>MyPalm needs location access for verification purpose and not share to anyone</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We take the video and audio of document for verification purpose and not share to anyone</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -58,18 +60,20 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIStatusBarStyle</key>
+	<string></string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>

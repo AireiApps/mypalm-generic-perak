@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar class="bg-brown-color">
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" mode="md">
       <ion-back-button color="whitefav"></ion-back-button>
     </ion-buttons>
     <ion-title color="light" mode="ios"
@@ -12,7 +12,7 @@
   <div id="chartContainer8" style="margin: 10px">
     <form [formGroup]="pressstationreportForm">
       <ion-row class="form-row">
-        <ion-col size="2.5"> </ion-col>
+        <ion-col size="2.35"> </ion-col>
 
         <ion-col size="2">
           <div class="h7 text-white" style="text-align: right">
@@ -20,9 +20,10 @@
           </div>
         </ion-col>
 
-        <ion-col size="3">
+        <ion-col size="3.30">
           <input
             type="text"
+            style="padding: 5px"
             class="h7 form-control readonly"
             formControlName="pickdate"
             placeholder="DD-MM-YYYY"
@@ -41,16 +42,13 @@
           </button>
         </ion-col>
 
-        <ion-col size="2.5"> </ion-col>
+        <ion-col size="2.35"> </ion-col>
       </ion-row>
 
       <hr />
     </form>
 
-    <div
-      style="overflow-x: auto; margin-top: 20px"
-      *ngIf="norecordsflag==false"
-    >
+    <div style="margin-top: 20px" *ngIf="norecordsflag==false">
       <div *ngFor="let general of pressstationhourlyperformanceArr">
         <table style="width: 100%; height: 100%" class="table table-bordered">
           <tr>
@@ -113,133 +111,186 @@
           </tr>
         </table>
 
-        <div *ngFor="let pressname of general.data">
-          <table style="width: 100%; height: 100%" class="table table-bordered">
-            <tr class="table_head">
-              <th colspan="1" scope="colgroup" style="padding: 4px !important">
-                <span class="mdfont">{{pressname.pressname}}</span>
-              </th>
-
-              <th colspan="4" scope="colgroup" style="padding: 4px !important">
-                <span class="mdfont"
-                  >{{ 'REPORTPRESSSTATION.digestor' | translate}}</span
+        <div style="overflow-x: auto">
+          <div *ngFor="let pressname of general.data">
+            <table
+              style="width: 100%; height: 100%"
+              class="table table-bordered"
+            >
+              <tr class="table_head">
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
                 >
-              </th>
+                  <span class="mdfont">{{pressname.pressname}}</span>
+                </th>
 
-              <th colspan="3" scope="colgroup" style="padding: 4px !important">
-                <span class="mdfont"
-                  >{{ 'REPORTPRESSSTATION.press' | translate}}</span
+                <th
+                  colspan="4"
+                  scope="colgroup"
+                  style="padding: 4px !important"
                 >
-              </th>
-
-              <th
-                rowspan="2"
-                scope="colgroup"
-                style="padding: 4px !important"
-                *ngIf="general.image==1"
-              >
-                <span class="mdfont"
-                  >{{ 'REPORTPRESSSTATION.image' | translate}}</span
-                >
-              </th>
-
-              <th rowspan="2" scope="colgroup" style="padding: 4px !important">
-                <span class="mdfont"
-                  >{{ 'REPORTPRESSSTATION.doneby' | translate}}</span
-                >
-              </th>
-            </tr>
-
-            <tr class="table_head">
-              <th colspan="1" scope="colgroup" style="padding: 4px !important">
-                <span class="mdfont"
-                  >{{ 'REPORTPRESSSTATION.time' | translate}}</span
-                >
-              </th>
-
-              <th colspan="1" scope="colgroup" style="padding: 4px !important">
-                <span class="mdfont"
-                  >{{ 'REPORTPRESSSTATION.temperature' | translate}}
-                  (<sup>O</sup>C)</span
-                >
-              </th>
-
-              <th colspan="1" scope="colgroup" style="padding: 4px !important">
-                <span class="mdfont"
-                  >{{ 'REPORTPRESSSTATION.motor' | translate}}</span
-                >
-              </th>
-
-              <th colspan="1" scope="colgroup" style="padding: 4px !important">
-                <span class="mdfont"
-                  >{{ 'REPORTPRESSSTATION.level' | translate}} (%)</span
-                >
-              </th>
-
-              <th colspan="1" scope="colgroup" style="padding: 4px !important">
-                <span class="mdfont"
-                  >{{ 'REPORTPRESSSTATION.digestor' | translate}}<br />{{
-                  'REPORTPRESSSTATION.drainage' | translate}}</span
-                >
-              </th>
-
-              <th colspan="1" scope="colgroup" style="padding: 4px !important">
-                <span class="mdfont"
-                  >{{ 'REPORTPRESSSTATION.motor' | translate}}</span
-                >
-              </th>
-
-              <th colspan="1" scope="colgroup" style="padding: 4px !important">
-                <span class="mdfont"
-                  >{{ 'REPORTPRESSSTATION.fibre' | translate}}<br />{{
-                  'REPORTPRESSSTATION.flow' | translate}}</span
-                >
-              </th>
-
-              <th colspan="1" scope="colgroup" style="padding: 4px !important">
-                <span class="mdfont"
-                  >{{ 'REPORTPRESSSTATION.hydraulic' | translate}}<br />{{
-                  'REPORTPRESSSTATION.pressure' | translate}} (Bar)</span
-                >
-              </th>
-            </tr>
-
-            <ng-container *ngFor="let value of pressname.pressdata">
-              <tr>
-                <td scope="row">{{value.time}}</td>
-                <td scope="row">{{value.temperature}}</td>
-                <td scope="row">{{value.digestormotoramp}}</td>
-                <td scope="row">{{value.level}}</td>
-                <!-- <td scope="row">{{value.predictedlevel}}</td> -->
-                <td scope="row">{{value.diegestordrainoillow}}</td>
-                <td scope="row">{{value.pressmotoramp}}</td>
-                <td scope="row">{{value.fiberflow}}</td>
-                <td scope="row">{{value.hydralicpressure}}</td>
-                <!-- <td scope="row">{{value.dilutiontemperature}}</td> -->
-                <td scope="row" *ngIf="general.image==1">
-                  <button
-                    type="button"
-                    class="h7 btn btn-imageview btn-sm"
-                    (click)="btn_ViewImages(value.temperatureimages, value.motorimages, value.levelimages, value.drainageimages, value.pressmotorimages, value.fibreflowimages, value.hydraulicpressureimages)"
-                    *ngIf="(value.temperatureimages!='' || value.motorimages!='' || value.levelimages!='' || value.drainageimages!='' || value.pressmotorimages!='' || value.fibreflowimages!='' || value.hydraulicpressureimages!='')"
+                  <span class="mdfont"
+                    >{{ 'REPORTPRESSSTATION.digestor' | translate}}</span
                   >
-                    <span class="icontext"
-                      >{{ 'GENERALBUTTON.viewbutton' | translate}}</span
-                    >
-                  </button>
-                  <span
-                    *ngIf="(value.temperatureimages =='' && value.motorimages =='' && value.levelimages =='' && value.drainageimages =='' && value.pressmotorimages =='' && value.fibreflowimages =='' && value.hydraulicpressureimages =='')"
-                    >-</span
+                </th>
+
+                <th
+                  colspan="3"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'REPORTPRESSSTATION.press' | translate}}</span
                   >
-                </td>
-                <td scope="row">{{value.rasiedby}}</td>
+                </th>
+
+                <th
+                  rowspan="2"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                  *ngIf="general.image==1"
+                >
+                  <span class="mdfont"
+                    >{{ 'REPORTPRESSSTATION.image' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  rowspan="2"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'REPORTPRESSSTATION.doneby' | translate}}</span
+                  >
+                </th>
               </tr>
-            </ng-container>
-          </table>
-        </div>
 
-        <div class="nopressstationrecords" *ngIf="general.data.length==0">
-          {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+              <tr class="table_head">
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'REPORTPRESSSTATION.time' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'REPORTPRESSSTATION.temperature' | translate}}
+                    (<sup>O</sup>C)</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'REPORTPRESSSTATION.motor' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'REPORTPRESSSTATION.level' | translate}} (%)</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'REPORTPRESSSTATION.digestor' | translate}}<br />{{
+                    'REPORTPRESSSTATION.drainage' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'REPORTPRESSSTATION.motor' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'REPORTPRESSSTATION.fibre' | translate}}<br />{{
+                    'REPORTPRESSSTATION.flow' | translate}}</span
+                  >
+                </th>
+
+                <th
+                  colspan="1"
+                  scope="colgroup"
+                  style="padding: 4px !important"
+                >
+                  <span class="mdfont"
+                    >{{ 'REPORTPRESSSTATION.hydraulic' | translate}}<br />{{
+                    'REPORTPRESSSTATION.pressure' | translate}} (Bar)</span
+                  >
+                </th>
+              </tr>
+
+              <ng-container *ngFor="let value of pressname.pressdata">
+                <tr>
+                  <td scope="row">{{value.time}}</td>
+                  <td scope="row">{{value.temperature}}</td>
+                  <td scope="row">{{value.digestormotoramp}}</td>
+                  <td scope="row">{{value.level}}</td>
+                  <!-- <td scope="row">{{value.predictedlevel}}</td> -->
+                  <td scope="row">{{value.diegestordrainoillow}}</td>
+                  <td scope="row">{{value.pressmotoramp}}</td>
+                  <td scope="row">{{value.fiberflow}}</td>
+                  <td scope="row">{{value.hydralicpressure}}</td>
+                  <!-- <td scope="row">{{value.dilutiontemperature}}</td> -->
+                  <td scope="row" *ngIf="general.image==1">
+                    <button
+                      type="button"
+                      class="h7 btn btn-imageview btn-sm"
+                      (click)="btn_ViewImages(value.temperatureimages, value.motorimages, value.levelimages, value.drainageimages, value.pressmotorimages, value.fibreflowimages, value.hydraulicpressureimages)"
+                      *ngIf="(value.temperatureimages!='' || value.motorimages!='' || value.levelimages!='' || value.drainageimages!='' || value.pressmotorimages!='' || value.fibreflowimages!='' || value.hydraulicpressureimages!='')"
+                    >
+                      <span class="icontext"
+                        >{{ 'GENERALBUTTON.viewbutton' | translate}}</span
+                      >
+                    </button>
+                    <span
+                      *ngIf="(value.temperatureimages =='' && value.motorimages =='' && value.levelimages =='' && value.drainageimages =='' && value.pressmotorimages =='' && value.fibreflowimages =='' && value.hydraulicpressureimages =='')"
+                      >-</span
+                    >
+                  </td>
+                  <td scope="row">{{value.rasiedby}}</td>
+                </tr>
+              </ng-container>
+            </table>
+          </div>
+
+          <div class="nopressstationrecords" *ngIf="general.data.length==0">
+            {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+          </div>
         </div>
 
         <hr />
