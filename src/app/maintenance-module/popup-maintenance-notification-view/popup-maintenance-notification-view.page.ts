@@ -57,6 +57,7 @@ export class PopupMaintenanceNotificationViewPage implements OnInit {
   maximumrunninghours = "";
   runninghours = "";
   extendedmaximumrunninghours = "";
+  machinereplacementFlag = "";
   equipment = "";
   equipmentid = "";
   reportedby = "";
@@ -121,9 +122,10 @@ export class PopupMaintenanceNotificationViewPage implements OnInit {
     this.notificationid = this.params.id;
     this.conditionid = this.params.conditionid;
     this.extendrunninghoursFlag = navParams.get("flag");
+    this.machinereplacementFlag = this.params.machinereplacement;
     this.fromscreen = navParams.get("module");
 
-    //console.log(this.params);
+    console.log(this.params);
 
     //console.log(this.fromscreen);
   }
@@ -184,7 +186,7 @@ export class PopupMaintenanceNotificationViewPage implements OnInit {
         this.equipment = this.generalArr[0].equipment;
         this.equipmentid = this.generalArr[0].equipmentid;
         this.maximumrunninghours = this.generalArr[0].lifetimehours;
-        //this.runninghours = this.generalArr[0].runningHours;
+        this.runninghours = this.generalArr[0].runningHours;
         this.extendedmaximumrunninghours =
           this.generalArr[0].extendedlifetimehours;
         //this.partdefect = this.generalArr[0].partdefect;
@@ -237,41 +239,11 @@ export class PopupMaintenanceNotificationViewPage implements OnInit {
           this.jobauthorizationnorecordFlag = true;
         }
 
-        if (
-          (this.fromscreen == "CM" || this.fromscreen == "CMVIEW") &&
-          getpartdefectidArr.length > 1
-        ) {
-          this.getParts(
-            this.generalArr[0].stationid,
-            this.generalArr[0].equipmentid,
-            2,
-            this.generalArr[0].runningHours,
-            this.generalArr[0].partdefect
-          );
-        } else if (
-          (this.fromscreen == "RoPM" || this.fromscreen == "RoPMVIEW") &&
-          getpartdefectidArr.length > 1
-        ) {
-          this.getParts(
-            this.generalArr[0].stationid,
-            this.generalArr[0].equipmentid,
-            0,
-            this.generalArr[0].runningHours,
-            this.generalArr[0].partdefect
-          );
-        } else if (
-          (this.fromscreen == "RePM" || this.fromscreen == "RePMVIEW") &&
-          getpartdefectidArr.length > 1
-        ) {
-          this.getParts(
-            this.generalArr[0].stationid,
-            this.generalArr[0].equipmentid,
-            1,
-            this.generalArr[0].runningHours,
-            this.generalArr[0].partdefect
-          );
-        } else if (this.partdefect == "") {
-          if (this.fromscreen == "CM" || this.fromscreen == "CMVIEW") {
+        if (this.machinereplacementFlag == "0") {
+          if (
+            (this.fromscreen == "CM" || this.fromscreen == "CMVIEW") &&
+            getpartdefectidArr.length > 1
+          ) {
             this.getParts(
               this.generalArr[0].stationid,
               this.generalArr[0].equipmentid,
@@ -280,8 +252,8 @@ export class PopupMaintenanceNotificationViewPage implements OnInit {
               this.generalArr[0].partdefect
             );
           } else if (
-            this.fromscreen == "RoPM" ||
-            this.fromscreen == "RoPMVIEW"
+            (this.fromscreen == "RoPM" || this.fromscreen == "RoPMVIEW") &&
+            getpartdefectidArr.length > 1
           ) {
             this.getParts(
               this.generalArr[0].stationid,
@@ -291,8 +263,8 @@ export class PopupMaintenanceNotificationViewPage implements OnInit {
               this.generalArr[0].partdefect
             );
           } else if (
-            this.fromscreen == "RePM" ||
-            this.fromscreen == "RePMVIEW"
+            (this.fromscreen == "RePM" || this.fromscreen == "RePMVIEW") &&
+            getpartdefectidArr.length > 1
           ) {
             this.getParts(
               this.generalArr[0].stationid,
@@ -301,6 +273,38 @@ export class PopupMaintenanceNotificationViewPage implements OnInit {
               this.generalArr[0].runningHours,
               this.generalArr[0].partdefect
             );
+          } else if (this.partdefect == "") {
+            if (this.fromscreen == "CM" || this.fromscreen == "CMVIEW") {
+              this.getParts(
+                this.generalArr[0].stationid,
+                this.generalArr[0].equipmentid,
+                2,
+                this.generalArr[0].runningHours,
+                this.generalArr[0].partdefect
+              );
+            } else if (
+              this.fromscreen == "RoPM" ||
+              this.fromscreen == "RoPMVIEW"
+            ) {
+              this.getParts(
+                this.generalArr[0].stationid,
+                this.generalArr[0].equipmentid,
+                0,
+                this.generalArr[0].runningHours,
+                this.generalArr[0].partdefect
+              );
+            } else if (
+              this.fromscreen == "RePM" ||
+              this.fromscreen == "RePMVIEW"
+            ) {
+              this.getParts(
+                this.generalArr[0].stationid,
+                this.generalArr[0].equipmentid,
+                1,
+                this.generalArr[0].runningHours,
+                this.generalArr[0].partdefect
+              );
+            }
           }
         }
       } else {
@@ -371,10 +375,9 @@ export class PopupMaintenanceNotificationViewPage implements OnInit {
       stationid: getstationid,
       equipment: getequipmentid,
       pvflag: getpvflag,
+      machinereplacementflag: this.machinereplacementFlag,
       language: this.languageService.selected,
     };
-
-    console.log(req);
 
     this.maintenanceservice.getMultiPartDefectViewList(req).then((result) => {
       var resultdata: any;
@@ -455,10 +458,11 @@ export class PopupMaintenanceNotificationViewPage implements OnInit {
         breakdown_cause: this.breakdowncausesid,
         cmflag: 0,
         id: this.notificationid,
+        machinereplacementflag: this.machinereplacementFlag,
         language: this.languageService.selected,
       };
 
-      //console.log(req);
+      console.log(req);
 
       this.maintenanceservice
         .formanCorrectiveMaintenanceVerify(req)
@@ -554,10 +558,11 @@ export class PopupMaintenanceNotificationViewPage implements OnInit {
         cmflag: 0,
         id: this.notificationid,
         extendrunninghoursflag: extendedhourstoupdate,
+        machinereplacementflag: this.machinereplacementFlag,
         language: this.languageService.selected,
       };
 
-      //console.log(req);
+      console.log(req);
 
       this.maintenanceservice
         .updateCorrectiveMaintenanceAuthorize(req)

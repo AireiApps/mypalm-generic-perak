@@ -284,4 +284,12 @@ export class appsettings {
   public static getmonthlylaboillosslist = "get_monthwise_lab_average";
 
   public static getpresswiselabaverage = "get_presswise_montly_lab_average";
+
+  public static getabnormalreport = "get_machine_abnormal_report";
+
+  public static getpendinggradinglist = "get_pending_grading_list";
+
+  public static updategradingnetweight = "update_grading_netweight";
+
+  public static getweighbridgereport = "get_grading_netweight_report";
 }

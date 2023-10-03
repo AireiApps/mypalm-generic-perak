@@ -104,35 +104,6 @@
       <div class="form-row" style="margin-top: 20px">
         <div class="col">
           <div class="h7 text-white">
-            <b>{{ 'OILLOSSESSREPORT.samplecollectiontime' | translate}}</b>
-          </div>
-        </div>
-
-        <div class="col">
-          <!-- <input
-            type="text"
-            class="h7 form-control readonly"
-            formControlName="txt_fromtime"
-            placeholder="HH:mm"
-            (click)="openTimePicker('SCFT')"
-            readonly
-          /> -->
-
-          <ion-datetime
-            mode="ios"
-            class="h7 form-control"
-            formControlName="txt_fromtime"
-            display-format="HH:mm"
-            placeholder="HH:mm"
-            cancelText="{{ 'GENERALBUTTON.cancelbutton' | translate}}"
-            doneText="{{ 'GENERALBUTTON.okay' | translate}}"
-          ></ion-datetime>
-        </div>
-      </div>
-
-      <div class="form-row" style="margin-top: 20px">
-        <div class="col">
-          <div class="h7 text-white">
             <b>{{ 'OILLOSSESSREPORT.oer' | translate}} (%)</b>
           </div>
         </div>
@@ -163,6 +134,35 @@
             (keypress)="decimalFilter($event)"
             formControlName="txt_mtd"
           />
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top: 20px">
+        <div class="col">
+          <div class="h7 text-white">
+            <b>{{ 'OILLOSSESSREPORT.samplecollectiontime' | translate}}</b>
+          </div>
+        </div>
+
+        <div class="col">
+          <!-- <input
+            type="text"
+            class="h7 form-control readonly"
+            formControlName="txt_fromtime"
+            placeholder="HH:mm"
+            (click)="openTimePicker('SCFT')"
+            readonly
+          /> -->
+
+          <ion-datetime
+            mode="ios"
+            class="h7 form-control"
+            formControlName="txt_fromtime"
+            display-format="HH:mm"
+            placeholder="HH:mm"
+            cancelText="{{ 'GENERALBUTTON.cancelbutton' | translate}}"
+            doneText="{{ 'GENERALBUTTON.okay' | translate}}"
+          ></ion-datetime>
         </div>
       </div>
 

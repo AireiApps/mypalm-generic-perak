@@ -261,7 +261,8 @@ export class AppComponent implements OnInit {
             designationid == "11" ||
             designationid == "7" ||
             designationid == "8" ||
-            designationid == "9"
+            designationid == "9" ||
+            designationid == "15"
           ) {
             if (redirectpage == '"NOTIFICATION"') {
               this.router.navigate(["/tabs"]);

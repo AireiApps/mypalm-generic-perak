@@ -1,0 +1,100 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-title mode="md" color="light">
+      <div class="ion-text-wrap">Update Net Weight</div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #pageBottom>
+  <div class="content">
+    <form class="home-box" [formGroup]="weighbridgeForm">
+      <ion-row *ngIf="hardbunches!=''">
+        <ion-col size="7">
+          {{ 'GRADINGHOME.hardbunches' | translate}} (Unit)</ion-col
+        >
+
+        <ion-col size="5">
+          <p class="data">: {{hardbunches}}</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="underripebunches!=''">
+        <ion-col size="7">
+          {{ 'GRADINGHOME.underripebunches' | translate}} (%)</ion-col
+        >
+
+        <ion-col size="5">
+          <p class="data">: {{underripebunches}}</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="ripenesspercent!=''">
+        <ion-col size="7"> {{ 'GRADINGHOME.ripeness' | translate}} (%)</ion-col>
+
+        <ion-col size="5">
+          <p class="data">: {{ripenesspercent}}</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="overduepercent!=''">
+        <ion-col size="7"> {{ 'GRADINGHOME.overdue' | translate}} (%)</ion-col>
+
+        <ion-col size="5">
+          <p class="data">: {{overduepercent}}</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="loosefruits!=''">
+        <ion-col size="7"
+          >{{ 'GRADINGHOME.loosefruits' | translate}} (%)</ion-col
+        >
+
+        <ion-col size="5">
+          <p class="data">: {{loosefruits}}</p>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="7">
+          <div class="title">Net Weight (MT)</div>
+        </ion-col>
+
+        <ion-col size="5">
+          <input
+            type="number"
+            class="h7 form-control"
+            formControlName="txt_netweight"
+            placeholder="Enter"
+            (keypress)="decimalFilter($event)"
+            (focus)="scrollbottom()"
+          />
+        </ion-col>
+      </ion-row>
+
+      <ion-row style="margin-top: 20px">
+        <ion-col
+          style="
+            align-self: center;
+            text-align: center;
+            padding: 0px;
+            margin: 0px;
+          "
+        >
+          <button class="cancelbutton" (click)="cancel()"></button>
+        </ion-col>
+
+        <ion-col
+          style="
+            align-self: center;
+            text-align: center;
+            padding: 0px;
+            margin: 0px;
+          "
+        >
+          <button class="okaybutton" (click)="save()"></button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </div>
+</ion-content>

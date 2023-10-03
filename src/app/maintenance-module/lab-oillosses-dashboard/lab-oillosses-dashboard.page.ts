@@ -88,6 +88,7 @@ export class LabOillossesDashboardPage implements OnInit {
   oillossalerttitle = "";
   oillossalertmessage = "";
   oermtdflag = 0;
+  oeroillossflag = 0;
 
   getplatform: string;
 
@@ -225,6 +226,7 @@ export class LabOillossesDashboardPage implements OnInit {
         this.oillossthreshold_max = resultdata.oillossthreshold_max;
         this.oillossthreshold_min = resultdata.oillossthreshold_min;
         this.oermtdflag = resultdata.oermtdflag;
+        this.oeroillossflag = resultdata.oeroillossflag;
 
         this.detailsArr = resultdata.data;
 
@@ -241,6 +243,7 @@ export class LabOillossesDashboardPage implements OnInit {
         this.showFlag = true;
       } else {
         this.oermtdflag = 0;
+        this.oeroillossflag = 0;
         this.detailsArr = [];
         this.pressidArr = [];
         this.pressidArr = [];
@@ -250,41 +253,44 @@ export class LabOillossesDashboardPage implements OnInit {
   }
 
   async showalert() {
-    if (this.oillossesForm.valid) {
-      console.log(this.oillossesForm.value.txt_mtd);
+    if (this.oeroillossflag == 1) {
+      if (this.oillossesForm.valid) {
+        //console.log(this.oillossesForm.value.txt_mtd);
 
-      this.oillossvaluearr = [];
-      var novalues = 0;
-      var pressvalidationflag = 0;
+        this.oillossvaluearr = [];
+        var novalues = 0;
+        var pressvalidationflag = 0;
 
-      if (
-        this.oillossesForm.value.txt_oer == "" ||
-        this.oillossesForm.value.txt_oer == null
-      ) {
-        this.commonservice.presentToast(
-          this.translate.instant("OILLOSSESSREPORT.oermandatory")
-        );
-        return;
-      }
+        if (
+          this.oillossesForm.value.txt_oer == "" ||
+          this.oillossesForm.value.txt_oer == null
+        ) {
+          this.commonservice.presentToast(
+            this.translate.instant("OILLOSSESSREPORT.oermandatory")
+          );
+          return;
+        }
 
-      if (
-        (this.oillossesForm.value.txt_mtd == "" ||
-          this.oillossesForm.value.txt_mtd == null) &&
-        this.oermtdflag == 1
-      ) {
-        this.commonservice.presentToast(
-          this.translate.instant("OILLOSSESSREPORT.mtdmandatory")
-        );
-        return;
-      }
+        if (
+          (this.oillossesForm.value.txt_mtd == "" ||
+            this.oillossesForm.value.txt_mtd == null) &&
+          this.oermtdflag == 1
+        ) {
+          this.commonservice.presentToast(
+            this.translate.instant("OILLOSSESSREPORT.mtdmandatory")
+          );
+          return;
+        }
 
-      const rowcontrol = this.oillossesForm.get("pressRows");
-      for (let i = 0; i < rowcontrol.length; i++) {
-        const controlsub = <FormArray>this.oillossesForm.get(["pressRows", i]);
+        const rowcontrol = this.oillossesForm.get("pressRows");
+        for (let i = 0; i < rowcontrol.length; i++) {
+          const controlsub = <FormArray>(
+            this.oillossesForm.get(["pressRows", i])
+          );
 
-        if (controlsub.value != null && controlsub.value != "") {
-          this.oillossvaluearr.push(String(controlsub.value));
-          /*if (
+          if (controlsub.value != null && controlsub.value != "") {
+            this.oillossvaluearr.push(String(controlsub.value));
+            /*if (
             controlsub.value >= this.oillossthreshold_min &&
             controlsub.value <= this.oillossthreshold_max
           ) {
@@ -294,65 +300,225 @@ export class LabOillossesDashboardPage implements OnInit {
             this.oillossvaluearr.push(String(controlsub.value));
           }*/
 
-          if (controlsub.value > 100) {
-            pressvalidationflag = 1;
+            if (controlsub.value > 100) {
+              pressvalidationflag = 1;
+            }
+          } else {
+            this.oillossvaluearr.push("~");
+            novalues = novalues + 1;
           }
-        } else {
-          this.oillossvaluearr.push("~");
-          novalues = novalues + 1;
         }
-      }
 
-      if (rowcontrol.length == novalues) {
-        this.commonservice.presentToast(
-          this.translate.instant("OILLOSSESSREPORT.mandatory")
-        );
-        return;
-      }
+        if (rowcontrol.length == novalues) {
+          this.commonservice.presentToast(
+            this.translate.instant("OILLOSSESSREPORT.mandatory")
+          );
+          return;
+        }
 
-      if (this.oillossesForm.value.txt_oer > 100 || pressvalidationflag == 1) {
-        this.commonservice.presentToast(
-          this.translate.instant("GRADINGHOME.percentagevalidation")
-        );
-        return;
-      }
+        if (
+          this.oillossesForm.value.txt_oer > 100 ||
+          pressvalidationflag == 1
+        ) {
+          this.commonservice.presentToast(
+            this.translate.instant("GRADINGHOME.percentagevalidation")
+          );
+          return;
+        }
 
-      if (
-        this.oermtdflag == 1 &&
-        (this.oillossesForm.value.txt_oer > 100 ||
-          this.oillossesForm.value.txt_mtd > 100 ||
-          pressvalidationflag == 1)
-      ) {
-        this.commonservice.presentToast(
-          this.translate.instant("GRADINGHOME.percentagevalidation")
-        );
-        return;
-      }
+        if (
+          this.oermtdflag == 1 &&
+          (this.oillossesForm.value.txt_oer > 100 ||
+            this.oillossesForm.value.txt_mtd > 100 ||
+            pressvalidationflag == 1)
+        ) {
+          this.commonservice.presentToast(
+            this.translate.instant("GRADINGHOME.percentagevalidation")
+          );
+          return;
+        }
 
-      const alert = await this.alertController.create({
-        mode: "md",
-        header: "",
-        cssClass: "customalertmessagetwobuttons",
-        message: this.translate.instant("OILLOSSESSREPORT.savealert"),
-        buttons: [
-          {
-            text: "",
-            handler: (cancel) => {},
-          },
-          {
-            text: "",
-            handler: () => {
-              this.save();
+        const alert = await this.alertController.create({
+          mode: "md",
+          header: "",
+          cssClass: "customalertmessagetwobuttons",
+          message: this.translate.instant("OILLOSSESSREPORT.savealert"),
+          buttons: [
+            {
+              text: "",
+              handler: (cancel) => {},
             },
-          },
-        ],
-      });
+            {
+              text: "",
+              handler: () => {
+                this.save(1);
+              },
+            },
+          ],
+        });
 
-      await alert.present();
+        await alert.present();
+      } else {
+        this.commonservice.presentToast(
+          this.translate.instant("GENERALBUTTON.pleasefilltheform")
+        );
+      }
     } else {
-      this.commonservice.presentToast(
-        this.translate.instant("GENERALBUTTON.pleasefilltheform")
-      );
+      if (this.oillossesForm.valid) {
+        console.log(this.oillossesForm.value.txt_mtd);
+
+        this.oillossvaluearr = [];
+        var novalues = 0;
+        var pressvalidationflag = 0;
+
+        const rowcontrol = this.oillossesForm.get("pressRows");
+        for (let i = 0; i < rowcontrol.length; i++) {
+          const controlsub = <FormArray>(
+            this.oillossesForm.get(["pressRows", i])
+          );
+
+          if (controlsub.value != null && controlsub.value != "") {
+            this.oillossvaluearr.push(String(controlsub.value));
+
+            if (controlsub.value > 100) {
+              pressvalidationflag = 1;
+            }
+          } else {
+            this.oillossvaluearr.push("~");
+            novalues = novalues + 1;
+          }
+        }
+
+        if (rowcontrol.length == novalues) {
+          if (
+            this.oillossesForm.value.txt_oer == "" ||
+            this.oillossesForm.value.txt_oer == null
+          ) {
+            this.commonservice.presentToast(
+              this.translate.instant("OILLOSSESSREPORT.oermandatory")
+            );
+            return;
+          }
+
+          if (
+            (this.oillossesForm.value.txt_mtd == "" ||
+              this.oillossesForm.value.txt_mtd == null) &&
+            this.oermtdflag == 1
+          ) {
+            this.commonservice.presentToast(
+              this.translate.instant("OILLOSSESSREPORT.mtdmandatory")
+            );
+            return;
+          }
+
+          if (this.oermtdflag == 0 && this.oillossesForm.value.txt_oer > 100) {
+            this.commonservice.presentToast(
+              this.translate.instant("GRADINGHOME.percentagevalidation")
+            );
+            return;
+          }
+
+          if (
+            this.oermtdflag == 1 &&
+            (this.oillossesForm.value.txt_oer > 100 ||
+              this.oillossesForm.value.txt_mtd > 100)
+          ) {
+            this.commonservice.presentToast(
+              this.translate.instant("GRADINGHOME.percentagevalidation")
+            );
+            return;
+          }
+
+          const alert = await this.alertController.create({
+            mode: "md",
+            header: "",
+            cssClass: "customalertmessagetwobuttons",
+            message: this.translate.instant("OILLOSSESSREPORT.saveoeralert"),
+            buttons: [
+              {
+                text: "",
+                handler: (cancel) => {},
+              },
+              {
+                text: "",
+                handler: () => {
+                  this.save(0);
+                },
+              },
+            ],
+          });
+
+          await alert.present();
+        } else {
+          if (
+            this.oillossesForm.value.txt_oer == "" ||
+            this.oillossesForm.value.txt_oer == null
+          ) {
+            this.commonservice.presentToast(
+              this.translate.instant("OILLOSSESSREPORT.oermandatory")
+            );
+            return;
+          }
+
+          if (
+            (this.oillossesForm.value.txt_mtd == "" ||
+              this.oillossesForm.value.txt_mtd == null) &&
+            this.oermtdflag == 1
+          ) {
+            this.commonservice.presentToast(
+              this.translate.instant("OILLOSSESSREPORT.mtdmandatory")
+            );
+            return;
+          }
+
+          if (
+            this.oermtdflag == 0 &&
+            (this.oillossesForm.value.txt_oer > 100 || pressvalidationflag == 1)
+          ) {
+            this.commonservice.presentToast(
+              this.translate.instant("GRADINGHOME.percentagevalidation")
+            );
+            return;
+          }
+
+          if (
+            this.oermtdflag == 1 &&
+            (this.oillossesForm.value.txt_oer > 100 ||
+              this.oillossesForm.value.txt_mtd > 100 ||
+              pressvalidationflag == 1)
+          ) {
+            this.commonservice.presentToast(
+              this.translate.instant("GRADINGHOME.percentagevalidation")
+            );
+            return;
+          }
+
+          const alert = await this.alertController.create({
+            mode: "md",
+            header: "",
+            cssClass: "customalertmessagetwobuttons",
+            message: this.translate.instant("OILLOSSESSREPORT.savealert"),
+            buttons: [
+              {
+                text: "",
+                handler: (cancel) => {},
+              },
+              {
+                text: "",
+                handler: () => {
+                  this.save(1);
+                },
+              },
+            ],
+          });
+
+          await alert.present();
+        }
+      } else {
+        this.commonservice.presentToast(
+          this.translate.instant("GENERALBUTTON.pleasefilltheform")
+        );
+      }
     }
   }
 
@@ -366,7 +532,7 @@ export class LabOillossesDashboardPage implements OnInit {
         {
           text: this.translate.instant("GENERALBUTTON.okay"),
           handler: () => {
-            this.save();
+            this.save(1);
           },
         },
       ],
@@ -375,69 +541,176 @@ export class LabOillossesDashboardPage implements OnInit {
     await alert.present();
   }
 
-  save() {
-    this.isDisabled = true;
-
-    /*let getdate = moment(this.selectoillossesdate, "DD-MM-YYYY").format(
-      "YYYY-MM-DD"
-    );
-
-    let getfromtime = moment(this.samplecollectionfromtime, "HH:mm").format(
-      "HH:mm"
-    );*/
+  save(option) {
+    var req;
 
     let getdate = moment(this.oillossesForm.value.txt_date).format(
       "YYYY-MM-DD"
     );
 
-    let getfromtime = moment(this.oillossesForm.value.txt_fromtime).format(
-      "HH:mm"
-    );
+    if (this.oeroillossflag == 0) {
+      if (option == 0) {
+        var getmtd = "";
 
-    var req = {
-      userid: this.userlist.userId,
-      millcode: this.userlist.millcode,
-      dept_id: this.userlist.dept_id,
-      id: 0,
-      date: getdate,
-      time: getfromtime,
-      to_time: "",
-      oer: this.oillossesForm.value.txt_oer,
-      mtd: this.oillossesForm.value.txt_mtd,
-      pressvalue: this.oillossvaluearr.join(","),
-      pressid: this.pressidArr.join(","),
-      language: this.languageService.selected,
-    };
+        if (
+          this.oillossesForm.value.txt_mtd == "" &&
+          this.oillossesForm.value.txt_mtd == null
+        ) {
+          getmtd = "";
+        } else {
+          getmtd = this.oillossesForm.value.txt_mtd;
+        }
 
-    console.log(req);
+        req = {
+          userid: this.userlist.userId,
+          millcode: this.userlist.millcode,
+          dept_id: this.userlist.dept_id,
+          id: 0,
+          date: getdate,
+          time: "",
+          to_time: "",
+          oer: this.oillossesForm.value.txt_oer,
+          mtd: getmtd,
+          pressvalue: this.oillossvaluearr.join(","),
+          pressid: this.pressidArr.join(","),
+          language: this.languageService.selected,
+        };
 
-    this.maintenanceservice.saveOilLosses(req).then((result) => {
-      var resultdata: any;
-      resultdata = result;
+        console.log(req);
 
-      if (resultdata.httpcode == 200) {
-        this.oillossesForm.reset();
-        this.oillossesForm.controls.txt_oer.setValue("");
-        this.oillossesForm.controls.txt_mtd.setValue("");
+        this.isDisabled = true;
 
-        this.isDisabled = false;
+        this.maintenanceservice.saveOilLosses(req).then((result) => {
+          var resultdata: any;
+          resultdata = result;
 
-        this.oillossesForm.controls.txt_date.setValue(this.currentdate);
-        this.oillossesForm.controls.txt_fromtime.setValue(this.currenttime);
+          if (resultdata.httpcode == 200) {
+            this.oillossesForm.reset();
+            this.oillossesForm.controls.txt_oer.setValue("");
+            this.oillossesForm.controls.txt_mtd.setValue("");
 
-        this.commonservice.presentToast(
-          this.translate.instant("OILLOSSESSREPORT.insertedsuccessfully")
-        );
+            this.isDisabled = false;
 
-        //this.router.navigate(["/lab-oillosses-list", { reportdate: "" }]);
+            this.oillossesForm.controls.txt_date.setValue(this.currentdate);
+            this.oillossesForm.controls.txt_fromtime.setValue(this.currenttime);
+
+            this.commonservice.presentToast(
+              this.translate.instant("OILLOSSESSREPORT.insertedsuccessfully")
+            );
+
+            //this.router.navigate(["/lab-oillosses-list", { reportdate: "" }]);
+          } else {
+            this.isDisabled = false;
+
+            this.commonservice.presentToast(
+              this.translate.instant("OILLOSSESSREPORT.insertedfailed")
+            );
+          }
+        });
       } else {
-        this.isDisabled = false;
-
-        this.commonservice.presentToast(
-          this.translate.instant("OILLOSSESSREPORT.insertedfailed")
+        let getfromtime = moment(this.oillossesForm.value.txt_fromtime).format(
+          "HH:mm"
         );
+
+        req = {
+          userid: this.userlist.userId,
+          millcode: this.userlist.millcode,
+          dept_id: this.userlist.dept_id,
+          id: 0,
+          date: getdate,
+          time: getfromtime,
+          to_time: "",
+          oer: this.oillossesForm.value.txt_oer,
+          mtd: this.oillossesForm.value.txt_mtd,
+          pressvalue: this.oillossvaluearr.join(","),
+          pressid: this.pressidArr.join(","),
+          language: this.languageService.selected,
+        };
+
+        console.log(req);
+
+        this.isDisabled = true;
+
+        this.maintenanceservice.saveOilLosses(req).then((result) => {
+          var resultdata: any;
+          resultdata = result;
+
+          if (resultdata.httpcode == 200) {
+            this.oillossesForm.reset();
+            this.oillossesForm.controls.txt_oer.setValue("");
+            this.oillossesForm.controls.txt_mtd.setValue("");
+
+            this.isDisabled = false;
+
+            this.oillossesForm.controls.txt_date.setValue(this.currentdate);
+            this.oillossesForm.controls.txt_fromtime.setValue(this.currenttime);
+
+            this.commonservice.presentToast(
+              this.translate.instant("OILLOSSESSREPORT.insertedsuccessfully")
+            );
+
+            //this.router.navigate(["/lab-oillosses-list", { reportdate: "" }]);
+          } else {
+            this.isDisabled = false;
+
+            this.commonservice.presentToast(
+              this.translate.instant("OILLOSSESSREPORT.insertedfailed")
+            );
+          }
+        });
       }
-    });
+    } else {
+      let getfromtime = moment(this.oillossesForm.value.txt_fromtime).format(
+        "HH:mm"
+      );
+
+      req = {
+        userid: this.userlist.userId,
+        millcode: this.userlist.millcode,
+        dept_id: this.userlist.dept_id,
+        id: 0,
+        date: getdate,
+        time: getfromtime,
+        to_time: "",
+        oer: this.oillossesForm.value.txt_oer,
+        mtd: this.oillossesForm.value.txt_mtd,
+        pressvalue: this.oillossvaluearr.join(","),
+        pressid: this.pressidArr.join(","),
+        language: this.languageService.selected,
+      };
+
+      console.log(req);
+
+      this.isDisabled = true;
+
+      this.maintenanceservice.saveOilLosses(req).then((result) => {
+        var resultdata: any;
+        resultdata = result;
+
+        if (resultdata.httpcode == 200) {
+          this.oillossesForm.reset();
+          this.oillossesForm.controls.txt_oer.setValue("");
+          this.oillossesForm.controls.txt_mtd.setValue("");
+
+          this.isDisabled = false;
+
+          this.oillossesForm.controls.txt_date.setValue(this.currentdate);
+          this.oillossesForm.controls.txt_fromtime.setValue(this.currenttime);
+
+          this.commonservice.presentToast(
+            this.translate.instant("OILLOSSESSREPORT.insertedsuccessfully")
+          );
+
+          //this.router.navigate(["/lab-oillosses-list", { reportdate: "" }]);
+        } else {
+          this.isDisabled = false;
+
+          this.commonservice.presentToast(
+            this.translate.instant("OILLOSSESSREPORT.insertedfailed")
+          );
+        }
+      });
+    }
   }
 
   decimalFilter(event: any) {

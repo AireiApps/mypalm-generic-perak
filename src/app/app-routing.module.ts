@@ -775,6 +775,41 @@ const routes: Routes = [
         "./segregatenotificatepages/update-extendedrunninghours/update-extendedrunninghours.module"
       ).then((m) => m.UpdateExtendedrunninghoursPageModule),
   },
+  {
+    path: "abnormal-report-screen",
+    loadChildren: () =>
+      import(
+        "./maintenance-module/abnormal-report-screen/abnormal-report-screen.module"
+      ).then((m) => m.AbnormalReportScreenPageModule),
+  },
+  {
+    path: "weighbridge-home-screen",
+    loadChildren: () =>
+      import(
+        "./weighbridge-module/weighbridge-home-screen/weighbridge-home-screen.module"
+      ).then((m) => m.WeighbridgeHomeScreenPageModule),
+  },
+  {
+    path: "weighbridge-report-screen",
+    loadChildren: () =>
+      import(
+        "./weighbridge-module/weighbridge-report-screen/weighbridge-report-screen.module"
+      ).then((m) => m.WeighbridgeReportScreenPageModule),
+  },
+  {
+    path: "weighbridge-update-screen",
+    loadChildren: () =>
+      import(
+        "./weighbridge-module/weighbridge-update-screen/weighbridge-update-screen.module"
+      ).then((m) => m.WeighbridgeUpdateScreenPageModule),
+  },
+  {
+    path: "weighbridge-update-report-screen",
+    loadChildren: () =>
+      import(
+        "./weighbridge-module/weighbridge-update-report-screen/weighbridge-update-report-screen.module"
+      ).then((m) => m.WeighbridgeUpdateReportScreenPageModule),
+  },
 ];
 
 @NgModule({

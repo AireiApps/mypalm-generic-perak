@@ -825,6 +825,56 @@ const routes_grading: Routes = [
   },
 ];
 
+//Weighbridge
+const routes_weighbridge: Routes = [
+  {
+    path: "",
+    component: TabsPage,
+    canActivate: [AuthGuardService],
+    children: [
+      {
+        path: "tabhome",
+        children: [
+          {
+            path: "",
+            loadChildren: () =>
+              import(
+                "../weighbridge-module/weighbridge-home-screen/weighbridge-home-screen.module"
+              ).then((m) => m.WeighbridgeHomeScreenPageModule),
+          },
+        ],
+      },
+      {
+        path: "tabreports",
+        children: [
+          {
+            path: "",
+            loadChildren: () =>
+              import(
+                "../weighbridge-module/weighbridge-report-screen/weighbridge-report-screen.module"
+              ).then((m) => m.WeighbridgeReportScreenPageModule),
+          },
+        ],
+      },
+      {
+        path: "tabprofile",
+        children: [
+          {
+            path: "",
+            loadChildren: () =>
+              import("../more/more.module").then((m) => m.MorePageModule),
+          },
+        ],
+      },
+      {
+        path: "",
+        redirectTo: "/tabs/tabhome",
+        pathMatch: "full",
+      },
+    ],
+  },
+];
+
 //console.log(userlist);
 
 if (userlist) {
@@ -857,6 +907,8 @@ if (userlist) {
       }
     } else if (userlist.dept_id == 10) {
       newRoutes = routes_grading;
+    } else if (userlist.dept_id == 45) {
+      newRoutes = routes_weighbridge;
     } else if (userlist.dept_id == 25) {
       /*if (userlist.desigId == 1) {
         newRoutes = routes_manager;

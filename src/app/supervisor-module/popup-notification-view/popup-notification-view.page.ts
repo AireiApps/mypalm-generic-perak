@@ -70,6 +70,7 @@ export class PopupNotificationViewPage implements OnInit {
   fromscreen = "";
   statusid = "";
   conditionid = "";
+  screenname = "";
 
   // Flag
   detailsnorecordFlag = false;
@@ -90,9 +91,14 @@ export class PopupNotificationViewPage implements OnInit {
     let viewform = navParams.get("item");
     this.params = JSON.parse(viewform);
     this.fromscreen = navParams.get("module");
+    this.screenname = navParams.get("screen");
     //console.log(this.params);
 
-    this.notificationid = this.params.id;
+    if (this.screenname == "Abnormal") {
+      this.notificationid = this.params.maintenance_notification_id;
+    } else {
+      this.notificationid = this.params.id;
+    }
 
     this.activatedroute.params.subscribe((val) => {
       this.getNotificationView();

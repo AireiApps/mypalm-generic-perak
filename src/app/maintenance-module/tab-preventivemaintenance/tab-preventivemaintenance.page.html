@@ -125,12 +125,12 @@
           <div *ngIf="!ropmnewnorecordflag">
             <ion-card
               class="ropmcard"
-              [style.backgroundColor]="getBackgroundColor(value.statusId)"
-              [style.borderColor]="geBorderColor('RoPM', value.statusId)"
+              [style.backgroundColor]="getBackgroundColor(value.statusId, value.machinereplacement)"
+              [style.borderColor]="geBorderColor('RoPM', value.statusId, value.machinereplacement)"
               *ngFor="let value of ropmnewnotificationlistArr | filter:ropmfilterTerm"
             >
               <ion-card-header
-                [style.backgroundColor]="geBorderColor('RoPM', value.statusId)"
+                [style.backgroundColor]="geBorderColor('RoPM', value.statusId, value.machinereplacement)"
                 [style.color]="getTextColor(value.statusId)"
               >
                 <div class="form-row">
@@ -313,12 +313,12 @@
           <div *ngIf="!ropmpendingnorecordflag">
             <ion-card
               class="ropmcard"
-              [style.backgroundColor]="getBackgroundColor(value.statusId)"
-              [style.borderColor]="geBorderColor('RoPM', value.statusId)"
+              [style.backgroundColor]="getBackgroundColor(value.statusId, value.machinereplacement)"
+              [style.borderColor]="geBorderColor('RoPM', value.statusId, value.machinereplacement)"
               *ngFor="let value of ropmpendingnotificationlistArr | filter:ropmfilterTerm"
             >
               <ion-card-header
-                [style.backgroundColor]="geBorderColor('RoPM', value.statusId)"
+                [style.backgroundColor]="geBorderColor('RoPM', value.statusId, value.machinereplacement)"
                 [style.color]="getTextColor(value.statusId)"
               >
                 <div class="form-row">
@@ -577,12 +577,12 @@
           <div *ngIf="!repmnewnorecordflag">
             <ion-card
               class="repmcard"
-              [style.backgroundColor]="getBackgroundColor(value.statusId)"
-              [style.borderColor]="geBorderColor('RePM', value.statusId)"
+              [style.backgroundColor]="getBackgroundColor(value.statusId, value.machinereplacement)"
+              [style.borderColor]="geBorderColor('RePM', value.statusId, value.machinereplacement)"
               *ngFor="let value of repmnewnotificationlistArr | filter:repmfilterTerm"
             >
               <ion-card-header
-                [style.backgroundColor]="geBorderColor('RePM',value.statusId)"
+                [style.backgroundColor]="geBorderColor('RePM',value.statusId, value.machinereplacement)"
                 [style.color]="getTextColor(value.statusId)"
               >
                 <div class="form-row">
@@ -766,12 +766,12 @@
           <div *ngIf="!repmpendingnorecordflag">
             <ion-card
               class="repmcard"
-              [style.backgroundColor]="getBackgroundColor(value.statusId)"
-              [style.borderColor]="geBorderColor('RePM', value.statusId)"
+              [style.backgroundColor]="getBackgroundColor(value.statusId, value.machinereplacement)"
+              [style.borderColor]="geBorderColor('RePM', value.statusId, value.machinereplacement)"
               *ngFor="let value of repmpendingnotificationlistArr | filter:repmfilterTerm"
             >
               <ion-card-header
-                [style.backgroundColor]="geBorderColor('RePM',value.statusId)"
+                [style.backgroundColor]="geBorderColor('RePM',value.statusId, value.machinereplacement)"
                 [style.color]="getTextColor(value.statusId)"
               >
                 <div class="form-row">

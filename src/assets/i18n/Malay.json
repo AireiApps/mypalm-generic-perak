@@ -550,7 +550,7 @@
     "current":"Semasa",
     "extendmaximum":"Tambahkan Maksimum",
     "runninghours":"Waktu Beroperasi",
-      "onepartmaximumabnormal": "Pilih satu bahagian sahaja untuk Abnormal",
+    "onepartmaximumabnormal": "Pilih satu bahagian sahaja untuk Abnormal",
     "onepartmaximumserviced": "Pilih satu bahagian sahaja untuk Diservis"
   },
 
@@ -1104,6 +1104,7 @@
     "mandatory":"Sila masukkan sekurang-kurangnya satu data!",
     "insertedsuccessfully":"Rekod Berjaya Dikemas Kini!",
     "insertedfailed":"Kehilangan Minyak Gagal Dimasukkan ",
+    "saveoeralert":"Adakah anda pasti mahu menyimpan rekod OER?",
     "savealert":"Adakah anda pasti mahu menyimpan rekod Oil Loss?",
     "failedtodelete":"Gagal Dipadam !",
     "month":"Bulan",
@@ -1372,7 +1373,8 @@
     "receivedloadfailed":"Gagal Menerima Muatan",
     "enter":"Masukkan Data",
     "hardbunchesimage":"Imej Hard Bunches",
-    "percentagevalidation":"Nilai peratusan melebihi 100"
+    "percentagevalidation":"Nilai peratusan melebihi 100",
+    "oerdata": "Data OER"
   },
 
   "GRADINGREPORT":{
@@ -1547,6 +1549,9 @@
     "searchstation":"Cari Stesen",
     "searchmachine":"Cari Mesin",
     "nosearchrecords":"Tiada Rekod Dijumpai"
+  },
+  "ABNORMALREPORT" : {
+    "title":"Laporan Tidak Biasa"
   }
 
 }

@@ -139,6 +139,8 @@ export class GradingHomePage implements OnInit {
     this.updateNotification();
     this.getLiveNotification();
 
+    this.forceUpdated();
+
     this.getGrading();
   }
 
@@ -160,6 +162,85 @@ export class GradingHomePage implements OnInit {
   btn_notification() {
     localStorage.setItem("badge_count", "0");
     this.router.navigate(["/segregatenotification"]);
+  }
+
+  forceUpdated() {
+    var app_version;
+
+    this.appVersion.getVersionNumber().then(
+      (versionNumber) => {
+        app_version = versionNumber;
+
+        console.log(app_version);
+
+        let req = {
+          user_id: this.userlist.userId,
+          millcode: this.userlist.millcode,
+          dept_id: this.userlist.dept_id,
+          language: this.languageService.selected,
+        };
+
+        this.commonservice.getSettings(req).then((result) => {
+          var resultdata: any;
+          resultdata = result;
+          let updateVersion = resultdata.appVersion;
+          let logout = resultdata.islogOut;
+
+          if (typeof logout !== "undefined" && logout !== null) {
+            if (logout == 1) {
+              this.notifi.logoutupdateNotification();
+              localStorage.clear();
+              this.router.navigate(["/login"], { replaceUrl: true });
+            } else {
+              if (updateVersion > app_version) {
+                this.alertForce(updateVersion);
+              }
+            }
+          } else {
+            if (updateVersion > app_version) {
+              this.alertForce(updateVersion);
+            }
+          }
+        });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  async alertForce(app_version) {
+    let alert = await this.alertController.create({
+      header: this.translate.instant("FORCEUPDATE.header"),
+      backdropDismiss: false,
+      message: this.translate.instant("FORCEUPDATE.message") + app_version,
+      buttons: [
+        {
+          text: this.translate.instant("FORCEUPDATE.button"),
+          handler: () => {
+            let appId;
+
+            if (this.platform.is("android")) {
+              appId = "com.airei.milltracking";
+            } else {
+              appId = "id1534533301";
+            }
+
+            this.market
+              .open(appId)
+              .then((response) => {
+                /*this.notifi.logoutupdateNotification();
+                localStorage.clear();
+                this.router.navigate(["/login"], { replaceUrl: true });*/
+              })
+              .catch((error) => {
+                console.warn(error);
+              });
+          },
+        },
+      ],
+    });
+    alert.present();
   }
 
   slideOpts = {

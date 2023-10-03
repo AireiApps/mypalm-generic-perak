@@ -275,7 +275,7 @@ export class TabPreventivemaintenancePage implements OnInit {
     this.router.navigate(["/segregatenotification"]);*/
   }
 
-  getBackgroundColor(value) {
+  getBackgroundColor(status, machineflag) {
     //console.log(value);
 
     let color;
@@ -293,13 +293,17 @@ export class TabPreventivemaintenancePage implements OnInit {
     return color;
   }
 
-  geBorderColor(type, status) {
+  geBorderColor(type, status, machineflag) {
     let color;
 
     if (type == "RoPM") {
       color = "#008000";
     } else {
-      color = "#0086c2";
+      if (machineflag == 1) {
+        color = "#cb4335";
+      } else {
+        color = "#0086c2";
+      }
     }
 
     return color;
@@ -465,6 +469,7 @@ export class TabPreventivemaintenancePage implements OnInit {
               machineid: eachitem.machineid,
               prNo: eachitem.prNo,
               machinename: eachitem.machinename,
+              machinereplacement: eachitem.machinereplacement,
               breakdowncodingid: eachitem.breakdowncodingid,
               runningHours: eachitem.runningHours,
               replacement_activityname: eachitem.replacement_activityname,
@@ -584,6 +589,7 @@ export class TabPreventivemaintenancePage implements OnInit {
               machineid: eachitem.machineid,
               prNo: eachitem.prNo,
               machinename: eachitem.machinename,
+              machinereplacement: eachitem.machinereplacement,
               breakdowncodingid: eachitem.breakdowncodingid,
               runningHours: eachitem.runningHours,
               replacement_activityname: eachitem.replacement_activityname,
@@ -704,6 +710,7 @@ export class TabPreventivemaintenancePage implements OnInit {
               machineid: eachitem.machineid,
               prNo: eachitem.prNo,
               machinename: eachitem.machinename,
+              machinereplacement: eachitem.machinereplacement,
               breakdowncodingid: eachitem.breakdowncodingid,
               runningHours: eachitem.runningHours,
               replacement_activityname: eachitem.replacement_activityname,
@@ -827,6 +834,7 @@ export class TabPreventivemaintenancePage implements OnInit {
               machineid: eachitem.machineid,
               prNo: eachitem.prNo,
               machinename: eachitem.machinename,
+              machinereplacement: eachitem.machinereplacement,
               breakdowncodingid: eachitem.breakdowncodingid,
               runningHours: eachitem.runningHours,
               replacement_activityname: eachitem.replacement_activityname,

@@ -272,3 +272,23 @@
     </ion-tab-button> -->
   </ion-tab-bar>
 </ion-tabs>
+
+<!-- Weighbridge -->
+<ion-tabs *ngIf="getTabCheck(45)">
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="tabhome">
+      <ion-icon name="home-outline"></ion-icon>
+      <ion-label>{{ 'TABSGRADING.home' | translate}}</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tabreports">
+      <ion-icon name="newspaper-outline"></ion-icon>
+      <ion-label>{{ 'TABSGRADING.reports' | translate}}</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tabprofile">
+      <ion-icon name="person-outline"></ion-icon>
+      <ion-label>{{ 'TABSGRADING.more' | translate}}</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

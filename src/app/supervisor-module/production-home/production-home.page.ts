@@ -115,6 +115,13 @@ export class ProductionHomePage implements OnInit {
     ],
     [
       {
+        title: "Abnormal",
+        subtitle: "Report",
+        name: "Abnormal Report",
+        path: "/abnormal-report-screen",
+        imgpath: "../../assets/img/pressmachineroutinecheck.png",
+      },
+      {
         title: this.translate.instant("PRODUCTIONHOME.preventivetitle"),
         subtitle: this.translate.instant("PRODUCTIONHOME.preventivesubtitle"),
         name: "Preventive Maintenance",
@@ -169,6 +176,13 @@ export class ProductionHomePage implements OnInit {
         name: "Corrective Maintenance",
         path: "/report-production-maintenance-notification",
         imgpath: "../../assets/img/corrective_report.png",
+      },
+      {
+        title: "Abnormal",
+        subtitle: "Report",
+        name: "Abnormal Report",
+        path: "/abnormal-report-screen",
+        imgpath: "../../assets/img/pressmachineroutinecheck.png",
       },
     ],
   ];

@@ -1389,6 +1389,49 @@ ion-picker {
   --spinner-color: #1d2730;
 }
 
+.ramppopup-modal {
+  --width: 90% !important;
+  --height: 30% !important;
+  --border-radius: 10px !important;
+  --backdrop-opacity: 0.8;
+  //--background: #000000b2;
+  --background: #ffffff;
+  backdrop-filter: blur(1px);
+
+  .modal-wrapper {
+    border: 2px solid #ff9f0c;
+    border-radius: 10px !important;
+  }
+
+  ion-content {
+    --background: none;
+    background-color: #ffffff;
+    background-image: none;
+  }
+}
+
+.weighbridgepopup-modal {
+  --width: 90% !important;
+  --height: 55% !important;
+  --border-radius: 10px !important;
+  --backdrop-opacity: 0.8;
+  //--background: #000000b2;
+  --background: #ffffff;
+  backdrop-filter: blur(1px);
+
+  .modal-wrapper {
+    border: 2px solid #ff9f0c;
+    border-radius: 10px !important;
+  }
+
+  ion-content {
+    --background: none;
+    background-color: #ffffff;
+    background-image: url(assets/img/palmbg.png);
+    background-size: cover;
+  }
+}
+
 /*ion-content {
   --background: none;
   //background-color: #273136;

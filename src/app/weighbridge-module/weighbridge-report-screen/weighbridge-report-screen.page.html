@@ -1,0 +1,149 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-avatar slot="start">
+      <ion-img
+        class="toolbarimage"
+        src="../../../assets/img/logo.png"
+      ></ion-img>
+    </ion-avatar>
+    <ion-title color="light" mode="ios" [innerHTML]="mill_name"></ion-title>
+
+    <ion-buttons slot="primary">
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'android'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'twodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'ios'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'iostwodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content mode="md">
+  <form [formGroup]="gradingReportForm">
+    <ion-row style="margin-top: 10px">
+      <ion-col size="1.6" style="align-self: center" no-padding>
+        <div class="h7 text-white">
+          <b>{{ 'GRADINGREPORT.from' | translate}}</b>
+        </div>
+      </ion-col>
+
+      <ion-col size="3.45">
+        <input
+          type="text"
+          class="h7 form-control readonly"
+          formControlName="from_date"
+          placeholder="DD-MM-YYYY"
+          (click)="openFromDateTimePicker()"
+          readonly
+        />
+      </ion-col>
+
+      <ion-col size="1" style="align-self: center" no-padding>
+        <div class="h7 text-white">
+          <b>{{ 'GRADINGREPORT.to' | translate}}</b>
+        </div>
+      </ion-col>
+
+      <ion-col size="3.45">
+        <input
+          type="text"
+          class="h7 form-control readonly"
+          formControlName="to_date"
+          placeholder="DD-MM-YYYY"
+          (click)="openToDateTimePicker()"
+          readonly
+        />
+      </ion-col>
+
+      <ion-col size="2.5">
+        <button
+          type="button"
+          class="h7 btn btn-general btn-sm float-right"
+          style="height: 31px; width: 100%"
+          (click)="getWeighbridgeReportDetails()"
+        >
+          {{ 'GENERALBUTTON.getrecords' | translate}}
+        </button>
+      </ion-col>
+    </ion-row>
+
+    <hr />
+  </form>
+  <div *ngIf="!norecordFlag" class="home-box">
+    <div style="overflow-x: auto">
+      <table style="width: 100%; height: 100%" class="table table-bordered">
+        <tr class="table_head">
+          <th colspan="1" scope="colgroup" style="padding: 4px !important">
+            <span class="mdfont">S.No</span>
+          </th>
+          <th colspan="1" scope="colgroup" style="padding: 4px !important">
+            <span class="mdfont">Date & Time</span>
+          </th>
+
+          <th colspan="1" scope="colgroup" style="padding: 4px !important">
+            <span class="mdfont">Vehicle<br />Number</span>
+          </th>
+          <th colspan="1" scope="colgroup" style="padding: 4px !important">
+            <span class="mdfont">Net Weight<br />(MT)</span>
+          </th>
+          <th colspan="1" scope="colgroup" style="padding: 4px !important">
+            <span class="mdfont">Updated<br />By</span>
+          </th>
+        </tr>
+        <ng-container *ngFor="let value of weighbridgeArr; let i=index">
+          <tr>
+            <td scope="row">{{i+1}}</td>
+            <td scope="row">{{value.insdt}}</td>
+            <td scope="row">{{value.vehicle_no}}</td>
+            <td scope="row">
+              <button
+                *ngIf="value.net_weight==''"
+                type="button"
+                class="h7 btn btn-edit btn-sm"
+                (click)="btn_Edit(value)"
+              >
+                <span class="icontext">Update</span>
+              </button>
+              <span *ngIf="value.net_weight!=''">{{value.net_weight}}</span>
+            </td>
+            <td scope="row">{{value.updatedby}}</td>
+          </tr>
+        </ng-container>
+      </table>
+    </div>
+  </div>
+  <div class="pleasewait" *ngIf="pleasewaitflag">
+    <div style="width: 100%; text-align: center">
+      <img
+        style="width: 80px; height: 80px"
+        src="../../../assets/img/loading.gif"
+      />
+    </div>
+    {{ 'NORECORDSFOUND.loading' | translate}}
+  </div>
+  <div class="norecords" *ngIf="norecordFlag">
+    {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+  </div>
+</ion-content>

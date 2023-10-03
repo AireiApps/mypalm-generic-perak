@@ -1578,4 +1578,21 @@ export class SupervisorService {
         );
     });
   }
+  getAbnormalReport(params) {
+    var reqOpts: any;
+    reqOpts = this.formParams(params);
+
+    var api = localStorage.getItem("endpoint") + appsettings.getabnormalreport;
+    return new Promise((resolve, reject) => {
+      this.httpClient.post(api, reqOpts).subscribe(
+        (data) => {
+          console.log(data);
+          resolve(data);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
 }

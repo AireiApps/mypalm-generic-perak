@@ -48,6 +48,7 @@ export class MaintenancePreventivemaintenanceAssignModalPage implements OnInit {
   title = "";
   module = "";
   extendrunninghoursFlag = "";
+  machinereplacementFlag = "";
 
   getnotificationid = "";
   getstationid = "";
@@ -155,8 +156,9 @@ export class MaintenancePreventivemaintenanceAssignModalPage implements OnInit {
     this.title = "ID: " + this.params.notificationno;
     this.module = navParams.get("module");
     this.extendrunninghoursFlag = navParams.get("flag");
+    this.machinereplacementFlag = this.params.machinereplacement;
 
-    console.log(this.extendrunninghoursFlag);
+    console.log(this.params);
 
     this.getnotificationid = this.params.id;
     this.getstationid = this.params.stationid;
@@ -583,55 +585,32 @@ export class MaintenancePreventivemaintenanceAssignModalPage implements OnInit {
   }
 
   save() {
-    let partsstatus = [];
-    let setpvflag = 0;
+    if (this.machinereplacementFlag == "0") {
+      let partsstatus = [];
+      let setpvflag = 0;
 
-    if (this.goodFlag) {
-      setpvflag = 0;
-      let eachreq = {
-        partid: this.partdefectid,
-        condition: this.conditionoptionSelected,
-        maintenancetypeid: "",
-        damagetypeid: "",
-      };
-
-      partsstatus.push(eachreq);
-    } else if (this.abnormalFlag) {
-      setpvflag = 0;
-      let eachreq = {
-        partid: this.partdefectid,
-        condition: this.conditionoptionSelected,
-        maintenancetypeid: String(this.maintenancetypeid),
-        damagetypeid: this.damagetypeidArr.join(","),
-      };
-
-      partsstatus.push(eachreq);
-    } else if (this.replacedFlag) {
-      setpvflag = 1;
-      let eachreq = {
-        partid: this.partdefectid,
-        replacestatus: this.conditionactivitySelected,
-        lifetimerunninghours: "",
-        currentrunninghours: "",
-        extendedmaxrunninghours: "",
-      };
-
-      partsstatus.push(eachreq);
-    } else if (this.servicedFlag) {
-      setpvflag = 1;
-      if (this.extendrunninghoursFlag == "1") {
+      if (this.goodFlag) {
+        setpvflag = 0;
         let eachreq = {
           partid: this.partdefectid,
-          replacestatus: this.conditionactivitySelected,
-          lifetimerunninghours: this.lifetimerunninghours,
-          currentrunninghours: this.currentrunninghours,
-          extendedmaxrunninghours: String(
-            this.assignForm.value.txt_extendlifetimehours
-          ),
+          condition: this.conditionoptionSelected,
+          maintenancetypeid: "",
+          damagetypeid: "",
         };
 
         partsstatus.push(eachreq);
-      } else {
+      } else if (this.abnormalFlag) {
+        setpvflag = 0;
+        let eachreq = {
+          partid: this.partdefectid,
+          condition: this.conditionoptionSelected,
+          maintenancetypeid: String(this.maintenancetypeid),
+          damagetypeid: this.damagetypeidArr.join(","),
+        };
+
+        partsstatus.push(eachreq);
+      } else if (this.replacedFlag) {
+        setpvflag = 1;
         let eachreq = {
           partid: this.partdefectid,
           replacestatus: this.conditionactivitySelected,
@@ -641,76 +620,218 @@ export class MaintenancePreventivemaintenanceAssignModalPage implements OnInit {
         };
 
         partsstatus.push(eachreq);
-      }
-    }
+      } else if (this.servicedFlag) {
+        setpvflag = 1;
+        if (this.extendrunninghoursFlag == "1") {
+          let eachreq = {
+            partid: this.partdefectid,
+            replacestatus: this.conditionactivitySelected,
+            lifetimerunninghours: this.lifetimerunninghours,
+            currentrunninghours: this.currentrunninghours,
+            extendedmaxrunninghours: String(
+              this.assignForm.value.txt_extendlifetimehours
+            ),
+          };
 
-    this.confirmDisable = true;
-
-    var req = {
-      userid: this.userlist.userId,
-      millcode: this.userlist.millcode,
-      dept_id: this.userlist.dept_id,
-      id: this.getnotificationid,
-      stationid: this.getstationid,
-      equipment: this.getmachineid,
-      partsarray: JSON.stringify(partsstatus),
-      assignedto: this.assignedtoidArr.join(","),
-      pvflag: setpvflag,
-      completedflag: 1,
-      extendrunninghoursflag: this.extendrunninghoursFlag,
-      language: this.languageService.selected,
-    };
-
-    console.log(req);
-
-    this.maintenanceservice
-      .saveMultiplePartMaintenanceNotification(req)
-      .then((result) => {
-        var resultdata: any;
-        resultdata = result;
-        if (resultdata.httpcode == 200) {
-          this.confirmDisable = false;
-
-          if (this.module == "RoPM") {
-            this.commonservice.presentToast(
-              this.translate.instant(
-                "PREVENTIVEMAINTENANCEASSIGN.routinesuccess"
-              )
-            );
-          }
-
-          if (this.module == "RePM") {
-            this.commonservice.presentToast(
-              this.translate.instant(
-                "PREVENTIVEMAINTENANCEASSIGN.replacementsuccess"
-              )
-            );
-          }
-
-          this.modalController.dismiss({
-            dismissed: true,
-            item: "Submitted",
-          });
+          partsstatus.push(eachreq);
         } else {
-          this.confirmDisable = false;
+          let eachreq = {
+            partid: this.partdefectid,
+            replacestatus: this.conditionactivitySelected,
+            lifetimerunninghours: "",
+            currentrunninghours: "",
+            extendedmaxrunninghours: "",
+          };
 
-          if (this.module == "RoPM") {
-            this.commonservice.presentToast(
-              this.translate.instant(
-                "PREVENTIVEMAINTENANCEASSIGN.routinefailed"
-              )
-            );
-          }
-
-          if (this.module == "RePM") {
-            this.commonservice.presentToast(
-              this.translate.instant(
-                "PREVENTIVEMAINTENANCEASSIGN.replacementfailed"
-              )
-            );
-          }
+          partsstatus.push(eachreq);
         }
-      });
+      }
+
+      this.confirmDisable = true;
+
+      var req = {
+        userid: this.userlist.userId,
+        millcode: this.userlist.millcode,
+        dept_id: this.userlist.dept_id,
+        id: this.getnotificationid,
+        stationid: this.getstationid,
+        equipment: this.getmachineid,
+        partsarray: JSON.stringify(partsstatus),
+        assignedto: this.assignedtoidArr.join(","),
+        pvflag: setpvflag,
+        completedflag: 1,
+        extendrunninghoursflag: this.extendrunninghoursFlag,
+        machinereplacementflag: this.machinereplacementFlag,
+        language: this.languageService.selected,
+      };
+
+      console.log(req);
+
+      this.maintenanceservice
+        .saveMultiplePartMaintenanceNotification(req)
+        .then((result) => {
+          var resultdata: any;
+          resultdata = result;
+          if (resultdata.httpcode == 200) {
+            this.confirmDisable = false;
+
+            if (this.module == "RoPM") {
+              this.commonservice.presentToast(
+                this.translate.instant(
+                  "PREVENTIVEMAINTENANCEASSIGN.routinesuccess"
+                )
+              );
+            }
+
+            if (this.module == "RePM") {
+              this.commonservice.presentToast(
+                this.translate.instant(
+                  "PREVENTIVEMAINTENANCEASSIGN.replacementsuccess"
+                )
+              );
+            }
+
+            this.modalController.dismiss({
+              dismissed: true,
+              item: "Submitted",
+            });
+          } else {
+            this.confirmDisable = false;
+
+            if (this.module == "RoPM") {
+              this.commonservice.presentToast(
+                this.translate.instant(
+                  "PREVENTIVEMAINTENANCEASSIGN.routinefailed"
+                )
+              );
+            }
+
+            if (this.module == "RePM") {
+              this.commonservice.presentToast(
+                this.translate.instant(
+                  "PREVENTIVEMAINTENANCEASSIGN.replacementfailed"
+                )
+              );
+            }
+          }
+        });
+    } else {
+      var machinereq;
+      let setpvflag = 0;
+      if (this.replacedFlag) {
+        setpvflag = 1;
+
+        machinereq = {
+          userid: this.userlist.userId,
+          millcode: this.userlist.millcode,
+          dept_id: this.userlist.dept_id,
+          id: this.getnotificationid,
+          stationid: this.getstationid,
+          equipment: this.getmachineid,
+          replacestatus: this.conditionactivitySelected,
+          assignedto: this.assignedtoidArr.join(","),
+          pvflag: setpvflag,
+          completedflag: 1,
+          extendrunninghoursflag: this.extendrunninghoursFlag,
+          machinereplacementflag: this.machinereplacementFlag,
+          language: this.languageService.selected,
+        };
+      } else if (this.servicedFlag) {
+        setpvflag = 1;
+        if (this.extendrunninghoursFlag == "1") {
+          machinereq = {
+            userid: this.userlist.userId,
+            millcode: this.userlist.millcode,
+            dept_id: this.userlist.dept_id,
+            id: this.getnotificationid,
+            stationid: this.getstationid,
+            equipment: this.getmachineid,
+            replacestatus: this.conditionactivitySelected,
+            assignedto: this.assignedtoidArr.join(","),
+            lifetimerunninghours: this.lifetimerunninghours,
+            currentrunninghours: this.currentrunninghours,
+            extendedmaxrunninghours: String(
+              this.assignForm.value.txt_extendlifetimehours
+            ),
+            pvflag: setpvflag,
+            completedflag: 1,
+            extendrunninghoursflag: this.extendrunninghoursFlag,
+            machinereplacementflag: this.machinereplacementFlag,
+            language: this.languageService.selected,
+          };
+        } else {
+          machinereq = {
+            userid: this.userlist.userId,
+            millcode: this.userlist.millcode,
+            dept_id: this.userlist.dept_id,
+            id: this.getnotificationid,
+            stationid: this.getstationid,
+            equipment: this.getmachineid,
+            replacestatus: this.conditionactivitySelected,
+            assignedto: this.assignedtoidArr.join(","),
+            lifetimerunninghours: "",
+            currentrunninghours: "",
+            extendedmaxrunninghours: "",
+            pvflag: setpvflag,
+            completedflag: 1,
+            extendrunninghoursflag: this.extendrunninghoursFlag,
+            machinereplacementflag: this.machinereplacementFlag,
+            language: this.languageService.selected,
+          };
+        }
+      }
+
+      console.log(machinereq);
+
+      this.maintenanceservice
+        .saveMultiplePartMaintenanceNotification(machinereq)
+        .then((result) => {
+          var resultdata: any;
+          resultdata = result;
+          if (resultdata.httpcode == 200) {
+            this.confirmDisable = false;
+
+            if (this.module == "RoPM") {
+              this.commonservice.presentToast(
+                this.translate.instant(
+                  "PREVENTIVEMAINTENANCEASSIGN.routinesuccess"
+                )
+              );
+            }
+
+            if (this.module == "RePM") {
+              this.commonservice.presentToast(
+                this.translate.instant(
+                  "PREVENTIVEMAINTENANCEASSIGN.replacementsuccess"
+                )
+              );
+            }
+
+            this.modalController.dismiss({
+              dismissed: true,
+              item: "Submitted",
+            });
+          } else {
+            this.confirmDisable = false;
+
+            if (this.module == "RoPM") {
+              this.commonservice.presentToast(
+                this.translate.instant(
+                  "PREVENTIVEMAINTENANCEASSIGN.routinefailed"
+                )
+              );
+            }
+
+            if (this.module == "RePM") {
+              this.commonservice.presentToast(
+                this.translate.instant(
+                  "PREVENTIVEMAINTENANCEASSIGN.replacementfailed"
+                )
+              );
+            }
+          }
+        });
+    }
   }
 
   async callmodalcontroller(type) {

@@ -1,0 +1,220 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-avatar slot="start">
+      <ion-img
+        class="toolbarimage"
+        src="../../../assets/img/logo.png"
+      ></ion-img>
+    </ion-avatar>
+    <ion-title color="light" mode="ios" [innerHTML]="mill_name"></ion-title>
+
+    <ion-buttons slot="primary">
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'android'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'twodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button
+        class="bg-light-color"
+        (click)="btn_notification()"
+        *ngIf="getplatform == 'ios'"
+      >
+        <ion-badge
+          class="badgeblink"
+          [ngClass]="{'onedigitbadgecount' : pendingcountlength == 1, 'iostwodigitbadgecount' : pendingcountlength >= 2}"
+          *ngIf="pendingcount && pendingcount != 0"
+          >{{ pendingcount }}</ion-badge
+        >
+        <ion-icon name="notifications-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content mode="md">
+  <div class="myCard">
+    <img class="backgroundimage" src="../../../assets/img/header_myPalm.png" />
+    <div class="myOverlay">
+      <div class="usermessagecard">
+        <ion-row>
+          <ion-col size="12">
+            <p
+              style="
+                font-size: 16px;
+                font-weight: bold;
+                margin: 0px;
+                color: #ffffff;
+              "
+            >
+              {{ 'GRADINGHOME.welcome' | translate}} {{userlist.name}}
+            </p>
+          </ion-col>
+        </ion-row>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="gradingForm">
+    <ion-row class="form-row">
+      <ion-col size="2.30"> </ion-col>
+
+      <ion-col size="2">
+        <div class="h7 text-white" style="text-align: right">
+          <b>{{ 'REPORTSTERILIZATION.date' | translate}} </b>
+        </div>
+      </ion-col>
+
+      <ion-col size="3.40">
+        <input
+          type="text"
+          style="padding: 5px"
+          class="h7 form-control readonly"
+          formControlName="pickdate"
+          placeholder="DD-MM-YYYY"
+          (click)="openDateTimePicker()"
+          readonly
+        />
+      </ion-col>
+
+      <ion-col size="2">
+        <button
+          type="button"
+          class="h7 btn btn-general btn-sm margin-5px float-left"
+          (click)="getWeighbridgeDetails(true,'0')"
+        >
+          {{ 'GENERALBUTTON.getrecords' | translate}}
+        </button>
+      </ion-col>
+
+      <ion-col size="2.30"> </ion-col>
+    </ion-row>
+  </form>
+  <hr />
+
+  <div class="home-box" #myElementRef>
+    <div *ngIf="!norecordFlag">
+      <ion-searchbar
+        placeholder="{{ 'CORRECTIVEMAINTENACE.searchrecords' | translate}}"
+        [(ngModel)]="filterTerm"
+        animated="true"
+        clearIcon="close"
+        *ngIf="!norecordFlag"
+      ></ion-searchbar>
+      <ion-card
+        class="bg-card"
+        *ngFor="let value of weighbridgeArr | filter:filterTerm"
+      >
+        <ion-card-content class="cardcontent">
+          <ion-row *ngIf="(value.vehicle_no!='' || value.insdt!='')">
+            <ion-col>
+              <p class="title-content">
+                {{value.vehicle_no}} &nbsp;&nbsp;&nbsp;&nbsp; {{value.insdt}}
+              </p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="value.hard_bunch_percent!=''">
+            <ion-col size="7"
+              >{{ 'GRADINGHOME.hardbunches' | translate}} (Unit)</ion-col
+            >
+
+            <ion-col size="5">
+              <p class="data">: {{value.hard_bunch_percent}}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="value.under_ripe_bunch_percent!=''">
+            <ion-col size="7"
+              >{{ 'GRADINGHOME.underripebunches' | translate}} (%)</ion-col
+            >
+
+            <ion-col size="5">
+              <p class="data">: {{value.under_ripe_bunch_percent}}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="value.ripeness_percent!=''">
+            <ion-col size="7"
+              >{{ 'GRADINGHOME.ripeness' | translate}} (%)</ion-col
+            >
+
+            <ion-col size="5">
+              <p class="data">: {{value.ripeness_percent}}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="value.overdue_percent!=''">
+            <ion-col size="7"
+              >{{ 'GRADINGHOME.overdue' | translate}} (%)</ion-col
+            >
+
+            <ion-col size="5">
+              <p class="data">: {{value.overdue_percent}}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row *ngIf="value.loose_fruit_percent!=''">
+            <ion-col size="7"
+              >{{ 'GRADINGHOME.loosefruits' | translate}} (%)</ion-col
+            >
+
+            <ion-col size="5">
+              <p class="data">: {{value.loose_fruit_percent}}</p>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col size="7">Net Weight (MT)</ion-col>
+            <ion-col size="5">
+              <p class="data">
+                :
+                <button
+                  type="button"
+                  class="h7 btn btn-update btn-sm"
+                  (click)="btn_update(value)"
+                >
+                  <span>Update</span>
+                </button>
+              </p>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+      <ion-infinite-scroll
+        threshold="100px"
+        (ionInfinite)="newpagination($event)"
+        *ngIf="weighbridgeArr.length>0"
+      >
+        <ion-infinite-scroll-content
+          class="loadmore"
+          loadingSpinner="bubbles"
+          loadingText="{{ 'NORECORDSFOUND.loadingmoredata' | translate}}"
+        >
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+    </div>
+
+    <div class="pleasewait" *ngIf="pleasewaitflag">
+      <div style="width: 100%; text-align: center">
+        <img
+          style="width: 80px; height: 80px"
+          src="../../../assets/img/loading.gif"
+        />
+      </div>
+      {{ 'NORECORDSFOUND.loading' | translate}}
+    </div>
+  </div>
+
+  <div class="norecords" *ngIf="norecordFlag">
+    {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+  </div>
+</ion-content>

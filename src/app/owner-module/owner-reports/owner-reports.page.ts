@@ -104,14 +104,21 @@ export class OwnerReportsPage implements OnInit {
         imgpath: "../../assets/img/corrective_report.png",
       },
       {
+        title: "Abnormal",
+        subtitle: "Report",
+        name: "Abnormal Report",
+        path: "/abnormal-report-screen",
+        imgpath: "../../assets/img/pressmachineroutinecheck.png",
+      },
+    ],
+    [
+      {
         title: this.translate.instant("PRODUCTIONHOME.preventivetitle"),
         subtitle: this.translate.instant("PRODUCTIONHOME.preventivesubtitle"),
         name: "Preventive Maintenance",
         path: "/report-pvrpv",
         imgpath: "../../assets/img/preventive_report.png",
       },
-    ],
-    [
       {
         title: "Running Hours",
         subtitle: this.nl2br("<br>"),
@@ -119,6 +126,8 @@ export class OwnerReportsPage implements OnInit {
         path: "/owner-machinerunninghours",
         imgpath: "../../assets/img/machinerunninghours.png",
       },
+    ],
+    [
       {
         title: "Performance",
         subtitle: "Analysis",

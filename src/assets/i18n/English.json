@@ -1068,6 +1068,7 @@
     "preventivetitle":"Preventive",
     "preventivesubtitle":"Maintenance"
   },
+
   "OILLOSSESSREPORT":{
     "oillosses":"Oil Losses",
     "oillosselist":"Oil Losses",
@@ -1089,6 +1090,7 @@
     "pressno5":"Press No.5",
     "header":"ALERT",
     "alertmessage":"Are you sure you want to update the oil losses record?",
+    "saveoeralert":"Are you sure you want to save the OER record?",
     "savealert":"Are you sure you want to save the oil losses record?",
     "sure":"Sure",
     "successmessage":"Oil Losses Updated Successfully",
@@ -1097,13 +1099,13 @@
     "enter":"Enter",
     "nopressmachinefound":"No Press Machine Found",
     "mandatory":"Atleast one oil loss entry is mandatory",
-
     "insertedsuccessfully":"Oil Losses Inserted Successfully",
     "insertedfailed":"Oil Losses Inserted Failed",
     "failedtodelete":"Failed to Deleted",
     "month":"Month",
     "monthlyaverage":"Monthly Average"
   },
+
   "PRESSSTATIONLOGSHEET":{
     "title":"Press Station Log Sheet",
     "date":"Date",
@@ -1374,7 +1376,8 @@
     "receivedloadfailed":"Receiving Load Failed",
     "enter":"Enter",
     "hardbunchesimage":"Hard Bunches Image",
-    "percentagevalidation":"Not a Valid Percentage"
+    "percentagevalidation":"Not a Valid Percentage",
+    "oerdata": "OER Data"
   },
   
   "GRADINGREPORT":{
@@ -1547,6 +1550,9 @@
     "searchstation":"Search Station",
     "searchmachine":"Search Machine",
     "nosearchrecords":"No Search Records Found"
+  },
+  "ABNORMALREPORT" : {
+    "title":"Abnormal Report"
   }
 }
 

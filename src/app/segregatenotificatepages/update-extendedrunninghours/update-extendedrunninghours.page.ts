@@ -57,6 +57,7 @@ export class UpdateExtendedrunninghoursPage implements OnInit {
   maximumrunninghours = "";
   runninghours = "";
   extendedmaximumrunninghours = "";
+  machinereplacementFlag = "";
   equipment = "";
   equipmentid = "";
   reportedby = "";
@@ -119,7 +120,7 @@ export class UpdateExtendedrunninghoursPage implements OnInit {
     let viewform = navParams.get("item");
     this.params = JSON.parse(viewform);
     this.notificationid = this.params.baseid;
-
+    this.machinereplacementFlag = this.params.machinereplacement;
     console.log(this.params);
 
     //console.log(this.fromscreen);
@@ -234,41 +235,11 @@ export class UpdateExtendedrunninghoursPage implements OnInit {
           this.jobauthorizationnorecordFlag = true;
         }
 
-        if (
-          (this.fromscreen == "CM" || this.fromscreen == "CMVIEW") &&
-          getpartdefectidArr.length > 1
-        ) {
-          this.getParts(
-            this.generalArr[0].stationid,
-            this.generalArr[0].equipmentid,
-            2,
-            this.generalArr[0].runningHours,
-            this.generalArr[0].partdefect
-          );
-        } else if (
-          (this.fromscreen == "RoPM" || this.fromscreen == "RoPMVIEW") &&
-          getpartdefectidArr.length > 1
-        ) {
-          this.getParts(
-            this.generalArr[0].stationid,
-            this.generalArr[0].equipmentid,
-            0,
-            this.generalArr[0].runningHours,
-            this.generalArr[0].partdefect
-          );
-        } else if (
-          (this.fromscreen == "RePM" || this.fromscreen == "RePMVIEW") &&
-          getpartdefectidArr.length > 1
-        ) {
-          this.getParts(
-            this.generalArr[0].stationid,
-            this.generalArr[0].equipmentid,
-            1,
-            this.generalArr[0].runningHours,
-            this.generalArr[0].partdefect
-          );
-        } else if (this.partdefect == "") {
-          if (this.fromscreen == "CM" || this.fromscreen == "CMVIEW") {
+        if (this.machinereplacementFlag == "0") {
+          if (
+            (this.fromscreen == "CM" || this.fromscreen == "CMVIEW") &&
+            getpartdefectidArr.length > 1
+          ) {
             this.getParts(
               this.generalArr[0].stationid,
               this.generalArr[0].equipmentid,
@@ -277,8 +248,8 @@ export class UpdateExtendedrunninghoursPage implements OnInit {
               this.generalArr[0].partdefect
             );
           } else if (
-            this.fromscreen == "RoPM" ||
-            this.fromscreen == "RoPMVIEW"
+            (this.fromscreen == "RoPM" || this.fromscreen == "RoPMVIEW") &&
+            getpartdefectidArr.length > 1
           ) {
             this.getParts(
               this.generalArr[0].stationid,
@@ -288,8 +259,8 @@ export class UpdateExtendedrunninghoursPage implements OnInit {
               this.generalArr[0].partdefect
             );
           } else if (
-            this.fromscreen == "RePM" ||
-            this.fromscreen == "RePMVIEW"
+            (this.fromscreen == "RePM" || this.fromscreen == "RePMVIEW") &&
+            getpartdefectidArr.length > 1
           ) {
             this.getParts(
               this.generalArr[0].stationid,
@@ -298,6 +269,38 @@ export class UpdateExtendedrunninghoursPage implements OnInit {
               this.generalArr[0].runningHours,
               this.generalArr[0].partdefect
             );
+          } else if (this.partdefect == "") {
+            if (this.fromscreen == "CM" || this.fromscreen == "CMVIEW") {
+              this.getParts(
+                this.generalArr[0].stationid,
+                this.generalArr[0].equipmentid,
+                2,
+                this.generalArr[0].runningHours,
+                this.generalArr[0].partdefect
+              );
+            } else if (
+              this.fromscreen == "RoPM" ||
+              this.fromscreen == "RoPMVIEW"
+            ) {
+              this.getParts(
+                this.generalArr[0].stationid,
+                this.generalArr[0].equipmentid,
+                0,
+                this.generalArr[0].runningHours,
+                this.generalArr[0].partdefect
+              );
+            } else if (
+              this.fromscreen == "RePM" ||
+              this.fromscreen == "RePMVIEW"
+            ) {
+              this.getParts(
+                this.generalArr[0].stationid,
+                this.generalArr[0].equipmentid,
+                1,
+                this.generalArr[0].runningHours,
+                this.generalArr[0].partdefect
+              );
+            }
           }
         }
       } else {
@@ -368,6 +371,7 @@ export class UpdateExtendedrunninghoursPage implements OnInit {
       stationid: getstationid,
       equipment: getequipmentid,
       pvflag: getpvflag,
+      machinereplacementflag: this.machinereplacementFlag,
       language: this.languageService.selected,
     };
 
@@ -452,6 +456,7 @@ export class UpdateExtendedrunninghoursPage implements OnInit {
         breakdown_cause: this.breakdowncausesid,
         cmflag: 0,
         id: this.notificationid,
+        machinereplacementflag: this.machinereplacementFlag,
         language: this.languageService.selected,
       };
 
@@ -551,6 +556,7 @@ export class UpdateExtendedrunninghoursPage implements OnInit {
         cmflag: 0,
         id: this.notificationid,
         extendrunninghoursflag: extendedhourstoupdate,
+        machinereplacementflag: this.machinereplacementFlag,
         language: this.languageService.selected,
       };
 

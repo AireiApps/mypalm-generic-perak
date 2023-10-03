@@ -511,7 +511,6 @@ export class ImageUploadService {
         quality: 80,
         destinationType: this.camera.DestinationType.FILE_URI,
         sourceType: this.camera.PictureSourceType.CAMERA,
-        allowEdit: true, //Added on 21.07.2023
         saveToPhotoAlbum: false,
         correctOrientation: true,
         targetWidth: 500,

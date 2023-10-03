@@ -11,6 +11,8 @@ import { LanguageService } from "src/app/services/language-service/language.serv
 
 // Modal Pages - Start
 import { AlertacknowledgePage } from "src/app/segregatenotificatepages/alertacknowledge/alertacknowledge.page";
+
+import { WeighbridgeUpdateReportScreenPage } from "src/app/weighbridge-module/weighbridge-update-report-screen/weighbridge-update-report-screen.page";
 // Modal Pages - End
 
 @Component({
@@ -68,7 +70,8 @@ export class SegregatenotificationPage implements OnInit {
       this.designationid == "7" ||
       this.designationid == "8" ||
       this.designationid == "9" ||
-      this.designationid == "11"
+      this.designationid == "11" ||
+      this.designationid == "15"
     ) {
       this.activatedroute.params.subscribe((val) => {
         this.currentorientation = this.screenOrientation.type;
@@ -119,7 +122,8 @@ export class SegregatenotificationPage implements OnInit {
       this.designationid == "7" ||
       this.designationid == "8" ||
       this.designationid == "9" ||
-      this.designationid == "11"
+      this.designationid == "11" ||
+      this.designationid == "15"
     ) {
       if (this.designationid == "3") {
         this.getalert();
@@ -340,7 +344,8 @@ export class SegregatenotificationPage implements OnInit {
     } else if (
       this.designationid == "7" ||
       this.designationid == "8" ||
-      this.designationid == "9"
+      this.designationid == "9" ||
+      this.designationid == "15"
     ) {
       this.filterstatus = "3";
     } else if (
@@ -481,28 +486,31 @@ export class SegregatenotificationPage implements OnInit {
   }
 
   updateNotification(value) {
-    //this.redirectcontroller(value);
-    let req = {
-      user_id: this.userlist.userId,
-      millcode: this.userlist.millcode,
-      id: value.id,
-      filter: this.filterstatus,
-      language: this.languageService.selected,
-    };
+    if (value.redirect == "WEIGHBRIDGE WEIGHT UPDATE") {
+      this.update_Weight(value);
+    } else {
+      let req = {
+        user_id: this.userlist.userId,
+        millcode: this.userlist.millcode,
+        id: value.id,
+        filter: this.filterstatus,
+        language: this.languageService.selected,
+      };
 
-    this.service.deletedasboardnotification(req).then((result) => {
-      var resultdata: any;
-      resultdata = result;
-      if (resultdata.httpcode == 200) {
-        if (value.rectify_status == 0) {
-          this.redirectcontroller(value);
+      this.service.deletedasboardnotification(req).then((result) => {
+        var resultdata: any;
+        resultdata = result;
+        if (resultdata.httpcode == 200) {
+          if (value.rectify_status == 0) {
+            this.redirectcontroller(value);
+          }
+        } else {
+          this.service.presentToast(
+            this.translate.instant("SEGREGATENOTIFICATION.message")
+          );
         }
-      } else {
-        this.service.presentToast(
-          this.translate.instant("SEGREGATENOTIFICATION.message")
-        );
-      }
-    });
+      });
+    }
   }
 
   redirectcontroller(value) {
@@ -594,6 +602,29 @@ export class SegregatenotificationPage implements OnInit {
     });
 
     return await modal.present();
+  }
+
+  async update_Weight(value) {
+    const weighbridgemodal = await this.modalController.create({
+      component: WeighbridgeUpdateReportScreenPage,
+      componentProps: {
+        item: JSON.stringify(value),
+        module: "NOTIFICATION SCREEN",
+      },
+      showBackdrop: true,
+      backdropDismiss: false,
+      cssClass: ["weighbridgepopup-modal"],
+    });
+
+    weighbridgemodal.onDidDismiss().then((modaldata) => {
+      let getdata = modaldata["data"]["item"];
+
+      if (getdata != "") {
+        this.getNotification();
+      }
+    });
+
+    return await weighbridgemodal.present();
   }
 
   nl2br(text: string) {

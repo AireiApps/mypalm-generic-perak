@@ -451,9 +451,10 @@ export class RepmMultipartSavePage implements OnInit {
     }
 
     if (
+      this.conditionactivitySelected == "Serviced" &&
+      this.extendrunninghoursFlag == "1" &&
       (this.assignForm.value.txt_extendlifetimehours == 0 ||
-        this.assignForm.value.txt_extendlifetimehours == "") &&
-      this.extendrunninghoursFlag == "1"
+        this.assignForm.value.txt_extendlifetimehours == "")
     ) {
       this.commonservice.presentToast(
         this.translate.instant(
@@ -525,7 +526,6 @@ export class RepmMultipartSavePage implements OnInit {
     } else {
       completedFlag = 0;
     }
-    
 
     if (this.conditionactivitySelected == "Replaced") {
       this.save(completedFlag);

@@ -1,0 +1,187 @@
+<ion-header>
+  <ion-toolbar class="bg-brown-color">
+    <ion-buttons slot="start" mode="md">
+      <ion-back-button color="whitefav"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title mode="ios" color="light"
+      >{{ 'ABNORMALREPORT.title' | translate}}</ion-title
+    >
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="home-box">
+    <form [formGroup]="notificationReportForm">
+      <ion-row style="margin-top: 10px">
+        <ion-col size="1.6" style="align-self: center" no-padding>
+          <div class="h7 text-white">
+            <b>{{ 'REPORTCORRECTIVEMAINTENANCE.fromdate' | translate}}</b>
+          </div>
+        </ion-col>
+
+        <ion-col size="3.45">
+          <input
+            type="text"
+            class="h7 form-control readonly"
+            formControlName="from_date"
+            placeholder="DD-MM-YYYY"
+            (click)="openFromDateTimePicker()"
+            readonly
+          />
+        </ion-col>
+
+        <ion-col size="1" style="align-self: center" no-padding>
+          <div class="h7 text-white">
+            <b>{{ 'REPORTCORRECTIVEMAINTENANCE.todate' | translate}}</b>
+          </div>
+        </ion-col>
+
+        <ion-col size="3.45">
+          <input
+            type="text"
+            class="h7 form-control readonly"
+            formControlName="to_date"
+            placeholder="DD-MM-YYYY"
+            (click)="openToDateTimePicker()"
+            readonly
+          />
+        </ion-col>
+
+        <ion-col size="2.5">
+          <button
+            type="button"
+            class="h7 btn btn-general btn-sm float-right"
+            style="height: 31px; width: 100%"
+            (click)="getNotification()"
+          >
+            {{ 'GENERALBUTTON.getrecords' | translate}}
+          </button>
+        </ion-col>
+      </ion-row>
+
+      <!-- Station Filter -->
+      <ion-row class="form-row" style="margin-top: 5px">
+        <ion-col size="2" style="align-self: center" no-padding>
+          <div class="h7 text-white">
+            <b>{{ 'REPORTCORRECTIVEMAINTENANCE.station' | translate}}</b>
+          </div>
+        </ion-col>
+        <ion-col size="9.5">
+          <ion-select
+            mode="md"
+            [interfaceOptions]="stationOptions"
+            formControlName="station_name"
+            multiple="false"
+            [okText]="'Okay'"
+            [cancelText]="'Cancel'"
+            class="selectdropdown"
+            (ionChange)="stationtypehandleChange($event)"
+          >
+            <ion-select-option value="" selected
+              >{{ 'GENERALBUTTON.select' | translate}}</ion-select-option
+            >
+            <ion-select-option
+              value="{{parseString(value)}}"
+              *ngFor="let value of stationArr; let i = index"
+              >{{ value.station_name }}</ion-select-option
+            >
+          </ion-select>
+        </ion-col>
+      </ion-row>
+
+      <hr />
+    </form>
+
+    <div *ngIf="!enableflag">
+      <div style="overflow-x: auto">
+        <table style="width: 100%; height: 100%" class="table table-bordered">
+          <tr class="table_head">
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'REPORTCORRECTIVEMAINTENANCE.datetime' | translate}}</span
+              >
+            </th>
+
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'REPORTCORRECTIVEMAINTENANCE.notificationid' |
+                translate}}</span
+              >
+            </th>
+
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'REPORTCORRECTIVEMAINTENANCE.station' | translate}}</span
+              >
+            </th>
+
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'REPORTCORRECTIVEMAINTENANCE.machine' | translate}}</span
+              >
+            </th>
+
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'REPORTCORRECTIVEMAINTENANCE.assignedto' | translate}}</span
+              >
+            </th>
+
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'REPORTCORRECTIVEMAINTENANCE.status' | translate}}</span
+              >
+            </th>
+
+            <th colspan="1" scope="colgroup" style="padding: 4px !important">
+              <span class="mdfont"
+                >{{ 'REPORTCORRECTIVEMAINTENANCE.detail' | translate}}</span
+              >
+            </th>
+          </tr>
+
+          <ng-container
+            *ngFor="let value of notificationlistArr;let i = index;"
+          >
+            <tr>
+              <td scope="row">{{value.start_datetime}}</td>
+              <td scope="row">{{value.notification_no}}</td>
+              <td scope="row" *ngIf="value.station_name!=''">
+                {{value.station_name}}
+              </td>
+              <td scope="row" *ngIf="value.station_name ==''">-</td>
+              <td scope="row" *ngIf="value.location_name!=''">
+                {{value.location_name}}
+              </td>
+              <td scope="row" *ngIf="value.location_name==''">-</td>
+              <td scope="row" *ngIf="value.assignto!=''">{{value.assignto}}</td>
+              <td scope="row" *ngIf="value.assignto==''">-</td>
+              <td
+                scope="row"
+                [style.background-color]="getStatusTextColor(value.statusid)"
+              >
+                {{value.statusname}}
+              </td>
+              <td scope="row">
+                <button
+                  type="button"
+                  class="h7 btn btn-viewnotificationform btn-sm"
+                  (click)="callmodalcontroller(value)"
+                >
+                  <span class="icontext"
+                    >{{ 'GENERALBUTTON.viewbutton' | translate}}</span
+                  >
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </table>
+      </div>
+    </div>
+
+    <div class="norecords" *ngIf="enableflag==true">
+      {{ 'NORECORDSFOUND.norecordsfound' | translate}}
+    </div>
+  </div>
+</ion-content>
